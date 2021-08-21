@@ -10,9 +10,9 @@ from .note import Note
 from .beat import Beat
 from .rest import Rest
 from .chord import Chord
-import py2musicxml.log as logger
+import lejaren.log as logger
 
-from py2musicxml.notation import measure
+from lejaren.notation import measure
 
 log = logger.get_logger()
 

@@ -9,8 +9,8 @@ import numpy as np
 from collections import namedtuple
 from math import pi
 
-from py2musicxml.notation import Note, Part, Score, Tempo
-from py2musicxml.analysis import AutoTranscribe
+from lejaren.notation import Note, Part, Score, Tempo
+from lejaren.analysis import AutoTranscribe
 
 peak = namedtuple("peak", ["bin", "freq", "amp", "dur"])
 

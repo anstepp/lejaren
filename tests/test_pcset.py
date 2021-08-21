@@ -1,6 +1,6 @@
 import pytest
 
-from py2musicxml.analysis import PitchClassSet
+from lejaren.analysis import PitchClassSet
 
 
 def test_object_init():

@@ -1,6 +1,6 @@
 import pytest
 
-from py2musicxml.notation import Tempo, Measure, Score
+from lejaren.notation import Tempo, Measure, Score
 
 @pytest.fixture
 def basic_tempo():

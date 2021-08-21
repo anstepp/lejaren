@@ -1,6 +1,6 @@
 import pytest
 
-from py2musicxml.notation import Measure, Note, Beat, Part, Score, Rest, Chord
+from lejaren.notation import Measure, Note, Beat, Part, Score, Rest, Chord
 
 # fmt: off
 fj_pitches = [0, 2, 4, 0, 0, 2, 4, 0, 4, 5, 7, 4, 5, 7, 7, 9, 7, 5, 4, 0, 7, 9, 7, 5, 4, 0, 0, -5, 0, 0, -5, 0]

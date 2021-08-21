@@ -8,7 +8,7 @@ from .rest import Rest
 from .measure import Measure
 from .beat import Beat
 from .chord import Chord
-import py2musicxml.log as logger
+import lejaren.log as logger
 
 log = logger.get_logger()
 

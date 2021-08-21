@@ -1,7 +1,7 @@
 from typing import Iterable
 
-from py2musicxml.notation import Note
-import py2musicxml.log as logger
+from lejaren.notation import Note
+import lejaren.log as logger
 
 logging = logger.get_logger()
 

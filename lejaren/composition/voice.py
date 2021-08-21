@@ -3,7 +3,7 @@ Voice is a file that contains classes that represent voices and instruments.
 
 To use one of the voices, you import:
 
-from py2musicxml.composition import [chosen_voice]
+from lejaren.composition import [chosen_voice]
 
 The score then has access to creating an instrument:
 
@@ -44,7 +44,7 @@ To clear out the note list:
 Voice.clear_list()
 """
 
-from py2musicxml.notation import Note, Rest, Part
+from lejaren.notation import Note, Rest, Part
 
 from typing import List, Tuple, Iterable, Union
 

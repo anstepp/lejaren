@@ -7,10 +7,10 @@ import scipy.io.wavfile as scwav
 from scipy.signal import find_peaks
 from scipy.fft import rfft
 
-import py2musicxml.log as logger
-from py2musicxml.notation import Note, Tempo
-from py2musicxml.notation.measure import TimeSignature
-from py2musicxml.notation.score import Score
+import lejaren.log as logger
+from lejaren.notation import Note, Tempo
+from lejaren.notation.measure import TimeSignature
+from lejaren.notation.score import Score
 
 log = logger.get_logger()
 
@@ -56,7 +56,7 @@ TWELVETET = [next(pitchgen) for x in range(128)]
 
 class AutoTranscribe:
     """
-    Class to code a soundfile into py2musicxml objects.
+    Class to code a soundfile into lejaren objects.
 
     Members:
 

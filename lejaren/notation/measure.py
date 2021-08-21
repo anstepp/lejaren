@@ -1,7 +1,7 @@
 """
 The Measure object generally should not be called by a user.
 
-Measure includes information that py2musicxml uses to keep
+Measure includes information that lejaren uses to keep
 track of metric structure. 
 """
 
@@ -14,7 +14,7 @@ from .note import Note
 from .beat import Beat
 from .rest import Rest
 from .chord import Chord
-import py2musicxml.log as logger
+import lejaren.log as logger
 
 log = logger.get_logger()
 

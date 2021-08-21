@@ -5,7 +5,7 @@
 import pytest
 import copy
 
-from py2musicxml.notation import Measure, Note, Rest
+from lejaren.notation import Measure, Note, Rest
 
 BASE_MEASURE_FACTOR = 4
 

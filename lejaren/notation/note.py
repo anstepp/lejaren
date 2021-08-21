@@ -33,7 +33,7 @@ True
 import copy
 from typing import Tuple
 
-import py2musicxml.log as logger
+import lejaren.log as logger
 
 log = logger.get_logger()
 
@@ -292,7 +292,7 @@ class Note:
         """Sets note as a tied note of a specific type.
 
         By feeding a type of tie: start, continue, or end, add a tie to the note both
-        in Py2MusicXML and the resulting XML. This can be called by an end user, or
+        in lejaren and the resulting XML. This can be called by an end user, or
         internally when breaking notes into measure groupings.
 
         Arguments:

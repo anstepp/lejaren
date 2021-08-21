@@ -1,6 +1,6 @@
 import pytest
 
-from py2musicxml.notation import Chord, Note, Rest
+from lejaren.notation import Chord, Note, Rest
 
 
 def test_chord_init():

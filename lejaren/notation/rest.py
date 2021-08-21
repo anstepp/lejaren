@@ -1,7 +1,7 @@
 import copy
 from typing import Tuple
 
-import py2musicxml.log as logger
+import lejaren.log as logger
 
 logging = logger.get_logger()
 

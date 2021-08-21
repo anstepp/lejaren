@@ -1,8 +1,8 @@
 import copy
 from typing import Iterable, Tuple, List
 
-from py2musicxml.notation import Note
-import py2musicxml.log as logger
+from lejaren.notation import Note
+import lejaren.log as logger
 
 log = logger.get_logger()
 
@@ -21,7 +21,7 @@ class Chord:
 
         Take a list of note objects and wraps them in a chord object.
         This wrapping does some under-the-hood work to have them work
-        functionally together in the Python end of Py2MusicXML. It also
+        functionally together in the Python end of lejaren. It also
         adds necessary flags to write the xml.
 
         Args:
@@ -91,7 +91,7 @@ class Chord:
                 for note in self.notes:
                     note.dur = new_duration
         except ValueError as e:
-            logging.error(e)
+            log.error(e)
             raise
 
     def split(self, diff) -> Tuple["Chord", "Chord"]:
@@ -110,7 +110,7 @@ class Chord:
         """Sets note as a tied chord of a specific type.
 
         By feeding a type of tie: start, continue, or end, add a tie to the note both
-        in Py2MusicXML and the resulting XML. This can be called by an end user, or
+        in lejaren and the resulting XML. This can be called by an end user, or
         internally when breaking notes into measure groupings.
 
         Arguments:
