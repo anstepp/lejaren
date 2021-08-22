@@ -1,0 +1,5 @@
+lxml==4.6.3
+numpy==1.21.1
+scipy==1.6.1
+matplotlib==3.4.3
+streamlit==0.87.0
