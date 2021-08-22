@@ -18,6 +18,8 @@ audio_bytes = audio_file.read()
 
 st.audio(audio_bytes, format="audio/wav")
 
+st.slider("F0 Range", 12, 72, (24, 36))
+
 with st.echo():
     # Define FFT size and tempo.
     fft_size = 2048
