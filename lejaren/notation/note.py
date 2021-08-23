@@ -32,6 +32,7 @@ True
 
 import copy
 from typing import Tuple
+from decimal import Decimal
 
 import lejaren.log as logger
 
@@ -139,7 +140,7 @@ class Note:
 
         try:
             if duration > 0:
-                self.dur = duration
+                self.dur = Decimal(str(duration))
         except ValueError as e:
             log.error(e)
             raise
@@ -322,7 +323,7 @@ class Note:
     def change_duration(self, new_duration: float) -> None:
         try:
             if new_duration > 0:
-                self.dur = new_duration
+                self.dur = Decimal(str(new_duration))
         except ValueError as e:
             log.error(e)
             raise

@@ -1,7 +1,7 @@
 from collections import namedtuple
 from math import ceil, floor, log2
 from typing import List, Tuple
-
+from decimal import Decimal
 import numpy as np
 import scipy.io.wavfile as scwav
 from scipy.signal import find_peaks
@@ -390,7 +390,7 @@ class AutoTranscribe:
 
     def smooth_notes(self, note_list: List[Note], N: int):
         one_frame_indices = []
-        one_frame_dur = self._get_fractional_beats(N, 1)
+        one_frame_dur = Decimal(str(self._get_fractional_beats(N, 1)))
         for idx, note in enumerate(note_list):
             if note.dur == one_frame_dur:
                 one_frame_indices.append(idx)
