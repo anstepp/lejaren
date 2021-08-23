@@ -119,3 +119,18 @@ def test_smooth_notes(load_sample_audio):
     indices = auto_transcribe_2.smooth_notes(resulting_pitches, N)
 
     assert indices == [1, 5, 7]
+
+def test_quantization(load_sample_audio):
+
+    N = 2048
+    f0_range = (24, 48)
+
+    auto_transcribe = AutoTranscribe(N, Tempo(60,1))
+
+    auto_transcribe._supply_audio(load_sample_audio / "violinclip1.wav")
+
+    resulting_pitches = auto_transcribe.get_note_list(f0_range)
+
+    quantized_list = auto_transcribe.quantize_notes(resulting_pitches, 0.125)
+    for note in quantized_list:
+        print(note)
