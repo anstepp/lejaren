@@ -6,6 +6,7 @@ import numpy as np
 import scipy.io.wavfile as scwav
 from scipy.signal import find_peaks
 from scipy.fft import rfft
+from bisect import bisect_left
 
 import lejaren.log as logger
 from lejaren.notation import Note, Tempo
@@ -31,7 +32,6 @@ DEFAULT_R = 0.5
 DEFAULT_NUM_PARTIALS = 8
 
 HOP_SIZE = 2
-
 
 def twelve_tet_gen(f0: float = C0):
     """
@@ -396,6 +396,13 @@ class AutoTranscribe:
                 one_frame_indices.append(idx)
 
         return one_frame_indices
+
+    def quantize_notes(self, note_list: List[Note], minimum_note_value: float):
+        quantization_values = [Decimal(x) * Decimal(str(minimum_note_value)) for x in range(20)]
+        for note in note_list:
+            note.change_duration(quantization_values[bisect_left(quantization_values, note.dur)])
+
+        return note_list
 
     def get_score(self, time_signature: TimeSignature, n_parts: int) -> Score:
         """
