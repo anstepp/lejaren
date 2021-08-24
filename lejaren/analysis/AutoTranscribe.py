@@ -389,13 +389,29 @@ class AutoTranscribe:
             return [0]
 
     def smooth_notes(self, note_list: List[Note], N: int):
-        one_frame_indices = []
         one_frame_dur = Decimal(str(self._get_fractional_beats(N, 1)))
         for idx, note in enumerate(note_list):
             if note.dur == one_frame_dur:
-                one_frame_indices.append(idx)
+                note_list[idx-1].change_duration(note.dur + note_list[idx-1].dur)
+                note_list.pop(idx)
 
-        return one_frame_indices
+        quantized_notes = self.quantize_notes(note_list, 0.125)
+
+        final_list = []
+        for idx, note in enumerate(quantized_notes):
+            if idx >= 1 and idx < len(quantized_notes) -1:
+                if note.pc == quantized_notes[idx-1].pc and note.octave == quantized_notes[idx-1].octave:
+                    final_list[-1].change_duration(note.dur + quantized_notes[idx-1].dur)
+                elif note.pc == quantized_notes[idx+1].pc and note.octave + 1 == quantized_notes[idx+1].octave:
+                    quantized_notes[idx+1].change_duration(note.dur + quantized_notes[idx+1].dur)
+                elif note.pc == quantized_notes[idx-1].pc and note.octave + 1 == quantized_notes[idx-1].octave:
+                    quantized_notes[idx+1].change_duration(note.dur + quantized_notes[idx+1].dur)
+                else:
+                    final_list.append(note)
+            else:
+                final_list.append(note)
+
+        return final_list
 
     def quantize_notes(self, note_list: List[Note], minimum_note_value: float):
         quantization_values = [Decimal(x) * Decimal(str(minimum_note_value)) for x in range(20)]

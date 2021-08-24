@@ -8,6 +8,7 @@ import pytest
 import numpy as np
 from collections import namedtuple
 from math import pi
+from decimal import Decimal
 
 from lejaren.notation import Note, Part, Score, Tempo
 from lejaren.analysis import AutoTranscribe
@@ -103,7 +104,12 @@ def test_smooth_notes(load_sample_audio):
 
     indices = auto_transcribe.smooth_notes(resulting_pitches, N)
 
-    assert indices == [3, 7]
+    smoothed_and_quantized = auto_transcribe.smooth_notes(resulting_pitches, N)
+
+    for note in smoothed_and_quantized:
+        print(note)
+
+    print('***')
 
     auto_transcribe_2 = AutoTranscribe(N, Tempo(60,1))
 
@@ -113,12 +119,10 @@ def test_smooth_notes(load_sample_audio):
 
     resulting_pitches = auto_transcribe_2.get_note_list(f0_range)
 
-    for pitch in resulting_pitches:
-        print(pitch)
+    smoothed_and_quantized_2 = auto_transcribe_2.smooth_notes(resulting_pitches, N)
 
-    indices = auto_transcribe_2.smooth_notes(resulting_pitches, N)
-
-    assert indices == [1, 5, 7]
+    for note in smoothed_and_quantized_2:
+        print(note)
 
 def test_quantization(load_sample_audio):
 
@@ -133,4 +137,4 @@ def test_quantization(load_sample_audio):
 
     quantized_list = auto_transcribe.quantize_notes(resulting_pitches, 0.125)
     for note in quantized_list:
-        print(note)
+        assert (note.dur * 8) % 1 == Decimal(0)
