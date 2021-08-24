@@ -1,11 +1,12 @@
 from collections import namedtuple
 from math import ceil, floor, log2
 from typing import List, Tuple
-
+from decimal import Decimal
 import numpy as np
 import scipy.io.wavfile as scwav
 from scipy.signal import find_peaks
 from scipy.fft import rfft
+from bisect import bisect_left
 
 import lejaren.log as logger
 from lejaren.notation import Note, Tempo
@@ -24,14 +25,16 @@ C1 = 32.7
 DEFAULT_ZERO_PADDING_FACTOR = 6
 DEFAULT_F0_RANGE = (32, 60)
 DEFAULT_SAMPLING_RATE = 44100
+MAX_BIN = 1200
 
 DEFAULT_P = 0.5
 DEFAULT_Q = 1.4
 DEFAULT_R = 0.5
 DEFAULT_NUM_PARTIALS = 8
 
-HOP_SIZE = 2
+SIXTEENTH_NOTE = 0.125
 
+HOP_SIZE = 2
 
 def twelve_tet_gen(f0: float = C0):
     """
@@ -117,7 +120,7 @@ class AutoTranscribe:
         frames = self._transform_x(self.N, self.audio)
 
         for frame_idx, frame in enumerate(frames):
-            f0_range = DEFAULT_F0_RANGE
+            #f0_range = DEFAULT_F0_RANGE
 
             best_guess = self._two_way_mismatch(frame, f0_range)
             octave, pc = self._get_pitch(best_guess)
@@ -156,11 +159,14 @@ class AutoTranscribe:
 
         start = 0
         frames = []
-        hann = np.hamming(N)
+        hann = np.hanning(N)
 
         for stop in range(N, len(audio_array) - 1, int(N/HOP_SIZE)):
 
             x = audio_array[start:start+N]
+
+            #dc block signal
+            x = x - np.mean(x)
             if len(x) < N:
                 x = np.concatenate([x, np.zeros(N-len(x))])
             xw = x * hann
@@ -174,7 +180,7 @@ class AutoTranscribe:
             Xr = rfft(xzerophase)
 
             # Get amplitude of bins lower than 800.
-            Xrmag = abs(Xr)[:1200]
+            Xrmag = abs(Xr)[0:MAX_BIN]
             max_height = max(Xrmag)
 
             peaks, _ = find_peaks(Xrmag, prominence=max_height * 0.05)
@@ -388,14 +394,51 @@ class AutoTranscribe:
         else:
             return [0]
 
-    def smooth_notes(self, note_list: List[Note], N: int):
-        one_frame_indices = []
-        one_frame_dur = self._get_fractional_beats(N, 1)
+    def smooth_notes(self, note_list: List[Note], N: int, minimum_note_value: float=SIXTEENTH_NOTE):
+        final_list = []
+        under_note_value = Decimal(str(4 * self._get_fractional_beats(N, 1)))
         for idx, note in enumerate(note_list):
-            if note.dur == one_frame_dur:
-                one_frame_indices.append(idx)
+            if note.dur < under_note_value:
+                note_list[idx-1].change_duration(note.dur + note_list[idx-1].dur)
+                note_list.pop(idx)
 
-        return one_frame_indices
+        added_list = []
+
+        for idx, note in enumerate(note_list):
+            if idx >= 1:
+                if note.pc == note_list[idx-1].pc and note.octave == note_list[idx-1].octave:
+                    added_list[-1].change_duration(note.dur + note_list[idx-1].dur)
+                else:
+                    added_list.append(note)
+            else:
+                added_list.append(note)
+
+        quantized_notes = self.quantize_notes(added_list, minimum_note_value)
+
+        
+        for idx, note in enumerate(quantized_notes):
+            if (idx >= 1) and (idx < len(quantized_notes) -1):
+                previous_note = quantized_notes[idx-1]
+                next_note = quantized_notes[idx+1]
+                if (note.pc == previous_note.pc) and (note.octave == previous_note.octave):
+                    final_list[-1].change_duration(note.dur + previous_note.dur)
+                elif (note.pc == next_note.pc) and (note.octave + 1 == next_note.octave):
+                    quantized_notes[idx+1].change_duration(note.dur + next_note.dur)
+                elif (note.pc == previous_note.pc) and (note.octave + 1 == previous_note.octave):
+                    quantized_notes[idx+1].change_duration(note.dur + next_note.dur)
+                else:
+                    final_list.append(note)
+            else:
+                final_list.append(note)
+
+        return final_list
+
+    def quantize_notes(self, note_list: List[Note], minimum_note_value: float=SIXTEENTH_NOTE):
+        quantization_values = [Decimal(x) * Decimal(str(minimum_note_value)) for x in range(20)]
+        for note in note_list:
+            note.change_duration(quantization_values[bisect_left(quantization_values, note.dur)])
+
+        return note_list
 
     def get_score(self, time_signature: TimeSignature, n_parts: int) -> Score:
         """
