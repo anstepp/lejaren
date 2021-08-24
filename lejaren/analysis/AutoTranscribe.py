@@ -25,11 +25,14 @@ C1 = 32.7
 DEFAULT_ZERO_PADDING_FACTOR = 6
 DEFAULT_F0_RANGE = (32, 60)
 DEFAULT_SAMPLING_RATE = 44100
+MAX_BIN = 1200
 
 DEFAULT_P = 0.5
 DEFAULT_Q = 1.4
 DEFAULT_R = 0.5
 DEFAULT_NUM_PARTIALS = 8
+
+SIXTEENTH_NOTE = 0.125
 
 HOP_SIZE = 2
 
@@ -177,7 +180,7 @@ class AutoTranscribe:
             Xr = rfft(xzerophase)
 
             # Get amplitude of bins lower than 800.
-            Xrmag = abs(Xr)[0:1200]
+            Xrmag = abs(Xr)[0:MAX_BIN]
             max_height = max(Xrmag)
 
             peaks, _ = find_peaks(Xrmag, prominence=max_height * 0.05)
@@ -391,7 +394,7 @@ class AutoTranscribe:
         else:
             return [0]
 
-    def smooth_notes(self, note_list: List[Note], N: int):
+    def smooth_notes(self, note_list: List[Note], N: int, minimum_note_value: float=SIXTEENTH_NOTE):
         final_list = []
         under_note_value = Decimal(str(4 * self._get_fractional_beats(N, 1)))
         for idx, note in enumerate(note_list):
@@ -410,17 +413,19 @@ class AutoTranscribe:
             else:
                 added_list.append(note)
 
-        quantized_notes = self.quantize_notes(added_list, 0.125)
+        quantized_notes = self.quantize_notes(added_list, minimum_note_value)
 
         
         for idx, note in enumerate(quantized_notes):
-            if idx >= 1 and idx < len(quantized_notes) -1:
-                if note.pc == quantized_notes[idx-1].pc and note.octave == quantized_notes[idx-1].octave:
-                    final_list[-1].change_duration(note.dur + quantized_notes[idx-1].dur)
-                elif note.pc == quantized_notes[idx+1].pc and note.octave + 1 == quantized_notes[idx+1].octave:
-                    quantized_notes[idx+1].change_duration(note.dur + quantized_notes[idx+1].dur)
-                elif note.pc == quantized_notes[idx-1].pc and note.octave + 1 == quantized_notes[idx-1].octave:
-                    quantized_notes[idx+1].change_duration(note.dur + quantized_notes[idx+1].dur)
+            if (idx >= 1) and (idx < len(quantized_notes) -1):
+                previous_note = quantized_notes[idx-1]
+                next_note = quantized_notes[idx+1]
+                if (note.pc == previous_note.pc) and (note.octave == previous_note.octave):
+                    final_list[-1].change_duration(note.dur + previous_note.dur)
+                elif (note.pc == next_note.pc) and (note.octave + 1 == next_note.octave):
+                    quantized_notes[idx+1].change_duration(note.dur + next_note.dur)
+                elif (note.pc == previous_note.pc) and (note.octave + 1 == previous_note.octave):
+                    quantized_notes[idx+1].change_duration(note.dur + next_note.dur)
                 else:
                     final_list.append(note)
             else:
@@ -428,7 +433,7 @@ class AutoTranscribe:
 
         return final_list
 
-    def quantize_notes(self, note_list: List[Note], minimum_note_value: float):
+    def quantize_notes(self, note_list: List[Note], minimum_note_value: float=SIXTEENTH_NOTE):
         quantization_values = [Decimal(x) * Decimal(str(minimum_note_value)) for x in range(20)]
         for note in note_list:
             note.change_duration(quantization_values[bisect_left(quantization_values, note.dur)])
