@@ -117,7 +117,7 @@ class AutoTranscribe:
         frames = self._transform_x(self.N, self.audio)
 
         for frame_idx, frame in enumerate(frames):
-            f0_range = DEFAULT_F0_RANGE
+            #f0_range = DEFAULT_F0_RANGE
 
             best_guess = self._two_way_mismatch(frame, f0_range)
             octave, pc = self._get_pitch(best_guess)
@@ -156,11 +156,14 @@ class AutoTranscribe:
 
         start = 0
         frames = []
-        hann = np.hamming(N)
+        hann = np.hanning(N)
 
         for stop in range(N, len(audio_array) - 1, int(N/HOP_SIZE)):
 
             x = audio_array[start:start+N]
+
+            #dc block signal
+            x = x - np.mean(x)
             if len(x) < N:
                 x = np.concatenate([x, np.zeros(N-len(x))])
             xw = x * hann
@@ -174,7 +177,7 @@ class AutoTranscribe:
             Xr = rfft(xzerophase)
 
             # Get amplitude of bins lower than 800.
-            Xrmag = abs(Xr)[:1200]
+            Xrmag = abs(Xr)[0:1200]
             max_height = max(Xrmag)
 
             peaks, _ = find_peaks(Xrmag, prominence=max_height * 0.05)
@@ -389,15 +392,27 @@ class AutoTranscribe:
             return [0]
 
     def smooth_notes(self, note_list: List[Note], N: int):
-        one_frame_dur = Decimal(str(self._get_fractional_beats(N, 1)))
+        final_list = []
+        under_note_value = Decimal(str(4 * self._get_fractional_beats(N, 1)))
         for idx, note in enumerate(note_list):
-            if note.dur == one_frame_dur:
+            if note.dur < under_note_value:
                 note_list[idx-1].change_duration(note.dur + note_list[idx-1].dur)
                 note_list.pop(idx)
 
-        quantized_notes = self.quantize_notes(note_list, 0.125)
+        added_list = []
 
-        final_list = []
+        for idx, note in enumerate(note_list):
+            if idx >= 1:
+                if note.pc == note_list[idx-1].pc and note.octave == note_list[idx-1].octave:
+                    added_list[-1].change_duration(note.dur + note_list[idx-1].dur)
+                else:
+                    added_list.append(note)
+            else:
+                added_list.append(note)
+
+        quantized_notes = self.quantize_notes(added_list, 0.125)
+
+        
         for idx, note in enumerate(quantized_notes):
             if idx >= 1 and idx < len(quantized_notes) -1:
                 if note.pc == quantized_notes[idx-1].pc and note.octave == quantized_notes[idx-1].octave:
