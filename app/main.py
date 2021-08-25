@@ -34,7 +34,7 @@ with st.echo():
     f0_range = (24, 48)
     resulting_pitches = transcriber.get_note_list(f0_range)
 
-    smoothed_and_quantized = transcriber.smooth_notes(resulting_pitches, N)
+    smoothed_and_quantized = transcriber.smooth_notes(resulting_pitches, fft_size)
 
 st.markdown("**`resulting_pitches`**:")
 for pitch in smoothed_and_quantized:
