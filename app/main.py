@@ -18,6 +18,9 @@ audio_bytes = audio_file.read()
 
 st.audio(audio_bytes, format="audio/wav")
 
+f0_range = st.slider("F0 Range", 12, 72, (24, 36))
+st.markdown(f"`f0_range = {f0_range}`")
+
 with st.echo():
     # Define FFT size and tempo.
     fft_size = 2048
@@ -29,9 +32,10 @@ with st.echo():
 
     # Use the transcriber, along with a guessed pitch range,
     # to generate the audio file notes.
-    f0_range = (24, 48)
     resulting_pitches = transcriber.get_note_list(f0_range)
 
+    smoothed_and_quantized = transcriber.smooth_notes(resulting_pitches, fft_size)
+
 st.markdown("**`resulting_pitches`**:")
-for pitch in resulting_pitches:
+for pitch in smoothed_and_quantized:
     st.write(pitch)
