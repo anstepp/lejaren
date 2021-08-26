@@ -436,7 +436,12 @@ class AutoTranscribe:
     def quantize_notes(self, note_list: List[Note], minimum_note_value: float=SIXTEENTH_NOTE):
         quantization_values = [Decimal(x) * Decimal(str(minimum_note_value)) for x in range(20)]
         for note in note_list:
-            note.change_duration(quantization_values[bisect_left(quantization_values, note.dur)])
+            idx = bisect_left(quantization_values, note.dur)
+            if abs(note.dur - quantization_values[idx]) < abs(note.dur - quantization_values[idx+1]):
+                abs_min_idx = idx
+            else:
+                abs_min_idx = idx + 1
+            note.change_duration(quantization_values[abs_min_idx])
 
         return note_list
 
