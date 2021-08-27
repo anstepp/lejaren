@@ -18,7 +18,13 @@ audio_bytes = audio_file.read()
 
 st.audio(audio_bytes, format="audio/wav")
 
-f0_range = st.slider("F0 Range", 12, 72, (24, 36))
+audio_file_to_f0_range = {
+    "violinclip1.wav" : (24, 48),
+    "y2monoChunk.wav" : (27, 37)
+}
+
+f0_range = st.slider("F0 Range", 12, 72, audio_file_to_f0_range[audio_file_name])
+
 st.markdown(f"`f0_range = {f0_range}`")
 
 with st.echo():
