@@ -103,8 +103,6 @@ def test_smooth_notes(load_sample_audio):
 
     smoothed_and_quantized = auto_transcribe.smooth_notes(resulting_pitches, N)
 
-    [print(note) for note in smoothed_and_quantized]
-
     auto_transcribe_2 = AutoTranscribe(N, Tempo(60,1))
 
     auto_transcribe_2._supply_audio("tests/sample_audio/y2monoChunk.wav")
