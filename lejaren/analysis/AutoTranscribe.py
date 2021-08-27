@@ -33,6 +33,7 @@ DEFAULT_R = 0.5
 DEFAULT_NUM_PARTIALS = 8
 
 SIXTEENTH_NOTE = 0.125
+SMOOTHING_FACTOR = 4
 
 HOP_SIZE = 2
 
@@ -396,7 +397,7 @@ class AutoTranscribe:
 
     def smooth_notes(self, note_list: List[Note], N: int, minimum_note_value: float=SIXTEENTH_NOTE):
         final_list = []
-        under_note_value = Decimal(str(4 * self._get_fractional_beats(N, 1)))
+        under_note_value = Decimal(str(SMOOTHING_FACTOR * self._get_fractional_beats(N, 1)))
         for idx, note in enumerate(note_list):
             if note.dur < under_note_value:
                 note_list[idx-1].change_duration(note.dur + note_list[idx-1].dur)
@@ -436,7 +437,12 @@ class AutoTranscribe:
     def quantize_notes(self, note_list: List[Note], minimum_note_value: float=SIXTEENTH_NOTE):
         quantization_values = [Decimal(x) * Decimal(str(minimum_note_value)) for x in range(20)]
         for note in note_list:
-            note.change_duration(quantization_values[bisect_left(quantization_values, note.dur)])
+            idx = bisect_left(quantization_values, note.dur)
+            if abs(note.dur - quantization_values[idx]) < abs(note.dur - quantization_values[idx+1]):
+                abs_min_idx = idx
+            else:
+                abs_min_idx = idx + 1
+            note.change_duration(quantization_values[abs_min_idx])
 
         return note_list
 

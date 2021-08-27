@@ -113,6 +113,15 @@ def test_smooth_notes(load_sample_audio):
 
     smoothed_and_quantized_2 = auto_transcribe_2.smooth_notes(resulting_pitches, N)
 
+    test_pitches = [0,10,9,0,9,10]
+    test_octaves = [4,3,3,4,3,3]
+    test_durations_not_dec = [0.500, 0.375, 0.250, 0.250, 0.250, 0.250]
+    test_durations = [Decimal(str(dur)) for dur in test_durations_not_dec]
+    for idx, note in enumerate(smoothed_and_quantized_2):
+        assert test_pitches[idx] == note.pc
+        assert test_octaves[idx] == note.octave
+        assert test_durations[idx] == note.dur
+
 def test_quantization(load_sample_audio):
 
     N = 1024
