@@ -1,47 +1,55 @@
+import pathlib
+
 import streamlit as st
-import lejaren as lj
+from pages import (
+    autotranscriber,
+    hello_world,
+    tutorial_2,
+    tutorial_3,
+    tutorial_4,
+    tutorial_5,
+)
 
-st.header("lejaren AutoTranscriber")
+APP_DIR = pathlib.Path(__file__).parent
+IMAGE_DIR = APP_DIR / "pages" / "images"
 
-st.markdown("""`lejaren` is a Python library that enables Computer-Aided Composition 
-and musical prototpying. [Check out the lejaren repo here](https://github.com/anstepp/lejaren).""")
+st.set_page_config(
+    page_title="lejaren: Computer-Aided Composition and musical prototpying in Python"
+)
 
-st.markdown("We start by creating an `AutoTranscribe` object.")
+st.sidebar.header("Lejaren Examples & Tutorials")
+st.sidebar.markdown(
+    """`lejaren` is a Python library that enables Computer-Aided Composition and musical prototpying."""
+)
 
-audio_file_name = st.selectbox(
-    "Select the audio file for transcription:",
-    ("violinclip1.wav", "y2monoChunk.wav"))
+lejaren_github_expander = st.sidebar.expander("lejaren on Github")
+col1, col2 = lejaren_github_expander.columns([1, 6])
+col1.image(str(IMAGE_DIR / "github_icon_64px.png"))
+col2.markdown(f"""[anstepp/lejaren](https://github.com/anstepp/lejaren)""")
 
-audio_filepath = f"app/samples/{audio_file_name}"
-audio_file = open(audio_filepath, "rb")
-audio_bytes = audio_file.read()
-
-st.audio(audio_bytes, format="audio/wav")
-
-audio_file_to_f0_range = {
-    "violinclip1.wav" : (24, 48),
-    "y2monoChunk.wav" : (27, 37)
+pages = {
+    "AutoTranscriber Example": autotranscriber,
+    "Tutorial 1: Hello, World": hello_world,
+    "Tutorial 2: Major Scales": tutorial_2,
+    "Tutorial 3: Major Scales, Another Way": tutorial_3,
+    "Tutorial 4: Sogetto Cavato": tutorial_4,
+    "Tutorial 5: More Sogetto Cavato": tutorial_5,
 }
 
-f0_range = st.slider("F0 Range", 12, 72, audio_file_to_f0_range[audio_file_name])
+page_names = [
+    "AutoTranscriber Example",
+    "Tutorial 1: Hello, World",
+    "Tutorial 2: Major Scales",
+    "Tutorial 3: Major Scales, Another Way",
+    "Tutorial 4: Sogetto Cavato",
+    "Tutorial 5: More Sogetto Cavato",
+]
 
-st.markdown(f"`f0_range = {f0_range}`")
+page_selection = st.sidebar.selectbox(
+    "Select example or tutorial page:", page_names, index=1
+)
 
-with st.echo():
-    # Define FFT size and tempo.
-    fft_size = 2048
-    tempo = lj.notation.Tempo(60, 1)
+page = pages[page_selection]
 
-    # Create the AutoTranscribe object and give it the audio file.
-    transcriber = lj.analysis.AutoTranscribe(fft_size, tempo)
-    transcriber._supply_audio(audio_filepath)
-
-    # Use the transcriber, along with a guessed pitch range,
-    # to generate the audio file notes.
-    resulting_pitches = transcriber.get_note_list(f0_range)
-
-    smoothed_and_quantized = transcriber.smooth_notes(resulting_pitches, fft_size)
-
-st.markdown("**`resulting_pitches`**:")
-for pitch in smoothed_and_quantized:
-    st.write(pitch)
+with st.spinner(f"Loading {page_selection}..."):
+    page.main()
