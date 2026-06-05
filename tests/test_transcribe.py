@@ -1,7 +1,7 @@
 import pathlib
-from distutils import dir_util
+from shutil import copytree
 
-from numpy.lib.npyio import load
+from numpy import load
 
 import pytest
 
@@ -23,7 +23,7 @@ def load_sample_audio(tmp_path):
     # Copy sample audio files into pytest temp directory.
     temp_sample_audio = tmp_path / "sample_audio"
     temp_sample_audio.mkdir()
-    dir_util.copy_tree(str(SAMPLE_AUDIO_DIR), str(temp_sample_audio))
+    copytree(str(SAMPLE_AUDIO_DIR), str(temp_sample_audio), dirs_exist_ok=True)
     return temp_sample_audio
 
 
