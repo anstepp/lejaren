@@ -384,4 +384,4 @@ test = ["Cython", "array-api-strict (>=2.3.1)", "asv", "gmpy2", "hypothesis (>=6
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4.0"
-content-hash = "a781847182626b2501d4e12c0ad579003d82d3759622e3cb1191f275908ca552"
+content-hash = "6005ff24e0499810a078d544c27ae45ee755e46338c36f58fda4fd7d6b765d80"
