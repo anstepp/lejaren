@@ -16,3 +16,6 @@ def test_whole_note_chord_in_XML():
     middle_g = Note(4, 4, 7)
 
     middle_c_major = Chord([middle_c, middle_e, middle_g])
+
+    assert middle_c_major
+    assert middle_c_major.dur == 4
