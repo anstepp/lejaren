@@ -133,7 +133,7 @@ class Score:
     def _convert_score_parts_to_xml(self) -> etree.ElementTree:
         """Convert self.parts (list of NoteLists) to a MusicXML tree"""
 
-        root = etree.Element("score-partwise", {"version": "3.0"})
+        root = etree.Element("score-partwise", {"version": "4.0"})
 
         if self.title:
             xml_movement_title = etree.SubElement(root, "movement-title")
