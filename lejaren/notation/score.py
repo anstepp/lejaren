@@ -1,4 +1,5 @@
 import pathlib
+from functools import reduce
 
 from lxml import etree
 from typing import Iterable, Optional, Tuple
@@ -19,7 +20,7 @@ class Score:
 
     def __init__(
         self,
-        parts: Iterable[Iterable[Part]],
+        parts: Iterable[Iterable[Part]] | etree,
         title: Optional[str] = None,
         composer: Optional[str] = None,
     ):
@@ -27,8 +28,19 @@ class Score:
         self.title = title
         self.composer = composer
 
-        self._parts = self._parse_parts(parts)
+        if isinstance(parts, list):
+            if len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0):
+                self._parts = self._parse_parts(parts)
+            else:
+                raise ValueError(f"Some parts wrong: {len(parts)} and {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
+        elif isinstance(parts, etree.ElementTree):
+            self._parts = self._from_etree(parts)
+        else:
+            raise TypeError(f"Parts must be Lejaren Parts or an ETree, is {type(parts)}")
         self._measure_count = self._pad_with_empty_measures()
+
+    def _from_etree(self, parts):
+        pass
 
     def _parse_parts(self, parts):
 

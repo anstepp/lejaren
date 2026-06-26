@@ -2,6 +2,8 @@ from re import search
 
 from lxml import etree
 
+from ..notation.score import Score
+
 class inputParser:
 
     def __init__(self, input: str) -> inputParser:
@@ -20,3 +22,4 @@ class inputParser:
 
     def create_tree():
         tree = etree.parse(input)
+        return Score(tree)
