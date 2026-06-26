@@ -35,6 +35,7 @@ from typing import Tuple
 from decimal import Decimal
 
 import lejaren.log as logger
+import lejaren.notation as ljn #only for returning a rest
 
 log = logger.get_logger()
 
@@ -338,6 +339,9 @@ class Note:
         new_note.change_duration(diff)
 
         return old_note, new_note
+    
+    def make_rest(self) -> ljn.Rest:
+        return ljn.Rest(self.dur)
 
     def __eq__(self, other) -> bool:
         """
