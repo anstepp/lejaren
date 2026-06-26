@@ -2,6 +2,8 @@ from re import search
 
 from lxml import etree
 
+import lejaren.notation as ljn
+
 class inputParser:
 
     def __init__(self, input: str) -> inputParser:
@@ -20,3 +22,4 @@ class inputParser:
 
     def create_tree():
         tree = etree.parse(input)
+        return ljn.Score(tree)
