@@ -4,6 +4,7 @@ from functools import reduce
 from lxml import etree
 from typing import Iterable, Optional, Tuple
 
+from .note import Note
 from .part import Part
 from .rest import Rest
 from .measure import Measure
@@ -40,7 +41,17 @@ class Score:
         self._measure_count = self._pad_with_empty_measures()
 
     def _from_etree(self, parts):
-        return False
+        part_list = []
+        root = parts.getroot()
+        for part in root.iterchildren('part'):
+            part_note_list = []
+            for note in part.iterchildren('note'):
+                dur = note.findall('.//duration')
+                step = note.findall('.//step')
+                octave = note.findall('.//octave')
+                part_note_list.append(Note(int(dur), int(octave), int(step)))
+            part_list.append(Part(part_note_list, [(4,4)]))
+        return part_note_list
 
     def _parse_parts(self, parts):
 
