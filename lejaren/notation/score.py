@@ -40,7 +40,7 @@ class Score:
         self._measure_count = self._pad_with_empty_measures()
 
     def _from_etree(self, parts):
-        pass
+        return False
 
     def _parse_parts(self, parts):
 
