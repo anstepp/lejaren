@@ -101,6 +101,7 @@ class Part:
     def __init__(
         self,
         input_list: Iterable[Note],
+        # TODO/FIXME: Verify Time Signature on instantiation
         time_signatures: TimeSignatures,
         key=0,
         clef="G",
