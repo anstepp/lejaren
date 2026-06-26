@@ -8,12 +8,15 @@ from lejaren.notation import Note, Part, Score, Chord
 
 @pytest.fixture
 def xml_file_list():
-    file_list = files = [f'tests/test_files/{f.name}' for f in Path('tests/test_files').iterdir() if f.is_file()]
+    file_list = [f'tests/test_files/{f.name}' for f in Path('tests/test_files').iterdir() if f.is_file()]
+    file_list = [item for item in file_list if item != "tests/test_files/.DS_Store"]
     return file_list
 
 def test_xml_valid():
     pass
 
+def test_create_note_list_without_ties_on_xml_parse():
+    pass
 
 def test_whole_note_chord_in_XML():
 

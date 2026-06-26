@@ -40,17 +40,21 @@ class Score:
             raise TypeError(f"Parts must be Lejaren Parts or an ETree, is {type(parts)}")
         self._measure_count = self._pad_with_empty_measures()
 
-    def _from_etree(self, parts):
+    def _from_etree(self, parts, time_signatures=[(4,4)]):
         part_list = []
         root = parts.getroot()
         for part in root.iterchildren('part'):
             part_note_list = []
             for note in part.iterchildren('note'):
+                # FIXME: Save minimum necessary info
+                # Try to stick with XPath for now...
                 dur = note.findall('.//duration')
                 step = note.findall('.//step')
                 octave = note.findall('.//octave')
                 part_note_list.append(Note(int(dur), int(octave), int(step)))
-            part_list.append(Part(part_note_list, [(4,4)]))
+                #join notes
+                part_note_list = self._join_ties(part_note_list)
+            part_list.append(Part(part_note_list, time_signatures))
         return part_note_list
 
     def _parse_parts(self, parts):
@@ -110,6 +114,25 @@ class Score:
         """
         xml_score = self._convert_score_parts_to_xml()
         self._write_xml_to_file(output_filepath, xml_score)
+
+    def _join_ties(self, note_list: list) -> list:
+        tie_attr_list = ("tie_start", "tie_end", "tie_continue")
+        for idx, note in enumerate(note_list):
+            if any(hasattr(note, attr) for attr in tie_attr_list):
+                #Verify adjacent notes tied
+                if "tie_start":
+                    if hasattr(note[idx+1], "tie_continue"):
+                        pass
+                    if hasattr(note[idx+1], "tie_end"):
+                        pass
+                if "tie_end":
+                    # This probably shouldn't happen! Test for it.
+                    log.warning("Check Tie End in Score _join_ties")
+                    pass
+                if "tie_continue":
+                    # Might not be supposed to happen... test for it.
+                    log.warning("Check Tie Continue in _join_ties")
+                    pass
 
     def _set_measure_attributes(
         self,
