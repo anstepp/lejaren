@@ -132,3 +132,9 @@ def test_split():
     assert new_note.dur == 3
     assert new_note.octave == 4
     assert new_note.pc == 0
+
+def test_convert_to_rest():
+
+    note_to_convert = Note(4,4,0)
+
+    rest = note_to_convert.make_rest()
