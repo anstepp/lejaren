@@ -408,7 +408,7 @@ class Score:
 
             serialized = etree.tostring(
                 root,
-                doctype='<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">',
+                doctype='<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/xsd/musicxml.xsd">',
             )
 
             new_root = etree.XML(serialized)

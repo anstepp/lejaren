@@ -329,7 +329,7 @@ def test_assert_unique(notes_that_cause_duration_split):
                 )
 
 
-def test_long_durs():
+def test_long_durs(shared_output_dir):
     # fmt: off
     long_durs = [4,4,4,4,7,1,4,6,7,3,8,6,7,1,5,6,1]
     long_durs_corrected = [4 * dur for dur in long_durs]
@@ -352,10 +352,10 @@ def test_long_durs():
                 note_count += 1
 
     long_durs_score = Score(parts=[long_durs_part])
-    long_durs_score.convert_to_xml("test_score_long.xml")
+    long_durs_score.convert_to_xml("tests/output/test_score_long.xml")
 
 
-def test_frere_jacques():
+def test_frere_jacques(shared_output_dir):
 
     fj_ts = [[4, 4]]
     fj_list = [Note(dur, 4, pitch) for dur, pitch in zip(fj_durs, fj_pitches)]
@@ -371,10 +371,10 @@ def test_frere_jacques():
                 counter += 1
 
     score = Score(parts=[fj_part])
-    score.convert_to_xml("test_score_fj.musicxml")
+    score.convert_to_xml("tests/output/test_score_fj.musicxml")
 
 
-def test_fj_three_four():
+def test_fj_three_four(shared_output_dir):
 
     # fmt: off
     fj_durs_34 = [2,1,1,2,2,1,1,2,2,1,1,2,2,1,3,2,1,1,2,2,1,1,1,1,2,1,1,1,1,1,1,1,1,2,2,1,1,2,2,1,1,2,3,1,2]
@@ -394,10 +394,10 @@ def test_fj_three_four():
                 counter += 1
 
     score = Score(parts=[fj_part])
-    score.convert_to_xml("test_score_fj_34.musicxml")
+    score.convert_to_xml("tests/output/test_score_fj_34.musicxml")
 
 
-def test_fj_shifting_ts():
+def test_fj_shifting_ts(shared_output_dir):
     # fmt: off
     fj_durs_shift = [2,2,2,1,1,1,1,2,1,1,2,2,2,2,2,1,1,1,1,3,1,1,1,1,1,2,2,1,1,1,1,1,1,2,1,1,2,2,2,2,2,1,2,1,3]
     # fmt: on
@@ -407,7 +407,7 @@ def test_fj_shifting_ts():
     fj_part = Part(fj_list, fj_ts)
 
     score = Score(parts=[fj_part])
-    score.convert_to_xml("test_score_fj_shifting.musicxml")
+    score.convert_to_xml("tests/output/test_score_fj_shifting.musicxml")
 
     counter = 0
     for measure_index, measure in enumerate(fj_part.measures):
@@ -418,7 +418,7 @@ def test_fj_shifting_ts():
                 counter += 1
 
 
-def test_frere_jacques_subdiv():
+def test_frere_jacques_subdiv(shared_output_dir):
 
     fj_ts = [[4, 4]]
     fj_list = [Note(dur, 4, pitch) for dur, pitch in zip(fj_durs, fj_pitches)]
@@ -515,10 +515,10 @@ def test_frere_jacques_subdiv():
                 counter += 1
 
     score = Score(parts=[fj_part, fj_halved_part, fj_quartered_part])
-    score.convert_to_xml("test_score_fj_subdiv.xml")
+    score.convert_to_xml("tests/output/test_score_fj_subdiv.xml")
 
     score_two = Score(parts=[fj_quartered_part])
-    score_two.convert_to_xml("test_score_fj_only_quarter.musicxml")
+    score_two.convert_to_xml("tests/output/test_score_fj_only_quarter.musicxml")
 
 
 def test_chord_parsed():
