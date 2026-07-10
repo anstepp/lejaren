@@ -355,6 +355,18 @@ class Note:
     def grace_note_toggle_on(self):
         self.grace_note = False
 
+    def tuplet_toggle_on(self):
+        #FIXME: Conditionalize
+        self.tuplet_continue = True
+        self.tuplet_end = True
+        self.tuplet_start = True
+
+    def tuplet_toggle_off(self):
+        #FIXME: Conditionalize
+        self.tuplet_continue = False
+        self.tuplet_end = False
+        self.tuplet_start = False
+
     def __eq__(self, other) -> bool:
         """
         Absolute equality test for two notes.

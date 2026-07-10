@@ -1,4 +1,4 @@
-from lejaren.notation import Note
+from lejaren.notation import Note, Score
 
 from lejaren.intake.import_musicxml import inputParser
 
@@ -9,8 +9,9 @@ settings_dict = {
 
 class noteIntake:
 
-    def __init__(self, score):
+    def __init__(self, score: Score):
         self.score = score
+        self.parts = score._parts
 
     def _convert_to_note(self, settings: dict):
         for part in self.Score:
