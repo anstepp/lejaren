@@ -1,15 +1,6 @@
 import pytest
 
-import itertools
-
 from lejaren.conversion.conversion_values import TicksForNotes, DefaultValues
-
-tempos = [60, 72, 102, 120]
-srs = [44100, 48000, 89000, 92000, 192000]
-
-@pytest.fixture(params=list(itertools.product(tempos, srs)))
-def ticks(request):
-    return TicksForNotes(request.param[0], request.param[1])
 
 def test_creation(ticks):
     assert ticks

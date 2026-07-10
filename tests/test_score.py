@@ -13,7 +13,20 @@ def xml_file_list():
     return file_list
 
 def test_xml_valid():
-    pass
+
+    schema_doc = etree.parse("musicxml-4.0/schema/musicxml.xsd")
+    schema = etree.XMLSchema(schema_doc)
+
+    xml_doc = etree.parse("data.xml")
+
+    if schema.validate(xml_doc):
+        print("Success: XML is fully valid.")
+    else:
+        print("Error: XML configuration violates schema definitions.")
+        # Log precise errors
+        for error in schema.error_log:
+            print(f"Line {error.line}: {error.message}")
+
 
 def test_create_note_list_without_ties_on_xml_parse():
     pass
