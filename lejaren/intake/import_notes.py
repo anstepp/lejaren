@@ -6,7 +6,7 @@ class noteIntake:
 
     def __init__(self, parser=None, import_file=None):
         if not parser:
-            self.parser = inputParser(import_file)
+            self.parser = inputParser()
         else:
             self.parser = parser
         self.Note = None # define now; must create note later
