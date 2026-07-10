@@ -119,6 +119,11 @@ class Note:
     # chord
     is_chord_member = False
 
+    # style/articulation
+    grace_note = False
+    tuplet = False
+
+
     def __init__(self, duration: float, octave: int, pitch_class: int) -> None:
 
         """Init a note with duration, octave and pc. Sets additional
@@ -329,7 +334,7 @@ class Note:
             log.error(e)
             raise
 
-    def split(self, diff: int) -> Tuple["__class__", "__class__"]:
+    def split(self, diff: int) -> Tuple[Note, Note]:
         old_note = copy.copy(self)
         new_note = copy.copy(self)
 
@@ -342,6 +347,13 @@ class Note:
     
     def make_rest(self) -> ljn.Rest:
         return ljn.Rest(self.dur)
+    
+    #Set toggle Methods
+    def grace_note_toggle_on(self):
+        self.grace_note = True
+
+    def grace_note_toggle_on(self):
+        self.grace_note = False
 
     def __eq__(self, other) -> bool:
         """
