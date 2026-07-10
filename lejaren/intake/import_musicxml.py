@@ -6,13 +6,17 @@ from ..notation.score import Score
 
 class inputParser:
 
-    def __init__(self, input: str) -> inputParser:
+    def __init__(self) -> inputParser:
+        pass
+
+    def set_input(self, input: str) -> None:
         if not isinstance(input, str):
             raise TypeError(f'File must me string, is: {input}', input)
-        self._clean_input(input)
+            return False #testing
         self.input = input
+        return True #testing
 
-    def _clean_input(self, input):
+    def clean_input(self, input):
         # TODO: Verify an xml input file is actaully MusicXML
         cleaned_input = search(r'.*\.musicxml$|\.mxl$|\.xml$', input)
         if not cleaned_input:
@@ -20,6 +24,6 @@ class inputParser:
         else:
             return input
 
-    def create_tree():
+    def _create_tree(self, input):
         tree = etree.parse(input)
         return Score(tree)

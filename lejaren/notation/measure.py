@@ -14,6 +14,7 @@ from .note import Note
 from .beat import Beat
 from .rest import Rest
 from .chord import Chord
+
 import lejaren.log as logger
 
 log = logger.get_logger()

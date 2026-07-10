@@ -1,10 +1,18 @@
 import pytest
 
+from pathlib import Path
+
 from lxml import etree
 
 from lejaren.notation import Note, Part, Score, Chord
 
-@pytest.mark.skip
+@pytest.fixture
+def xml_file_list():
+    file_list = [f'tests/test_files/{f.name}' for f in Path('tests/test_files').iterdir() if f.is_file()]
+    file_list = [item for item in file_list if item != "tests/test_files/.DS_Store"]
+    return file_list
+
+@pytest.mark.xfail
 def test_xml_valid():
 
     schema_doc = etree.parse("musicxml-4.0/schema/musicxml.xsd")
@@ -21,6 +29,8 @@ def test_xml_valid():
             print(f"Line {error.line}: {error.message}")
 
 
+def test_create_note_list_without_ties_on_xml_parse():
+    pass
 
 def test_whole_note_chord_in_XML():
 
@@ -47,3 +57,14 @@ def test_whole_note_chord_in_XML():
 
     test_score = Score(part_list)
     assert isinstance(test_score, Score)
+
+def test_xml_parser(xml_file_list):
+    test_score_list = []
+    for address in xml_file_list:
+        with open(address, "rb") as xml_file:
+            tree = etree.parse(xml_file)
+            root = tree.getroot()
+            score = Score(tree)
+            test_score_list.append(score)
+    for score in test_score_list:
+        assert isinstance(score, Score)
