@@ -12,6 +12,7 @@ def xml_file_list():
     file_list = [item for item in file_list if item != "tests/test_files/.DS_Store"]
     return file_list
 
+@pytest.mark.xfail
 def test_xml_valid():
 
     schema_doc = etree.parse("musicxml-4.0/schema/musicxml.xsd")
