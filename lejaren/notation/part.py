@@ -138,7 +138,14 @@ class Part:
 
         """
 
-        self.current_list = input_list
+        if isinstance(input_list, list):
+            self.current_list = input_list
+        elif isinstance(input_list, Note):
+            self.current_list = [input_list]
+        else:
+            raise ValueError(f"Bad Note list to Part, is type: {type(input_list)}")
+    
+        # self.current_list = input_list
 
         for note in self.current_list:
             if note is type(Note):

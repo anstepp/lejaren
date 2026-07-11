@@ -59,7 +59,7 @@ class Score:
             part_list.append(Part(part_note_list, time_signatures))
         return part_note_list
 
-    def _parse_parts(self, parts):
+    def _parse_parts(self, parts: Iterable[Part]):
 
         parsed_parts = []
 
