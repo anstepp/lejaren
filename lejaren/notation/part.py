@@ -140,7 +140,7 @@ class Part:
 
         if isinstance(input_list, list):
             self.current_list = input_list
-        elif isinstance(input_list, Note):
+        elif isinstance(input_list, Note|Rest):
             self.current_list = [input_list]
         else:
             raise ValueError(f"Bad Note list to Part, is type: {type(input_list)}")

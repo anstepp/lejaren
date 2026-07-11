@@ -33,3 +33,7 @@ def test_split():
 
     assert old_rest.dur == 5
     assert new_rest.dur == 3
+
+def test_eq():
+    assert Rest(4) == Rest(4)
+    assert Rest(5) != Rest(4)
