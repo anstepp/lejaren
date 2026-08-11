@@ -160,8 +160,29 @@ def test_stem_y_pos_adj():
     assert note_to_adjust_stem.octave == 4
     assert note_to_adjust_stem.pc == 0
     assert note_to_adjust_stem.stem_flag == True
+    assert note_to_adjust_stem.stem_dir == "up" # will get lowercased
     assert note_to_adjust_stem.stem_y_pos == 10
 
+    #test case correction also
+    note_to_adjust_stem.adj_stem_len("Up", 10)
+    assert note_to_adjust_stem.dur == 1
+    assert note_to_adjust_stem.octave == 4
+    assert note_to_adjust_stem.pc == 0
+    assert note_to_adjust_stem.stem_flag == True
+    assert note_to_adjust_stem.stem_dir == "up" # will get lowercased
+    assert note_to_adjust_stem.stem_y_pos == 10
+
+
+@pytest.mark.xfail
 def test_set_stem_to_vanish():
 
     note_to_disappear_stem = Note(1,4,0)
+
+    note_to_disappear_stem.hide_stem()
+
+    assert note_to_disappear_stem.dur == 1
+    assert note_to_disappear_stem.oct == 4
+    assert note_to_disappear_stem.pc == 0
+    assert note_to_disappear_stem.stem_flag == True
+    assert note_to_disappear_stem.stem_dir == "up"
+    assert note_to_disappear_stem.stem_y_pos == 0
