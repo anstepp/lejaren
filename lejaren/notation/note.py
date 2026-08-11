@@ -360,7 +360,11 @@ class Note:
             self.stem_dir = shift_type
         else:
             raise ValueError(f"Not a member of stem_dir: {shift_type}")
-        self.stem_y_pos = amount
+        if isinstance(amount, (int, float)):
+            self.stem_y_pos = amount
+        else:
+            raise TypeError("Distance must be a number")
+
 
     def __eq__(self, other) -> bool:
         """

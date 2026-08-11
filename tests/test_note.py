@@ -139,9 +139,20 @@ def test_convert_to_rest():
 
     rest = note_to_convert.make_rest()
 
-def test_stem_y_pos():
+def test_stem_y_pos_raise_on_fail():
 
     note_to_adjust_stem = Note(1,4,0) # Quarter!
+
+    with pytest.raises(ValueError):
+        note_to_adjust_stem.adj_stem_len("nonsense", 10)
+    
+    with pytest.raises(TypeError):
+        note_to_adjust_stem.adj_stem_len("up", "stupid")
+
+
+def test_stem_y_pos_adj():
+
+    note_to_adjust_stem = Note(1,4,0)
 
     note_to_adjust_stem.adj_stem_len("up", 10)
 
@@ -150,3 +161,7 @@ def test_stem_y_pos():
     assert note_to_adjust_stem.pc == 0
     assert note_to_adjust_stem.stem_flag == True
     assert note_to_adjust_stem.stem_y_pos == 10
+
+def test_set_stem_to_vanish():
+
+    note_to_disappear_stem = Note(1,4,0)
