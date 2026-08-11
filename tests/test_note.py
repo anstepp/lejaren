@@ -138,3 +138,15 @@ def test_convert_to_rest():
     note_to_convert = Note(4,4,0)
 
     rest = note_to_convert.make_rest()
+
+def test_stem_y_pos():
+
+    note_to_adjust_stem = Note(1,4,0) # Quarter!
+
+    note_to_adjust_stem.adj_stem_len("up", 10)
+
+    assert note_to_adjust_stem.dur == 1
+    assert note_to_adjust_stem.octave == 4
+    assert note_to_adjust_stem.pc == 0
+    assert note_to_adjust_stem.stem_flag == True
+    assert note_to_adjust_stem.stem_y_pos == 10
