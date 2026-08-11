@@ -120,7 +120,7 @@ class Note:
     is_chord_member = False
 
     # engrave
-    stem_dirs = ("Up", "Down", "None", "Double")
+    stem_dirs = ("up", "down", "none", "double") #lowercase only
     x_pos = 0
     stem = False
     stem_dir = False # must be in stem_dirs
@@ -355,12 +355,23 @@ class Note:
 
     def adj_stem_len(self, shift_type: str, amount: float) -> None:
         self.stem_flag = True # turn on stem sub
-        upper_shift_type = shift_type[:1].upper() + shift_type[1:]
-        if upper_shift_type in self.stem_dirs:
-            self.stem_dir = shift_type
+        lower_shift_type = shift_type.lower()
+        if lower_shift_type in self.stem_dirs:
+            self.stem_dir = lower_shift_type
         else:
             raise ValueError(f"Not a member of stem_dir: {shift_type}")
-        self.stem_y_pos = amount
+        if isinstance(amount, (int, float)):
+            self.stem_y_pos = amount
+        else:
+            raise TypeError("Distance must be a number")
+
+    def hide_stem(self) -> None:
+        """
+            Use this if you just want to hide the stem.
+            it calls adj_stem_len with default values.
+        """
+
+        self.adj_stem_len("up", 0)
 
     def __eq__(self, other) -> bool:
         """
