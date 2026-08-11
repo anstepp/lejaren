@@ -35,7 +35,7 @@ from typing import Tuple
 from decimal import Decimal
 
 import lejaren.log as logger
-import lejaren.notation as ljn #only for returning a rest
+from lejaren.notation.rest import Rest #only for returning a rest
 
 log = logger.get_logger()
 
@@ -118,6 +118,13 @@ class Note:
 
     # chord
     is_chord_member = False
+
+    # engrave
+    stem_dirs = ("Up", "Down", "None", "Double")
+    x_pos = 0
+    stem = False
+    stem_dir = False # must be in stem_dirs
+    stem_y_pos = 0
 
     def __init__(self, duration: float, octave: int, pitch_class: int) -> None:
 
@@ -340,8 +347,20 @@ class Note:
 
         return old_note, new_note
     
-    def make_rest(self) -> ljn.Rest:
-        return ljn.Rest(self.dur)
+    def make_rest(self) -> Rest:
+        return Rest(self.dur)
+
+    def set_x_pos(self, shift: float) -> None:
+        self.x_pos = shift
+
+    def adj_stem_len(self, shift_type: str, amount: float) -> None:
+        self.stem_flag = True # turn on stem sub
+        upper_shift_type = shift_type[:1].upper() + shift_type[1:]
+        if upper_shift_type in self.stem_dirs:
+            self.stem_dir = shift_type
+        else:
+            raise ValueError(f"Not a member of stem_dir: {shift_type}")
+        self.stem_y_pos = amount
 
     def __eq__(self, other) -> bool:
         """
