@@ -365,6 +365,13 @@ class Note:
         else:
             raise TypeError("Distance must be a number")
 
+    def hide_stem(self) -> None:
+        """
+            Use this if you just want to hide the stem.
+            it calls adj_stem_len with default values.
+        """
+
+        self.adj_stem_len("up", 0)
 
     def __eq__(self, other) -> bool:
         """
