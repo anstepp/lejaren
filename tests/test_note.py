@@ -138,3 +138,14 @@ def test_convert_to_rest():
     note_to_convert = Note(4,4,0)
 
     rest = note_to_convert.make_rest()
+
+def test_set_x_pos():
+
+    note_to_shift = Note(4,4,0)
+
+    note_to_shift.set_x_pos(10)
+
+    assert note_to_shift.dur == 4
+    assert note_to_shift.octave == 4
+    assert note_to_shift.pc == 0
+    assert note_to_shift.x_pos == 10

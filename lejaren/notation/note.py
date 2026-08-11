@@ -35,7 +35,7 @@ from typing import Tuple
 from decimal import Decimal
 
 import lejaren.log as logger
-import lejaren.notation as ljn #only for returning a rest
+from lejaren.notation.rest import Rest #only for returning a rest
 
 log = logger.get_logger()
 
@@ -118,6 +118,9 @@ class Note:
 
     # chord
     is_chord_member = False
+
+    # engrave
+    x_pos = 0
 
     def __init__(self, duration: float, octave: int, pitch_class: int) -> None:
 
@@ -340,8 +343,11 @@ class Note:
 
         return old_note, new_note
     
-    def make_rest(self) -> ljn.Rest:
-        return ljn.Rest(self.dur)
+    def make_rest(self) -> Rest:
+        return Rest(self.dur)
+
+    def set_x_pos(self, shift: int) -> None:
+        self.x_pos = shift
 
     def __eq__(self, other) -> bool:
         """
