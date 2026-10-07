@@ -37,6 +37,7 @@ from decimal import Decimal
 import lejaren.log as logger
 from lejaren.notation.rest import Rest #only for returning a rest
 
+
 log = logger.get_logger()
 
 # The Life of a Note
@@ -121,9 +122,7 @@ class Note:
 
     # engrave
     stem_dirs = ("up", "down", "none", "double") #lowercase only
-    #defaults
     x_pos = 0
-    x_relative = 0
     stem = False
     stem_dir = False # must be in stem_dirs
     stem_y_pos = 0
@@ -349,6 +348,31 @@ class Note:
 
         return old_note, new_note
     
+    def make_rest(self) -> Rest:
+        return Rest(self.dur)
+
+    def set_x_pos(self, shift: float) -> None:
+        self.x_pos = shift
+
+    def adj_stem_len(self, shift_type: str, amount: float) -> None:
+        self.stem_flag = True # turn on stem sub
+        lower_shift_type = shift_type.lower()
+        if lower_shift_type in self.stem_dirs:
+            self.stem_dir = lower_shift_type
+        else:
+            raise ValueError(f"Not a member of stem_dir: {shift_type}")
+        if isinstance(amount, (int, float)):
+            self.stem_y_pos = amount
+        else:
+            raise TypeError("Distance must be a number")
+
+    def hide_stem(self) -> None:
+        """
+            Use this if you just want to hide the stem.
+            it calls adj_stem_len with default values.
+        """
+
+        self.adj_stem_len("up", 0)
     def make_rest(self) -> Rest:
         return Rest(self.dur)
 
