@@ -6,7 +6,7 @@ from ..notation.score import Score
 
 class inputParser:
 
-    def __init__(self) -> inputParser:
+    def __init__(self):
         pass
 
     def set_input(self, input: str) -> None:

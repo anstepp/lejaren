@@ -121,7 +121,9 @@ class Note:
 
     # engrave
     stem_dirs = ("up", "down", "none", "double") #lowercase only
+    #defaults
     x_pos = 0
+    x_relative = 0
     stem = False
     stem_dir = False # must be in stem_dirs
     stem_y_pos = 0
