@@ -77,7 +77,7 @@ class noteIntake:
     def _crush_staves(self, score: Score, time_sig) -> Score:
         part_lists_no_measures = self._eliminate_measures(score)
         part_list = []
-        beat_counter = 0
+        beat_counter = 0     
         for part in part_lists_no_measures:
             part_list.append(Part(part, time_sig))
         crushed_score = Score(part_list)

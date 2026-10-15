@@ -28,7 +28,7 @@ class Rest:
     def __str__(self):
         return "Duration: {}, is_measure {}".format(self.dur, self.is_measure)
 
-    def split(self, diff) -> Tuple["__class__", "__class__"]:
+    def split(self, diff) -> Tuple[Rest, Rest]:
         old_rest = copy.deepcopy(self)
         new_rest = copy.deepcopy(self)
 
