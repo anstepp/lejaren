@@ -337,7 +337,7 @@ class Note:
             log.error(e)
             raise
 
-    def split(self, diff: int) -> Tuple["__class__", "__class__"]:
+    def split(self, diff: int) -> Tuple[Note, Note]:
         old_note = copy.copy(self)
         new_note = copy.copy(self)
 
