@@ -51,7 +51,7 @@ class Score:
             self._parts = self._from_etree(parts)
             if len(self._parts) < 0:
                 raise ValueError("No parts exist, Aborting.")
-            self._measure_count = len(self._parts[0].measures)
+            self._measure_count = len(self._parts)
         else:
             raise TypeError(f"Parts must be Lejaren Parts or an ETree, is {type(parts)}")
             
@@ -81,10 +81,10 @@ class Score:
                     #join notes
                     #part_note_list = self._join_ties(part_note_list)
             part_list.append(Part(part_note_list, time_signatures))
-            self._parse_parts(part_list)
-        return part_list
+        parsed_parts = self._parse_parts(part_list)
+        return parsed_parts
 
-    def _parse_parts(self, parts):
+    def _parse_parts(self, parts) -> Iterable[Part]:
 
         parsed_parts = []
 

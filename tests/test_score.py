@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from pathlib import Path
@@ -73,17 +75,35 @@ def test_xml_parser(xml_file_list):
         assert isinstance(score, Score)
         if address == "tests/test_files/test_treble_middle_c_full_score.musicxml":
             assert len(score._parts) == 1
-            assert len(score._parts[0].measures) == 1
-            assert score._parts[0].measures[0].notes[0] == Note(4,4,0)
+            assert len(score._parts[0]["staves"][0].measures) == 1
+            assert score._parts[0]["staves"][0].measures[0].notes[0] == Note(4,4,0)
         if address == "tests/test_files/test_treble_middle_c_full_score.musicxml":
             assert len(score._parts) == 1
-            assert len(score._parts[0].measures) == 1
-            assert score._parts[0].measures[0].notes[0] == Note(4,4,0)
+            assert len(score._parts[0]["staves"][0].measures) == 1
+            assert score._parts[0]["staves"][0].measures[0].notes[0] == Note(4,4,0)
         if address == "tests/test_files/test_treble_middle_c_full_score.musicxml":
             assert len(score._parts) == 1
-            assert len(score._parts[0].measures) == 1
-            assert score._parts[0].measures[0].notes[0] == Note(4,4,0)
+            assert len(score._parts[0]["staves"][0].measures) == 1
+            assert score._parts[0]["staves"][0].measures[0].notes[0] == Note(4,4,0)
         if address == "tests/test_files/test_treble_middle_c_full_score.musicxml":
             assert len(score._parts) == 1
-            assert len(score._parts[0].measures) == 1
-            assert score._parts[0].measures[0].notes[0] == Note(4,4,0)
+            assert len(score._parts[0]["staves"][0].measures) == 1
+            assert score._parts[0]["staves"][0].measures[0].notes[0] == Note(4,4,0)
+
+def test_create_output_xml(xml_file_list):
+    test_score_list = []
+    for address in xml_file_list:
+        with open(address, "rb") as xml_file:
+            tree = etree.parse(xml_file)
+            root = tree.getroot()
+            score = Score(tree)
+            test_score_list.append([address, score])
+    for group in test_score_list:
+        address = group[0]
+        temp_address = re.sub(r'test_files', 'output', address)
+        temp_path = Path(temp_address)
+        print(temp_address)
+        score = group[1]
+        score.convert_to_xml(temp_address)
+        assert temp_path.is_file()
+
