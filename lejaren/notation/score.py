@@ -18,6 +18,16 @@ EMPTY_MEASURE_FACTOR = 1
 
 ARTICULATIONS = []
 
+DIATONIC = {
+    "C":0,
+    "D":2,
+    "E":4,
+    "F":5,
+    "G":7,
+    "A":9,
+    "B":11
+}
+
 class Score:
     """Generates a MusicXML score from a list of parts (NoteLists) and outputs score to file"""
 
@@ -52,16 +62,26 @@ class Score:
         root = parts.getroot()
         for part in root.iterchildren('part'):
             part_note_list = []
-            for note in part.iterchildren('note'):
-                # FIXME: Save minimum necessary info
-                # Try to stick with XPath for now...
-                dur = note.findall('.//duration')
-                step = note.findall('.//step')
-                octave = note.findall('.//octave')
-                part_note_list.append(Note(int(dur), int(octave), int(step)))
-                #join notes
-                part_note_list = self._join_ties(part_note_list)
+            for measure in part.iterchildren('measure'):
+                divisions = float(measure.findall('.//divisions')[0].text)
+                for note in measure.iterchildren('note'):
+                    # FIXME: Save minimum necessary info
+                    # Try to stick with XPath for now...
+                    dur = float(note.findall('.//duration')[0].text)
+                    dur /= divisions
+                    step = DIATONIC[note.findall('.//step')[0].text]
+                    octave = note.findall('.//octave')[0].text
+                    try:
+                        alter = note.findall('.//alter')[0].text
+                        step += alter
+                    except (IndexError):
+                        alter = 0
+                        step += alter
+                    part_note_list.append(Note(int(dur), int(octave), step))
+                    #join notes
+                    #part_note_list = self._join_ties(part_note_list)
             part_list.append(Part(part_note_list, time_signatures))
+            self._parse_parts(part_list)
         return part_list
 
     def _parse_parts(self, parts):
