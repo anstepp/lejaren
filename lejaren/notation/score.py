@@ -36,11 +36,16 @@ class Score:
                 self._parts = self._parse_parts(parts)
             else:
                 raise ValueError(f"Some parts wrong: {len(parts)} and {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
+            self._measure_count = self._pad_with_empty_measures()
         elif isinstance(parts, etree.ElementTree):
             self._parts = self._from_etree(parts)
+            if len(self._parts) < 0:
+                raise ValueError("No parts exist, Aborting.")
+            self._measure_count = len(self._parts[0].measures)
         else:
             raise TypeError(f"Parts must be Lejaren Parts or an ETree, is {type(parts)}")
-        self._measure_count = self._pad_with_empty_measures()
+            
+        
 
     def _from_etree(self, parts, time_signatures=[(4,4)]):
         part_list = []
@@ -57,7 +62,7 @@ class Score:
                 #join notes
                 part_note_list = self._join_ties(part_note_list)
             part_list.append(Part(part_note_list, time_signatures))
-        return part_note_list
+        return part_list
 
     def _parse_parts(self, parts):
 

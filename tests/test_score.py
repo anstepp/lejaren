@@ -65,6 +65,11 @@ def test_xml_parser(xml_file_list):
             tree = etree.parse(xml_file)
             root = tree.getroot()
             score = Score(tree)
-            test_score_list.append(score)
-    for score in test_score_list:
+            test_score_list.append([address, score])
+    for test_list in test_score_list:
+        address = test_list[0]
+        print(address)
+        score = test_list[1]
         assert isinstance(score, Score)
+        if address == "tests/test_files/test_treble_middle_c_full_score.musicxml":
+            assert len(score._parts) == 1
