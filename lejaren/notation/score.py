@@ -69,10 +69,10 @@ class Score:
                     # Try to stick with XPath for now...
                     dur = float(note.findall('.//duration')[0].text)
                     dur /= divisions
-                    step = DIATONIC[note.findall('.//step')[0].text]
+                    step = int(DIATONIC[note.findall('.//step')[0].text])
                     octave = note.findall('.//octave')[0].text
                     try:
-                        alter = note.findall('.//alter')[0].text
+                        alter = float(note.findall('.//alter')[0].text)
                         step += alter
                     except (IndexError):
                         alter = 0
