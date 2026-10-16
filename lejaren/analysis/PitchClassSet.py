@@ -7,9 +7,9 @@ CLOCKFACE = 12
 
 
 class PitchClassSet:
-    def __init__(self, pcs: Iterable[int]) -> None:
+    def __init__(self, pitch_classs: Iterable[int]) -> None:
 
-        self.ordered_set = [x for x in set(pcs) if x is not None]
+        self.ordered_set = [x for x in set(pitch_classs) if x is not None]
 
         self.ordered_list = list(self.ordered_set)
 
@@ -19,9 +19,9 @@ class PitchClassSet:
 
         self.normal_order = self._get_normal_order(self.ordered_list)
 
-    def _get_normal_order(self, pclist: Iterable[int]) -> Iterable[int]:
+    def _get_normal_order(self, pitch_classlist: Iterable[int]) -> Iterable[int]:
 
-        cycled_set = cycle(pclist)
+        cycled_set = cycle(pitch_classlist)
 
         potential_set_orders = []
 
@@ -29,7 +29,7 @@ class PitchClassSet:
 
             current_set = []
 
-            for current_pc in range(self.cardinality):
+            for current_pitch_class in range(self.cardinality):
 
                 next_cycled_set = next(cycled_set)
                 current_set.append(next_cycled_set)
@@ -45,18 +45,18 @@ class PitchClassSet:
 
             next(cycled_set)
 
-        first_to_last_pc_distance = [
+        first_to_last_pitch_class_distance = [
             (s[-1] - s[0]) % CLOCKFACE for s in potential_set_orders
         ]
 
-        minimum_distance = min(first_to_last_pc_distance)
+        minimum_distance = min(first_to_last_pitch_class_distance)
 
         compression_mask = [
-            1 if dist == minimum_distance else 0 for dist in first_to_last_pc_distance
+            1 if dist == minimum_distance else 0 for dist in first_to_last_pitch_class_distance
         ]
 
         minimum_distance_list = list(
-            compress(first_to_last_pc_distance, compression_mask)
+            compress(first_to_last_pitch_class_distance, compression_mask)
         )
 
         candidates = []
@@ -82,8 +82,8 @@ class PitchClassSet:
 
         return no_duplicates
 
-    def _get_zero_start(self, pcs: Iterable[int]) -> Iterable[int]:
-        zero_set = [(x - pcs[0]) % CLOCKFACE for x in pcs]
+    def _get_zero_start(self, pitch_classs: Iterable[int]) -> Iterable[int]:
+        zero_set = [(x - pitch_classs[0]) % CLOCKFACE for x in pitch_classs]
 
         return zero_set
 
@@ -108,11 +108,11 @@ class PitchClassSet:
 
     def _interval_generator(self, candidate: Iterable[int]):
 
-        last_pc = 0
+        last_pitch_class = 0
 
-        for pc in candidate:
-            interval = last_pc + pc
-            last_pc = pc
+        for pitch_class in candidate:
+            interval = last_pitch_class + pitch_class
+            last_pitch_class = pitch_class
             yield interval
 
     def _retrograde(self, reverse_me: Iterable[int]) -> Iterable[int]:
@@ -135,26 +135,26 @@ class PitchClassSet:
 
     def transpose(self, interval: int) -> PitchClassSet:
 
-        new_pcs = [(pc + interval) % CLOCKFACE for pc in self.ordered_list]
+        new_pitch_classs = [(pitch_class + interval) % CLOCKFACE for pitch_class in self.ordered_list]
 
-        return PitchClassSet(new_pcs)
+        return PitchClassSet(new_pitch_classs)
 
     def invert(self) -> PitchClassSet:
 
-        new_pcs = [(CLOCKFACE - pc) % CLOCKFACE for pc in self.ordered_list]
+        new_pitch_classs = [(CLOCKFACE - pitch_class) % CLOCKFACE for pitch_class in self.ordered_list]
 
-        return PitchClassSet(new_pcs)
+        return PitchClassSet(new_pitch_classs)
 
     def transpositional_inversion(self, interval: int) -> PitchClassSet:
 
-        new_pcs = [
-            ((CLOCKFACE - pc) + interval) % CLOCKFACE for pc in self.ordered_list
+        new_pitch_classs = [
+            ((CLOCKFACE - pitch_class) + interval) % CLOCKFACE for pitch_class in self.ordered_list
         ]
 
-        return PitchClassSet(new_pcs)
+        return PitchClassSet(new_pitch_classs)
 
     def get_compliment(self) -> PitchClassSet:
 
-        new_pcs = [x for x in range(CLOCKFACE) if x not in self.ordered_list]
+        new_pitch_classs = [x for x in range(CLOCKFACE) if x not in self.ordered_list]
 
-        return PitchClassSet(new_pcs)
+        return PitchClassSet(new_pitch_classs)

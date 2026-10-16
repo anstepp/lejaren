@@ -57,8 +57,7 @@ class Chord:
         """Wrapper Function for Insertion sorting the notes by
         pitch."""
 
-        for idx, note in enumerate(note_list):
-            note_list = self._insert_notes(note_list, idx, note)
+        note_list = sorted(note_list, key=lambda x: (x.octave, x.pitch_class))
 
         return note_list
 

@@ -1,5 +1,5 @@
 """
-The Note object contains and represents notes with pitch and duration.
+The Note object contains and represents notes with pitch and dur.
 Pitches are represented in two domains: octave and pitch class. Each
 is a separate data member, and can be modified separately. Duration
 is one member.
@@ -16,7 +16,7 @@ math operators. To create a note, simply create the object:
 The Note object overloads operators to allow for comparison of note objects.
 There is an attempt to be intutitive. Equality tests for pitches, greater
 than/less than test for pitch relationships, and greater than or equal/less
-than or equal test for duration relationships. As follows:
+than or equal test for dur relationships. As follows:
 
 note_1 = Note(4,4,0) # Whole note middle C
 note_2 = Note(2,4,1) # Half note middle C#
@@ -60,12 +60,12 @@ class Note:
     Attributes:
     -----------
     dur : float
-    represents the duration of the note
+    represents the dur of the note
 
     octave : int
     the octave of the note
 
-    pc : int (0-11)
+    pitch_class : int (0-11)
     the pitch class of the note, gets corrected if outside the 0-11 interval
 
     step_name : str
@@ -103,9 +103,9 @@ class Note:
     Overloaded Operators:
     ---------------------
 
-    == : absolute equality (dur, pc, octave)
+    == : absolute equality (dur, pitch_class, octave)
     >/< : pitch greater than/less than
-    >=/<= : duration greater than/less than
+    >=/<= : dur greater than/less than
 
     """
 
@@ -127,15 +127,15 @@ class Note:
     stem_dir = False # must be in stem_dirs
     stem_y_pos = 0
 
-    def __init__(self, duration: float, octave: int, pitch_class: int) -> None:
+    def __init__(self, dur: float, octave: int, pitch_class: int) -> None:
 
-        """Init a note with duration, octave and pc. Sets additional
+        """Init a note with dur, octave and pitch_class. Sets additional
         data members step_name, alter and accidental with _get_step_name
         as well as initing articulation.
 
         Arguments:
 
-        duration (float): note duration
+        dur (float): note dur
 
         octave (int): scientific octave of pitch
 
@@ -147,28 +147,33 @@ class Note:
 
         """
 
+        # TODO: Verify float for microtones
+        necessary_items = (["dur", float], ["octave", int], ["pitch_class", int])
+        
+        passed_args = locals()
+        for necessary_item in necessary_items:
+            isinstance(passed_args[necessary_item[0]], necessary_item[1])
+
         try:
-            if duration > 0:
-                self.dur = Decimal(str(duration))
+            if dur > 0:
+                self.dur = Decimal(str(dur))
         except ValueError as e:
             log.error(e)
             raise ValueError("Duration must be greater than 0")
 
         # called to correct any errant pitch classes
-        self.octave, self.pc = self._fix_pitch_overflow(octave, pitch_class)
+        self.octave, self.pitch_class = self._fix_pitch_overflow(octave, pitch_class)
 
         # force starting_pitch to be keyless
         self.step_name, self.alter, self.accidental = self._get_step_name(0)
 
         self.articulation = None
 
-        necessary_items = ("dur", "octave", "pc")
-
         for item in necessary_items:
-            if hasattr(self, item):
+            if hasattr(self, item[0]):
                 pass
             else:
-                raise ValueError(f"Note has no {item}.")
+                raise ValueError(f"Note has no {item[0]}.")
 
     def _fix_pitch_overflow(self, octave: int, pitch_class: int) -> Tuple[int, int]:
         """
@@ -274,7 +279,7 @@ class Note:
         else:
             raise ValueError("starting_pitch must be zero, a flat key, or sharp key")
 
-        return step_names[self.pc]
+        return step_names[self.pitch_class]
 
     def add_articulation(self, articulation: str) -> None:
 
@@ -411,7 +416,7 @@ class Note:
         """
         Absolute equality test for two notes.
 
-        Tests equality of duration, octave, and pitch class for two
+        Tests equality of dur, octave, and pitch class for two
         notes. Testing Note == Note is expected usage.
 
         Arguments:
@@ -426,7 +431,7 @@ class Note:
         if (
             (self.dur == other.dur)
             and (self.octave == other.octave)
-            and (self.pc == other.pc)
+            and (self.pitch_class == other.pitch_class)
         ):
             return True
         else:
@@ -446,18 +451,18 @@ class Note:
         if self.octave > other.octave:
             return True
         elif self.octave == other.octave:
-            if self.pc > other.pc:
+            if self.pitch_class > other.pitch_class:
                 return True
             else:
                 return False
         else:
             return False
 
-    # Evaluate duration equality
+    # Evaluate dur equality
 
     def __ge__(self, other) -> bool:
         """
-        Tests for duration inequality.
+        Tests for dur inequality.
 
         Arguments:
 
@@ -485,5 +490,5 @@ class Note:
         """
 
         return "Duration: {}, Octave: {}, Pitch Class: {}".format(
-            self.dur, self.octave, self.pc
+            self.dur, self.octave, self.pitch_class
         )

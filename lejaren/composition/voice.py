@@ -19,17 +19,17 @@ arguments are given as well:
 To extend pitch values:
 Voice.extend_pitches(List[int])
 
-To extend duration values:
+To extend dur values:
 Voice.extend_durations(List[int])
 
-To convert pitch and duration values to Note objects:
+To convert pitch and dur values to Note objects:
 Voice.make_note_list(int)
 
 To add Note objects to the list of Note objects:
 Voice.extend_note_list(List[Note, Rest])
 
-To insert a Rest object of a given duration in the Note object list:
-Voice.insert_rest(int: duration, int: index)
+To insert a Rest object of a given dur in the Note object list:
+Voice.insert_rest(int: dur, int: index)
 
 To insert a Note object or list of Note objects in the Note object list:
 Voice.insert_note_list(List[Note, Rest], int: index)
@@ -80,7 +80,7 @@ class Voice:
 
         for note in input_list:
             if isinstance(note, Note):
-                temp_list.append(Note(note.dur, note.octave, note.pc + 2))
+                temp_list.append(Note(note.dur, note.octave, note.pitch_class + 2))
             else:
                 temp_list.append(note)
 
@@ -94,7 +94,7 @@ class Voice:
 
     def make_note_list(self, octave: int) -> None:
         self.note_list = [
-            Note(dur, octave, pc) for dur, pc in zip(self.durations, self.pitches)
+            Note(dur, octave, pitch_class) for dur, pitch_class in zip(self.durations, self.pitches)
         ]
 
     def append_to_note_list(self, note: Iterable[Union[Note, Rest]]) -> None:
@@ -103,8 +103,8 @@ class Voice:
     def extend_note_list(self, input_list: Iterable[Union[Note, Rest]]) -> None:
         self.note_list.extend(input_list)
 
-    def insert_rest(self, duration: int, index: int) -> None:
-        self.note_list.insert(index, Rest(duration))
+    def insert_rest(self, dur: int, index: int) -> None:
+        self.note_list.insert(index, Rest(dur))
 
     def insert_note_list(self, input_list: Iterable[Union[Note, Rest]], index: int) -> None:
         first_chunk = self.note_list[0:index]
@@ -124,26 +124,26 @@ class Voice:
             checking_range = self.inst_range
         for note in note_list:
             if isinstance(note, Note):
-                if note.octave == checking_range[0][0] and note.pc < checking_range[0][1]:
-                    temp_note = Note(note.dur, note.octave + 1, note.pc)
+                if note.octave == checking_range[0][0] and note.pitch_class < checking_range[0][1]:
+                    temp_note = Note(note.dur, note.octave + 1, note.pitch_class)
                     temp_list.append(temp_note)
 
-                elif note.octave == checking_range[0][0] and note.pc >= checking_range[0][1]:
+                elif note.octave == checking_range[0][0] and note.pitch_class >= checking_range[0][1]:
                     temp_list.append(note)
 
                 elif note.octave < checking_range[0][0]:
-                    temp_note = Note(note.dur, checking_range[0][0], note.pc)
+                    temp_note = Note(note.dur, checking_range[0][0], note.pitch_class)
                     temp_list.append(temp_note)
 
-                elif note.octave == checking_range[1][0] and note.pc > checking_range[1][1]:
-                    temp_note = Note(note.dur, note.octave - 1, note.pc)
+                elif note.octave == checking_range[1][0] and note.pitch_class > checking_range[1][1]:
+                    temp_note = Note(note.dur, note.octave - 1, note.pitch_class)
                     temp_list.append(temp_note)
 
-                elif note.octave == checking_range[1][0] and note.pc <= checking_range[1][1]:
+                elif note.octave == checking_range[1][0] and note.pitch_class <= checking_range[1][1]:
                     temp_list.append(note)
 
                 elif note.octave > checking_range[1][0]:
-                    temp_note = Note(note.dur, checking_range[1][0], note.pc)
+                    temp_note = Note(note.dur, checking_range[1][0], note.pitch_class)
                     temp_list.append(temp_note)  
 
                 else:
@@ -159,12 +159,12 @@ class Voice:
         if slice_range:
             for note in self.note_list:
                 if isinstance(note, Note) and note.dur >= 0.5:
-                    temp_list.append(Note(0.25, note.octave, note.pc))
+                    temp_list.append(Note(0.25, note.octave, note.pitch_class))
                     temp_list.append(Rest(note.dur - 0.25))
         else:
             for note in self.note_list:
                 if isinstance(note, Note) and note.dur >= 0.5:
-                    temp_list.append(Note(0.25, note.octave, note.pc))
+                    temp_list.append(Note(0.25, note.octave, note.pitch_class))
                     temp_list.append(Rest(note.dur - 0.25))
         self.note_list = temp_list
 

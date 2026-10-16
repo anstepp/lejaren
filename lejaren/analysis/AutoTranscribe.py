@@ -124,19 +124,19 @@ class AutoTranscribe:
             #f0_range = DEFAULT_F0_RANGE
 
             best_guess = self._two_way_mismatch(frame, f0_range)
-            octave, pc = self._get_pitch(best_guess)
+            octave, pitch_class = self._get_pitch(best_guess)
             dur = self._get_fractional_beats(self.N, self.tempo.note_value)
 
-            new_note = Note(dur, octave, pc)
+            new_note = Note(dur, octave, pitch_class)
 
             start += self.N
 
             if frame_idx > 0:
                 if (new_note.octave == notes[-1].octave) and (
-                    new_note.pc == notes[-1].pc
+                    new_note.pitch_class == notes[-1].pitch_class
                 ):
                     summed_duration = new_note.dur + notes[-1].dur
-                    new_note = Note(summed_duration, new_note.octave, new_note.pc)
+                    new_note = Note(summed_duration, new_note.octave, new_note.pitch_class)
                     notes[-1] = new_note
                 else:
                     notes.append(new_note)
@@ -322,8 +322,8 @@ class AutoTranscribe:
     def _get_pitch(self, freq):
         rounded_pitch = round(12 * log2(freq / C0))
         octave = rounded_pitch // 12
-        pc = rounded_pitch % 12
-        return octave, pc
+        pitch_class = rounded_pitch % 12
+        return octave, pitch_class
 
     def _get_frequency_range(self, idx, ideal_spectrum, num_partials):
         """
@@ -407,7 +407,7 @@ class AutoTranscribe:
 
         for idx, note in enumerate(note_list):
             if idx >= 1:
-                if note.pc == note_list[idx-1].pc and note.octave == note_list[idx-1].octave:
+                if note.pitch_class == note_list[idx-1].pitch_class and note.octave == note_list[idx-1].octave:
                     added_list[-1].change_duration(note.dur + note_list[idx-1].dur)
                 else:
                     added_list.append(note)
@@ -421,11 +421,11 @@ class AutoTranscribe:
             if (idx >= 1) and (idx < len(quantized_notes) -1):
                 previous_note = quantized_notes[idx-1]
                 next_note = quantized_notes[idx+1]
-                if (note.pc == previous_note.pc) and (note.octave == previous_note.octave):
+                if (note.pitch_class == previous_note.pitch_class) and (note.octave == previous_note.octave):
                     final_list[-1].change_duration(note.dur + previous_note.dur)
-                elif (note.pc == next_note.pc) and (note.octave + 1 == next_note.octave):
+                elif (note.pitch_class == next_note.pitch_class) and (note.octave + 1 == next_note.octave):
                     quantized_notes[idx+1].change_duration(note.dur + next_note.dur)
-                elif (note.pc == previous_note.pc) and (note.octave + 1 == previous_note.octave):
+                elif (note.pitch_class == previous_note.pitch_class) and (note.octave + 1 == previous_note.octave):
                     quantized_notes[idx+1].change_duration(note.dur + next_note.dur)
                 else:
                     final_list.append(note)
