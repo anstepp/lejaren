@@ -152,7 +152,7 @@ class Note:
                 self.dur = Decimal(str(duration))
         except ValueError as e:
             log.error(e)
-            raise
+            raise ValueError("Duration must be greater than 0")
 
         # called to correct any errant pitch classes
         self.octave, self.pc = self._fix_pitch_overflow(octave, pitch_class)
@@ -161,6 +161,14 @@ class Note:
         self.step_name, self.alter, self.accidental = self._get_step_name(0)
 
         self.articulation = None
+
+        necessary_items = ("dur", "octave", "pc")
+
+        for item in necessary_items:
+            if hasattr(self, item):
+                pass
+            else:
+                raise ValueError(f"Note has no {item}.")
 
     def _fix_pitch_overflow(self, octave: int, pitch_class: int) -> Tuple[int, int]:
         """
