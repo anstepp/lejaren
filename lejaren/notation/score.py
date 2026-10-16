@@ -16,7 +16,23 @@ log = logger.get_logger()
 
 EMPTY_MEASURE_FACTOR = 1
 
-ARTICULATIONS = []
+ARTICULATIONS = ["accent",
+"strong-accent",
+"staccato",
+"tenuto",
+"detached-legato",
+"staccatissimo",
+"spiccato",
+"scoop",
+"plop",
+"doit",
+"falloff",
+"breath-mark",
+"caesura",
+"stress",
+"unstress",
+"soft-accent",
+"other-articulation",]
 
 DIATONIC = {
     "C":0,
