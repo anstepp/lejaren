@@ -260,7 +260,6 @@ class Part:
             except (TypeError, AttributeError):
                 print(f"Non-Note in Part.get_note_uniques, is type {type(item)} instead")
             else:
-                print(item, type(item))
                 if item.dur not in uniques:
                     uniques.append(item.dur)
         return uniques
