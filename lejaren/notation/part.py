@@ -255,10 +255,14 @@ class Part:
         """
         uniques = []
         for item in self.current_list:
-            if item.dur not in uniques:
-                uniques.append(item.dur)
+            try:
+                isinstance(item, Note)
+            except (TypeError, AttributeError):
+                print(f"Non-Note in Part.get_note_uniques, is type {type(item)} instead")
             else:
-                pass
+                print(item, type(item))
+                if item.dur not in uniques:
+                    uniques.append(item.dur)
         return uniques
 
     def get_ts_uniques(self) -> list:

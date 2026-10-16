@@ -77,7 +77,7 @@ class Score:
                     except (IndexError):
                         alter = 0
                         step += alter
-                    part_note_list.append(Note(int(dur), int(octave), step))
+                    part_note_list.append(Note(float(dur), int(octave), step))
                     #join notes
                     #part_note_list = self._join_ties(part_note_list)
             part_list.append(Part(part_note_list, time_signatures))
