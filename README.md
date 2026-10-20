@@ -34,7 +34,7 @@ If you're a music person, more than a programmer person, I recommend you look in
 
 Clone this repository. Use a local pip...
 
-```zsh
+```shell
 cd [path/to/lejaren]
 pip install .
 ```
