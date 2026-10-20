@@ -57,8 +57,11 @@ class Score:
         self.title = title
         self.composer = composer
 
-        if isinstance(parts, list):
-            if len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0):
+        #FIXME: Add really nice testing for this so we know it acutally works right
+        if isinstance(parts, list) or isinstance(parts, Part):
+            if isinstance(parts, Part):
+                self._parts = self._parse_parts(parts)
+            elif len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0):
                 self._parts = self._parse_parts(parts)
             else:
                 raise ValueError(f"Some parts wrong: {len(parts)} and {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
