@@ -34,7 +34,11 @@ import copy
 from typing import Tuple
 from decimal import Decimal
 
-import lejaren.log as logger
+try:
+    import lejaren.log.log as logger
+except ImportError as e:
+    print(f"Logger fail, details: {e}")
+    
 from lejaren.notation.rest import Rest #only for returning a rest
 
 

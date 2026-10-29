@@ -4,10 +4,10 @@ import os
 
 def get_logger() -> logging.Logger:
     """Return a logging.Logger object w/ default of info.
-    can specify level with P2XML_LOG_LEVEL.
+    can specify level with LEJAREN_LOG_LEVEL.
     """
 
-    log_level = os.getenv("P2XML_LOG_LEVEL", "INFO").upper()
+    log_level = os.getenv("LEJAREN_LOG_LEVEL", "INFO").upper()
 
     logging.config.dictConfig(
         {
