@@ -2,7 +2,7 @@ import copy
 from typing import Tuple
 from decimal import Decimal
 
-import lejaren.log as logger
+import lejaren.log.log as logger
 
 logging = logger.get_logger()
 
