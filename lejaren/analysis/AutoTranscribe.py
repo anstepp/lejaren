@@ -8,7 +8,7 @@ from scipy.signal import find_peaks
 from scipy.fft import rfft
 from bisect import bisect_left
 
-import lejaren.log as logger
+import lejaren.log.log as logger
 from lejaren.notation import Note, Tempo
 from lejaren.notation.measure import TimeSignature
 from lejaren.notation.score import Score
