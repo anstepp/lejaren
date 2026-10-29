@@ -1,7 +1,7 @@
 from typing import Iterable
 
 from lejaren.notation import Note
-import lejaren.log as logger
+import lejaren.log.log as logger
 
 logging = logger.get_logger()
 

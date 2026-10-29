@@ -34,7 +34,7 @@ import copy
 from typing import Tuple
 from decimal import Decimal
 
-import lejaren.log as logger
+import lejaren.log.log as logger
 from lejaren.notation.rest import Rest #only for returning a rest
 
 
