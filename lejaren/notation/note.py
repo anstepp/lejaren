@@ -34,15 +34,16 @@ import copy
 from typing import Tuple
 from decimal import Decimal
 
-try:
-    import lejaren.log.log as logger
-except ImportError as e:
-    print(f"Logger fail, details: {e}")
+#FIXME: when in PyPi, return to real
+# try:
+#     import lejaren.log.log as logger
+# except ImportError as e:
+#     print(f"Logger fail, details: {e}")
     
 from lejaren.notation.rest import Rest #only for returning a rest
 
-
-log = logger.get_logger()
+#FIXME: when in PyPi, return to real
+#log = logger.get_logger()
 
 # The Life of a Note
 
