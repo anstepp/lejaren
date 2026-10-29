@@ -10,7 +10,7 @@ from .note import Note
 from .beat import Beat
 from .rest import Rest
 from .chord import Chord
-import lejaren.log.log as logger
+#import lejaren.log.log as logger
 
 from lejaren.notation import measure
 

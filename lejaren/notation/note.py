@@ -35,7 +35,7 @@ from typing import Tuple
 from decimal import Decimal
 
 try:
-    import lejaren.log.log as logger
+    #import lejaren.log.log as logger
 except ImportError as e:
     print(f"Logger fail, details: {e}")
     

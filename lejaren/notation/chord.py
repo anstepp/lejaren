@@ -2,7 +2,7 @@ import copy
 from typing import Iterable, Tuple, List
 
 from lejaren.notation import Note
-import lejaren.log.log as logger
+#import lejaren.log.log as logger
 
 log = logger.get_logger()
 

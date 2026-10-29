@@ -10,7 +10,7 @@ from .rest import Rest
 from .measure import Measure
 from .beat import Beat
 from .chord import Chord
-import lejaren.log.log as logger
+#import lejaren.log.log as logger
 
 log = logger.get_logger()
 
