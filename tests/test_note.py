@@ -139,13 +139,17 @@ def test_convert_to_rest():
 
     rest = note_to_convert.make_rest()
 
-def test_stem_y_pos_raise_on_fail():
+def test_stem_y_pos_raise_on_fail_dir():
 
     note_to_adjust_stem = Note(1,4,0) # Quarter!
 
     with pytest.raises(ValueError):
         note_to_adjust_stem.adj_stem_len("nonsense", 10)
-    
+
+def test_stem_y_pos_raise_on_fail_distance():
+
+    note_to_adjust_stem = Note(1,4,0) # Quarter!
+
     with pytest.raises(TypeError):
         note_to_adjust_stem.adj_stem_len("up", "stupid")
 

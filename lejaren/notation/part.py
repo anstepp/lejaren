@@ -154,7 +154,15 @@ class Part:
         self.measures = []
 
         # TS stuff
-        self.time_signatures = time_signatures
+        try:
+            isinstance(time_signatures, (TimeSignatures, TimeSignature))
+        except TypeError as e:
+            print(f"Time Signature non-usable, was type: {type(time_signatures)}, details: {e}")
+        if not isinstance(time_signatures, list):
+            log.debug("Wrapping Time Signature in List")
+            self.time_signatures = [time_signatures]
+        else:
+            self.time_signatures = time_signatures
         self.time_signature_index = 0
 
         self.subdivisions, self.max_subdivisions = None, None
@@ -256,7 +264,7 @@ class Part:
         uniques = []
         for item in self.current_list:
             try:
-                isinstance(item, Note)
+                isinstance(item, (Note|Rest))
             except (TypeError, AttributeError):
                 print(f"Non-Note in Part.get_note_uniques, is type {type(item)} instead")
             else:
@@ -341,10 +349,14 @@ class Part:
 
         search_range (int): adjacent measures on both sides
         """
-        if index < search_range:
-            return 0, search_range + index
+
+        if isinstance(index, int) and isinstance(search_range, int):
+            if index < search_range:
+                return 0, search_range + index
+            else:
+                return index - search_range, index + search_range
         else:
-            return index - search_range, index + search_range
+            raise TypeError(f"Non-integer search indices and ranges for measures, types were... index: {type(index)}, range: {type(search_range)}")
 
     def _get_change_pitch(self, index: int) -> None:
         """
@@ -367,17 +379,20 @@ class Part:
         index_range_low, index_range_high = self._get_index_range(index)
         test_measure_pitch = self.measures[index].beats[0]
 
-        # test downbeats
-        for measure in self.measures[index_range_low:index_range_high]:
-            if measure.beats[0] > test_measure_pitch:
-                break
-            else:
-                self.weight += 1
-        for measure in self.measures:
-            if measure.beats[0] < test_measure_pitch:
-                break
-            else:
-                self.weight += 1
+        if isinstance(index, int):
+            # test downbeats
+            for measure in self.measures[index_range_low:index_range_high]:
+                if measure.beats[0] > test_measure_pitch:
+                    break
+                else:
+                    self.weight += 1
+            for measure in self.measures:
+                if measure.beats[0] < test_measure_pitch:
+                    break
+                else:
+                    self.weight += 1
+        else:
+            raise TypeError(f"Pitch index non-integer, was {type(index)}")
 
     def _get_change_group(self):
         """
@@ -430,10 +445,13 @@ class Part:
         flat_list = []
 
         for idx, entry in enumerate(note_list):
-            if type(entry) == Chord:
-                flat_list.extend(entry.notes)
+            if isinstance(entry, (Note|Rest|Chord)):
+                if type(entry) == Chord:
+                    flat_list.extend(entry.notes)
+                else:
+                    flat_list.append(entry)
             else:
-                flat_list.append(entry)
+                raise TypeError(f"Non-note or Chord when trying to Flatten Chords, was {type(entry)}")
 
         return flat_list
 
