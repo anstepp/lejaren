@@ -349,10 +349,14 @@ class Part:
 
         search_range (int): adjacent measures on both sides
         """
-        if index < search_range:
-            return 0, search_range + index
+
+        if isinstance(index, int) and isinstance(search_range, int):
+            if index < search_range:
+                return 0, search_range + index
+            else:
+                return index - search_range, index + search_range
         else:
-            return index - search_range, index + search_range
+            raise TypeError(f"Non-integer search indices and ranges for measures, types were... index: {type(index)}, range: {type(search_range)}")
 
     def _get_change_pitch(self, index: int) -> None:
         """
