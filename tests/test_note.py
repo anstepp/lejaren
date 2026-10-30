@@ -195,5 +195,5 @@ def test_set_x_pos():
 
     assert note_to_shift.dur == 4
     assert note_to_shift.octave == 4
-    assert note_to_shift.pc == 0
+    assert note_to_shift.pitch_class == 0
     assert note_to_shift.x_pos == 10
