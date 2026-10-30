@@ -15,16 +15,17 @@ ORDER_TEST_FILE = "tests/test_files/simple_test_score_output.musicxml"
 def increase_counter_and_return_truth(element, order, counter):
     max_count = (len(order) - 1)
     internal_counter = counter + 1
-    if element != order[internal_counter]:
-        print(f"element: {element}, order value: {order[internal_counter]}")
+    if element.tag != order[internal_counter]:
+        print(f"element: {element.tag}, order value: {order[internal_counter]}")
         if internal_counter < max_count:
-            _, _ = increase_counter_and_return_truth(element, order, internal_counter)
-            return (None, None)
+            truth, counter = increase_counter_and_return_truth(element, order, internal_counter)
+            return truth, counter
         else:
-            return (False, 0)
+            truth = False
+            return truth, counter
     else:
         truth = True
-        return (truth, counter)
+        return truth, counter
 
 
 @pytest.fixture
