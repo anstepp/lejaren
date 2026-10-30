@@ -389,14 +389,15 @@ class Note:
     def adj_stem_len(self, shift_type: str, amount: float) -> None:
         self.stem_flag = True # turn on stem sub
         lower_shift_type = shift_type.lower()
-        if lower_shift_type in self.stem_dirs:
-            self.stem_dir = lower_shift_type
-        else:
-            raise ValueError(f"Not a member of stem_dir: {shift_type}")
-        if isinstance(amount, (int, float)):
+        try:
+            lower_shift_type in self.stem_dirs
+        except ValueError as e:
+            print(f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}; details: {e}")
+            try:
+                isinstance(amount, (int, float))
+            except ValueError as e:
+                print(f"Stem shift amount non-numerical, was {type(amount)}, details: {e}")
             self.stem_y_pos = amount
-        else:
-            raise TypeError("Distance must be a number")
 
     def hide_stem(self) -> None:
         """
