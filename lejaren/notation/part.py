@@ -264,7 +264,7 @@ class Part:
         uniques = []
         for item in self.current_list:
             try:
-                isinstance(item, Note)
+                isinstance(item, (Note|Rest))
             except (TypeError, AttributeError):
                 print(f"Non-Note in Part.get_note_uniques, is type {type(item)} instead")
             else:
