@@ -154,7 +154,15 @@ class Part:
         self.measures = []
 
         # TS stuff
-        self.time_signatures = time_signatures
+        try:
+            isinstance(time_signatures, (TimeSignatures, TimeSignature))
+        except TypeError as e:
+            print(f"Time Signature non-usable, was type: {type(time_signatures)}, details: {e}")
+        if not isinstance(time_signatures, list):
+            log.debug("Wrapping Time Signature in List")
+            self.time_signatures = [time_signatures]
+        else:
+            self.time_signatures = time_signatures
         self.time_signature_index = 0
 
         self.subdivisions, self.max_subdivisions = None, None
