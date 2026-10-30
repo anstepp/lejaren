@@ -61,6 +61,5 @@ def test_xml_measure_attribute_order():
         truth, counter = increase_counter_and_return_truth(element, order, counter)
         assert truth
 
-
 def test_xml_score_order(simple_test_score):
     assert simple_test_score
