@@ -181,7 +181,7 @@ class Note:
             else:
                 raise ValueError(f"Note has no {item[0]}.")
 
-    def _fix_pitch_overflow(self, octave: int, pitch_class: int) -> Tuple[int, int]:
+    def _fix_pitch_overflow(self, octave: int, pitch_class: float) -> Tuple[int, int]:
         """
         Addresses pitch classes below 0 or above 11.
 
@@ -198,18 +198,26 @@ class Note:
         """
         new_pitch_class, new_octave = None, None
 
-        if pitch_class > 11:
-            new_pitch_class = pitch_class % 12
-            new_octave = octave + pitch_class // 12
-            return new_octave, new_pitch_class
+        try:
+            isinstance(pitch_class, float)
 
-        elif pitch_class < 0:
-            new_pitch_class = pitch_class % 12
-            new_octave = octave + pitch_class // 12
-            return new_octave, new_pitch_class
+        except TypeError as e:
+            print(f"Non-float passed to pitch class for overflow, was {type(pitch_class)}, details: {e}")
 
         else:
-            return octave, pitch_class
+
+            if pitch_class > 11:
+                new_pitch_class = pitch_class % 12
+                new_octave = octave + pitch_class // 12
+                return new_octave, new_pitch_class
+
+            elif pitch_class < 0:
+                new_pitch_class = pitch_class % 12
+                new_octave = octave + pitch_class // 12
+                return new_octave, new_pitch_class
+
+            else:
+                return octave, pitch_class
 
     def _get_step_name(self, starting_pitch: int) -> Tuple[str, int, str]:
 
