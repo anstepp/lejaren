@@ -96,7 +96,7 @@ def test_xml_parser(xml_file_list):
             assert len(score._parts[0]["staves"][0].measures) == 1
             assert score._parts[0]["staves"][0].measures[0].notes[0] == Note(4,4,0)
 
-def test_create_output_xml(xml_file_list):
+def test_create_output_xml(xml_file_list, shared_output_dir):
     test_score_list = []
     for address in xml_file_list:
         with open(address, "rb") as xml_file:
