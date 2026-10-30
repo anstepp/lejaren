@@ -31,14 +31,20 @@ True
 """
 
 import copy
-from typing import Tuple
+from typing import Tuple, Self
 from decimal import Decimal
 
-import lejaren.log as logger
+
+#FIXME: when in PyPi, return to real
+# try:
+#     import lejaren.log.log as logger
+# except ImportError as e:
+#     print(f"Logger fail, details: {e}")
+    
 from lejaren.notation.rest import Rest #only for returning a rest
 
-
-log = logger.get_logger()
+#FIXME: when in PyPi, return to real
+#log = logger.get_logger()
 
 # The Life of a Note
 
@@ -350,7 +356,7 @@ class Note:
             log.error(e)
             raise
 
-    def split(self, diff: int) -> Tuple[Note, Note]:
+    def split(self, diff: int) -> Tuple[Self, Self]:
         old_note = copy.copy(self)
         new_note = copy.copy(self)
 

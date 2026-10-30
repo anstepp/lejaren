@@ -185,3 +185,15 @@ def test_set_stem_to_vanish():
     assert note_to_disappear_stem.stem_flag == True
     assert note_to_disappear_stem.stem_dir == "up"
     assert note_to_disappear_stem.stem_y_pos == 0
+
+
+def test_set_x_pos():
+
+    note_to_shift = Note(4,4,0)
+
+    note_to_shift.set_x_pos(10)
+
+    assert note_to_shift.dur == 4
+    assert note_to_shift.octave == 4
+    assert note_to_shift.pitch_class == 0
+    assert note_to_shift.x_pos == 10
