@@ -49,7 +49,6 @@ def test_xml_note_order():
     for element in note_element_to_test:
         truth, counter = increase_counter_and_return_truth(element, order, counter)
         assert truth
-        
 
 def test_xml_measure_attribute_order():
     counter = 0
