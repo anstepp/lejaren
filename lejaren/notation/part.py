@@ -155,7 +155,7 @@ class Part:
 
         # TS stuff
         try:
-            isinstance(time_signatures, (TimeSignatures, TimeSignature))
+            isinstance(time_signatures, (list|tuple))
         except TypeError as e:
             print(f"Time Signature non-usable, was type: {type(time_signatures)}, details: {e}")
         if not isinstance(time_signatures, list):

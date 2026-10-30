@@ -12,12 +12,10 @@ srs = [44100, 48000, 89000, 92000, 192000]
 
 @pytest.fixture(scope="session")
 def shared_output_dir(tmp_path_factory):
-    # mktemp creates the actual directory structure
-    base_dir = tmp_path_factory.mktemp("artifacts")
-    return base_dir
+    return tmp_path_factory.mktemp("output")
 
-@pytest.fixture
-def sample_files(scope='function'):
+@pytest.fixture(scope='function')
+def sample_files():
     sample_files = [                  
                 "test_files/test_treble_middle_c_full_score.musicxml",
                 "test_files/test_treble_middle_c.mxl",       
