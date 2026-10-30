@@ -127,12 +127,11 @@ class Note:
     is_chord_member = False
 
     # engrave
-    def __init__(self, duration: float, octave: int, pitch_class: int) -> None:
-        stem_dirs = ("up", "down", "none", "double") #lowercase only
-        x_pos = 0
-        stem = False
-        stem_dir = False # must be in stem_dirs
-        stem_y_pos = 0
+    stem_dirs = ("up", "down", "none", "double") #lowercase only
+    x_pos = 0
+    stem = False
+    stem_dir = False # must be in stem_dirs
+    stem_y_pos = 0
 
     def __init__(self, dur: float, octave: int, pitch_class: int) -> None:
 
