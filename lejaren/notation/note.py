@@ -34,16 +34,13 @@ import copy
 from typing import Tuple, Self
 from decimal import Decimal
 
-<<<<<<< HEAD
-import lejaren.log as logger
-=======
+
 #FIXME: when in PyPi, return to real
 # try:
 #     import lejaren.log.log as logger
 # except ImportError as e:
 #     print(f"Logger fail, details: {e}")
     
->>>>>>> main
 from lejaren.notation.rest import Rest #only for returning a rest
 
 #FIXME: when in PyPi, return to real
@@ -130,17 +127,12 @@ class Note:
     is_chord_member = False
 
     # engrave
-<<<<<<< HEAD
-    x_pos = 0
-
     def __init__(self, duration: float, octave: int, pitch_class: int) -> None:
-=======
-    stem_dirs = ("up", "down", "none", "double") #lowercase only
-    x_pos = 0
-    stem = False
-    stem_dir = False # must be in stem_dirs
-    stem_y_pos = 0
->>>>>>> main
+        stem_dirs = ("up", "down", "none", "double") #lowercase only
+        x_pos = 0
+        stem = False
+        stem_dir = False # must be in stem_dirs
+        stem_y_pos = 0
 
     def __init__(self, dur: float, octave: int, pitch_class: int) -> None:
 
@@ -379,10 +371,6 @@ class Note:
     def make_rest(self) -> Rest:
         return Rest(self.dur)
 
-<<<<<<< HEAD
-    def set_x_pos(self, shift: int) -> None:
-        self.x_pos = shift
-=======
     def set_x_pos(self, shift: float) -> None:
         self.x_pos = shift
 
@@ -430,7 +418,6 @@ class Note:
         """
 
         self.adj_stem_len("up", 0)
->>>>>>> main
 
     def __eq__(self, other) -> bool:
         """
