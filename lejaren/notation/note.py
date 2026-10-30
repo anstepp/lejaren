@@ -34,6 +34,7 @@ import copy
 from typing import Tuple, Self
 from decimal import Decimal
 
+
 #FIXME: when in PyPi, return to real
 # try:
 #     import lejaren.log.log as logger
