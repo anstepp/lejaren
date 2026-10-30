@@ -181,7 +181,7 @@ class Note:
             else:
                 raise ValueError(f"Note has no {item[0]}.")
 
-    def _fix_pitch_overflow(self, octave: int, pitch_class: int) -> Tuple[int, int]:
+    def _fix_pitch_overflow(self, octave: int, pitch_class: float) -> Tuple[int, int]:
         """
         Addresses pitch classes below 0 or above 11.
 
@@ -198,18 +198,26 @@ class Note:
         """
         new_pitch_class, new_octave = None, None
 
-        if pitch_class > 11:
-            new_pitch_class = pitch_class % 12
-            new_octave = octave + pitch_class // 12
-            return new_octave, new_pitch_class
+        try:
+            isinstance(pitch_class, float)
 
-        elif pitch_class < 0:
-            new_pitch_class = pitch_class % 12
-            new_octave = octave + pitch_class // 12
-            return new_octave, new_pitch_class
+        except TypeError as e:
+            print(f"Non-float passed to pitch class for overflow, was {type(pitch_class)}, details: {e}")
 
         else:
-            return octave, pitch_class
+
+            if pitch_class > 11:
+                new_pitch_class = pitch_class % 12
+                new_octave = octave + pitch_class // 12
+                return new_octave, new_pitch_class
+
+            elif pitch_class < 0:
+                new_pitch_class = pitch_class % 12
+                new_octave = octave + pitch_class // 12
+                return new_octave, new_pitch_class
+
+            else:
+                return octave, pitch_class
 
     def _get_step_name(self, starting_pitch: int) -> Tuple[str, int, str]:
 
@@ -371,19 +379,25 @@ class Note:
         return Rest(self.dur)
 
     def set_x_pos(self, shift: float) -> None:
-        self.x_pos = shift
+        try:
+            isinstance(shift, float)
+        except TypeError as e:
+            print(f"Non-float passed to X-position, was type {type(shift)}, details: {e}")
+        else:
+            self.x_pos = shift
 
     def adj_stem_len(self, shift_type: str, amount: float) -> None:
         self.stem_flag = True # turn on stem sub
         lower_shift_type = shift_type.lower()
         if lower_shift_type in self.stem_dirs:
-            self.stem_dir = lower_shift_type
-        else:
-            raise ValueError(f"Not a member of stem_dir: {shift_type}")
-        if isinstance(amount, (int, float)):
-            self.stem_y_pos = amount
-        else:
-            raise TypeError("Distance must be a number")
+            if not isinstance(amount, (int|float)):
+                raise TypeError(f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}")
+            else:
+                self.stem_dir = lower_shift_type
+                self.stem_y_pos = amount
+        else:    
+            raise ValueError(f"Stem shift amount non-numerical, was {type(amount)}")
+            
 
     def hide_stem(self) -> None:
         """
@@ -392,23 +406,9 @@ class Note:
         """
 
         self.adj_stem_len("up", 0)
+
     def make_rest(self) -> Rest:
         return Rest(self.dur)
-
-    def set_x_pos(self, shift: float) -> None:
-        self.x_pos = shift
-
-    def adj_stem_len(self, shift_type: str, amount: float) -> None:
-        self.stem_flag = True # turn on stem sub
-        lower_shift_type = shift_type.lower()
-        if lower_shift_type in self.stem_dirs:
-            self.stem_dir = lower_shift_type
-        else:
-            raise ValueError(f"Not a member of stem_dir: {shift_type}")
-        if isinstance(amount, (int, float)):
-            self.stem_y_pos = amount
-        else:
-            raise TypeError("Distance must be a number")
 
     def hide_stem(self) -> None:
         """
