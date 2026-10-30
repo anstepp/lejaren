@@ -14,6 +14,12 @@ def xml_file_list():
     file_list = [item for item in file_list if item != "tests/test_files/.DS_Store"]
     return file_list
 
+def test_time_sig_list(score_with_list_sig):
+    assert score_with_list_sig
+
+def test_time_sig_singleton(simple_score_with_singleton_sig):
+    assert simple_score_with_singleton_sig
+
 @pytest.mark.xfail
 def test_xml_valid():
 

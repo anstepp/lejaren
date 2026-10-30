@@ -2,6 +2,8 @@ import pytest
 
 import itertools
 
+from lejaren.notation import Score, Part, Note, Rest, Chord
+
 #Tempo Check Globals
 # FIXME: Put insider larger fixture, so sharing is easier?
 from lejaren.conversion.conversion_values import TicksForNotes, DefaultValues
@@ -27,3 +29,34 @@ def sample_files(scope='function'):
 @pytest.fixture(params=list(itertools.product(tempos, srs)))
 def ticks(request):
     return TicksForNotes(request.param[0], request.param[1])
+
+@pytest.fixture
+def simple_test_note():
+    test_middle_c = Note(4,4,0)
+    return test_middle_c
+
+@pytest.fixture
+def single_time_sig():
+    time_signature = (4,4)
+    return time_signature
+
+@pytest.fixture
+def list_time_sig():
+    time_signature = [(4,4)]
+    return time_signature
+
+@pytest.fixture
+def simple_test_score(simple_test_note):
+    time_signature = [(4,4)]
+    simple_test_score = Score(Part([simple_test_note], time_signature))
+    return simple_test_score
+
+@pytest.fixture
+def score_with_list_sig(simple_test_note, list_time_sig):
+    simple_test_score = Score(Part([simple_test_note], list_time_sig))
+    return simple_test_score
+
+@pytest.fixture
+def simple_score_with_singleton_sig(simple_test_note, single_time_sig):
+    simple_test_score = Score(Part([simple_test_note], single_time_sig))
+    return simple_test_score
