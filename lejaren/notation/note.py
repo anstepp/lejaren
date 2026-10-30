@@ -379,7 +379,12 @@ class Note:
         return Rest(self.dur)
 
     def set_x_pos(self, shift: float) -> None:
-        self.x_pos = shift
+        try:
+            isinstance(shift, float)
+        except TypeError as e:
+            print(f"Non-float passed to X-position, was type {type(shift)}, details: {e}")
+        else:
+            self.x_pos = shift
 
     def adj_stem_len(self, shift_type: str, amount: float) -> None:
         self.stem_flag = True # turn on stem sub
