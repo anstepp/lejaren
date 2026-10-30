@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lejaren"
-version = "1.0.0"
+version = "1.1.0"
 description = "Computer-Aided Musical Prototyping using Python"
 authors = ["Aaron Stepp <stepp.aaron@gmail.com>"]
 readme = "README.md"
