@@ -379,17 +379,20 @@ class Part:
         index_range_low, index_range_high = self._get_index_range(index)
         test_measure_pitch = self.measures[index].beats[0]
 
-        # test downbeats
-        for measure in self.measures[index_range_low:index_range_high]:
-            if measure.beats[0] > test_measure_pitch:
-                break
-            else:
-                self.weight += 1
-        for measure in self.measures:
-            if measure.beats[0] < test_measure_pitch:
-                break
-            else:
-                self.weight += 1
+        if isinstance(index, int):
+            # test downbeats
+            for measure in self.measures[index_range_low:index_range_high]:
+                if measure.beats[0] > test_measure_pitch:
+                    break
+                else:
+                    self.weight += 1
+            for measure in self.measures:
+                if measure.beats[0] < test_measure_pitch:
+                    break
+                else:
+                    self.weight += 1
+        else:
+            raise TypeError(f"Pitch index non-integer, was {type(index)}")
 
     def _get_change_group(self):
         """
@@ -442,10 +445,13 @@ class Part:
         flat_list = []
 
         for idx, entry in enumerate(note_list):
-            if type(entry) == Chord:
-                flat_list.extend(entry.notes)
+            if isinstance(entry, (Note|Rest|Chord)):
+                if type(entry) == Chord:
+                    flat_list.extend(entry.notes)
+                else:
+                    flat_list.append(entry)
             else:
-                flat_list.append(entry)
+                raise TypeError(f"Non-note or Chord when trying to Flatten Chords, was {type(entry)}")
 
         return flat_list
 
