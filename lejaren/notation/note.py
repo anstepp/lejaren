@@ -31,7 +31,7 @@ True
 """
 
 import copy
-from typing import Tuple
+from typing import Tuple, Self
 from decimal import Decimal
 
 <<<<<<< HEAD
@@ -365,7 +365,7 @@ class Note:
             log.error(e)
             raise
 
-    def split(self, diff: int) -> Tuple[Note, Note]:
+    def split(self, diff: int) -> Tuple[Self, Self]:
         old_note = copy.copy(self)
         new_note = copy.copy(self)
 
