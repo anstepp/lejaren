@@ -10,6 +10,7 @@ from lejaren.notation import Note, Part, Score, Chord
 
 from tests.xml_order import XML_NOTE_ORDER, XML_MEASURE_ATTRIBUTE_ORDER
 
+# TODO: more test files
 ORDER_TEST_FILE = "tests/test_files/simple_test_score_output.musicxml"
 
 def increase_counter_and_return_truth(element, order, counter):
@@ -34,10 +35,39 @@ def simple_test_note():
     return test_middle_c
 
 @pytest.fixture
+def single_time_sig():
+    time_signature = (4,4)
+    return time_signature
+
+@pytest.fixture
+def list_time_sig():
+    time_signature = [(4,4)]
+    return time_signature
+
+@pytest.fixture
 def simple_test_score(simple_test_note):
     time_signature = [(4,4)]
     simple_test_score = Score(Part([simple_test_note], time_signature))
     return simple_test_score
+
+@pytest.fixture
+def score_with_list_sig(simple_test_note, list_time_sig):
+    simple_test_score = Score(Part([simple_test_note], list_time_sig))
+    return simple_test_score
+
+@pytest.fixture
+def simple_score_with_singleton_sig(simple_test_note, single_time_sig):
+    simple_test_score = Score(Part([simple_test_note], single_time_sig))
+    return simple_test_score
+
+def test_xml_score_order(score_with_list_sig):
+    assert score_with_list_sig
+
+def test_xml_score_order(simple_test_score):
+    assert simple_test_score
+
+def test_xml_score_order(simple_score_with_singleton_sig):
+    assert simple_score_with_singleton_sig
 
 def test_xml_note_order():
     counter = 0
