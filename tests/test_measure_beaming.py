@@ -73,7 +73,7 @@ def test_eighth_note_beams():
         for idx, note in enumerate(beat.notes):
             assert note.dur == 1
             assert note.octave == 4
-            assert note.pc == 0
+            assert note.pitch_class == 0
             if idx % 2 == 0:
                 assert note.beam_start
             else:
@@ -149,11 +149,11 @@ def test_quarter_half_multibeat():
 
     # assert m.beats[0].multi_beat == False
     assert m.beats[0].notes[0].dur == 1
-    assert m.beats[0].notes[0].pc == 0
+    assert m.beats[0].notes[0].pitch_class == 0
 
     # assert m.beats[1].multi_beat == True
     assert m.beats[1].notes[0].dur == 2
-    assert m.beats[1].notes[0].pc == 2
+    assert m.beats[1].notes[0].pitch_class == 2
 
     # assert m.beats[2].multi_beat == False
     assert m.beats[2].notes[0].dur == 1

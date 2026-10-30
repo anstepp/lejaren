@@ -118,7 +118,7 @@ def test_smooth_notes(load_sample_audio):
     test_durations_not_dec = [0.500, 0.375, 0.250, 0.250, 0.250, 0.250]
     test_durations = [Decimal(str(dur)) for dur in test_durations_not_dec]
     #for idx, note in enumerate(smoothed_and_quantized_2):
-        #assert test_pitches[idx] == note.pc
+        #assert test_pitches[idx] == note.pitch_class
         #assert test_octaves[idx] == note.octave
         #assert test_durations[idx] == note.dur
 

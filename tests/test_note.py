@@ -11,10 +11,10 @@ def test_object_init_fail_without_args():
 
 
 def test_object_init_success_with_args():
-    n = Note(duration=TEST_DURATION, octave=TEST_OCTAVE, pitch_class=TEST_PITCH_CLASS)
+    n = Note(dur=TEST_DURATION, octave=TEST_OCTAVE, pitch_class=TEST_PITCH_CLASS)
     assert n.dur == TEST_DURATION
     assert n.octave == TEST_OCTAVE
-    assert n.pc == TEST_PITCH_CLASS
+    assert n.pitch_class == TEST_PITCH_CLASS
 
 
 def test_get_step_name():
@@ -38,7 +38,7 @@ def test_get_step_name():
 
     for test_case in test_cases.keys():
         n = Note(
-            duration=TEST_DURATION,
+            dur=TEST_DURATION,
             octave=TEST_OCTAVE,
             pitch_class=test_cases[test_case]["pitch_class"],
         )
@@ -49,7 +49,7 @@ def test_get_step_name():
 
     try:
         n = Note(
-            duration=TEST_DURATION, octave=TEST_OCTAVE, pitch_class=TEST_PITCH_CLASS
+            dur=TEST_DURATION, octave=TEST_OCTAVE, pitch_class=TEST_PITCH_CLASS
         )
         n._get_step_name(starting_pitch=999)
     except Exception as e:
@@ -57,9 +57,9 @@ def test_get_step_name():
 
 
 def test_note_equality():
-    note_a = Note(duration=1, octave=2, pitch_class=3)
-    note_b = Note(duration=1, octave=2, pitch_class=3)
-    note_c = Note(duration=9, octave=8, pitch_class=7)
+    note_a = Note(dur=1, octave=2, pitch_class=3)
+    note_b = Note(dur=1, octave=2, pitch_class=3)
+    note_c = Note(dur=9, octave=8, pitch_class=7)
 
     assert note_a == note_b
     assert note_a != note_c
@@ -111,33 +111,81 @@ def test_split():
 
     dur = 8
     octave = 4
-    pc = 0
+    pitch_class = 0
 
-    note_to_split = Note(dur, octave, pc)
+    note_to_split = Note(dur, octave, pitch_class)
 
     old_note, new_note = note_to_split.split(4)
 
     assert old_note.dur == 4
     assert old_note.octave == 4
-    assert old_note.pc == 0
+    assert old_note.pitch_class == 0
     assert new_note.dur == 4
     assert new_note.octave == 4
-    assert new_note.pc == 0
+    assert new_note.pitch_class == 0
 
     old_note, new_note = note_to_split.split(3)
 
     assert old_note.dur == 5
     assert old_note.octave == 4
-    assert old_note.pc == 0
+    assert old_note.pitch_class == 0
     assert new_note.dur == 3
     assert new_note.octave == 4
-    assert new_note.pc == 0
+    assert new_note.pitch_class == 0
 
 def test_convert_to_rest():
 
     note_to_convert = Note(4,4,0)
 
     rest = note_to_convert.make_rest()
+
+def test_stem_y_pos_raise_on_fail():
+
+    note_to_adjust_stem = Note(1,4,0) # Quarter!
+
+    with pytest.raises(ValueError):
+        note_to_adjust_stem.adj_stem_len("nonsense", 10)
+    
+    with pytest.raises(TypeError):
+        note_to_adjust_stem.adj_stem_len("up", "stupid")
+
+
+def test_stem_y_pos_adj():
+
+    note_to_adjust_stem = Note(1,4,0)
+
+    note_to_adjust_stem.adj_stem_len("up", 10)
+
+    assert note_to_adjust_stem.dur == 1
+    assert note_to_adjust_stem.octave == 4
+    assert note_to_adjust_stem.pitch_class == 0
+    assert note_to_adjust_stem.stem_flag == True
+    assert note_to_adjust_stem.stem_dir == "up" # will get lowercased
+    assert note_to_adjust_stem.stem_y_pos == 10
+
+    #test case correction also
+    note_to_adjust_stem.adj_stem_len("Up", 10)
+    assert note_to_adjust_stem.dur == 1
+    assert note_to_adjust_stem.octave == 4
+    assert note_to_adjust_stem.pitch_class == 0
+    assert note_to_adjust_stem.stem_flag == True
+    assert note_to_adjust_stem.stem_dir == "up" # will get lowercased
+    assert note_to_adjust_stem.stem_y_pos == 10
+
+
+def test_set_stem_to_vanish():
+
+    note_to_disappear_stem = Note(1,4,0)
+
+    note_to_disappear_stem.hide_stem()
+
+    assert note_to_disappear_stem.dur == 1
+    assert note_to_disappear_stem.octave == 4
+    assert note_to_disappear_stem.pitch_class == 0
+    assert note_to_disappear_stem.stem_flag == True
+    assert note_to_disappear_stem.stem_dir == "up"
+    assert note_to_disappear_stem.stem_y_pos == 0
+
 
 def test_set_x_pos():
 

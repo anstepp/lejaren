@@ -10,7 +10,7 @@ from .note import Note
 from .beat import Beat
 from .rest import Rest
 from .chord import Chord
-import lejaren.log as logger
+import lejaren.log.log as logger
 
 from lejaren.notation import measure
 
@@ -138,7 +138,14 @@ class Part:
 
         """
 
-        self.current_list = input_list
+        if isinstance(input_list, list):
+            self.current_list = input_list
+        elif isinstance(input_list, Note|Rest):
+            self.current_list = [input_list]
+        else:
+            raise ValueError(f"Bad Note list to Part, is type: {type(input_list)}")
+    
+        # self.current_list = input_list
 
         for note in self.current_list:
             if note is type(Note):
@@ -248,10 +255,13 @@ class Part:
         """
         uniques = []
         for item in self.current_list:
-            if item.dur not in uniques:
-                uniques.append(item.dur)
+            try:
+                isinstance(item, Note)
+            except (TypeError, AttributeError):
+                print(f"Non-Note in Part.get_note_uniques, is type {type(item)} instead")
             else:
-                pass
+                if item.dur not in uniques:
+                    uniques.append(item.dur)
         return uniques
 
     def get_ts_uniques(self) -> list:

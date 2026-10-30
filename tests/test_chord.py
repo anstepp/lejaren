@@ -13,11 +13,11 @@ def test_chord_init():
     assert len(simple_octave.notes) == 2
     assert simple_octave.notes[0].dur == 4
     assert simple_octave.notes[0].octave == 4
-    assert simple_octave.notes[0].pc == 0
+    assert simple_octave.notes[0].pitch_class == 0
     assert simple_octave.notes[0].is_chord_member == False
     assert simple_octave.notes[1].dur == 4
     assert simple_octave.notes[1].octave == 5
-    assert simple_octave.notes[1].pc == 0
+    assert simple_octave.notes[1].pitch_class == 0
     assert simple_octave.notes[1].is_chord_member == True
     assert simple_octave.dur == 4
 
@@ -51,20 +51,22 @@ def test_notes_ascending():
     assert len(chord.notes) == 3
 
     for idx, note in enumerate(chord.notes):
+        print(f"\nEach note {note} at {idx}\n")
         if idx > 0:
+            print(f"\nNotes: {note}, {chord.notes[idx -1]}\n")
             assert note > chord.notes[idx - 1]
 
     assert chord.notes[0].dur == 4
     assert chord.notes[0].octave == 4
-    assert chord.notes[0].pc == 0
+    assert chord.notes[0].pitch_class == 0
     assert chord.notes[0].is_chord_member == False
     assert chord.notes[1].dur == 4
     assert chord.notes[1].octave == 4
-    assert chord.notes[1].pc == 2
+    assert chord.notes[1].pitch_class == 2
     assert chord.notes[1].is_chord_member == True
     assert chord.notes[2].dur == 4
     assert chord.notes[2].octave == 4
-    assert chord.notes[2].pc == 4
+    assert chord.notes[2].pitch_class == 4
     assert chord.notes[2].is_chord_member == True
 
 

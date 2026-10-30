@@ -45,18 +45,18 @@ def test_measure_equals_note():
                 if isinstance(note, Note):
                     assert note.dur == 4
                     assert note.octave == 4
-                    assert note.pc == 0
+                    assert note.pitch_class == 0
 
 
 def test_note_less_than_measure():
 
     dur = 3
     octave = 4
-    pc = 0
+    pitch_class = 0
 
     measure_factor = 4
 
-    test_note = Note(dur, octave, pc)
+    test_note = Note(dur, octave, pitch_class)
 
     time_sig = [(4, 4)]
 
@@ -66,7 +66,7 @@ def test_note_less_than_measure():
 
     assert test_part.measures[0].beats[0].notes[0].dur == dur
     assert test_part.measures[0].beats[0].notes[0].octave == octave
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[0].beats[1].notes[0].dur == 1
     assert test_part.measures[0].beats[1].notes[0].is_measure == False
@@ -76,9 +76,9 @@ def test_note_greater_than_measure():
 
     dur = 5
     octave = 4
-    pc = 0
+    pitch_class = 0
 
-    test_note = Note(dur, octave, pc)
+    test_note = Note(dur, octave, pitch_class)
 
     time_sig = [(4, 4)]
 
@@ -89,20 +89,20 @@ def test_note_greater_than_measure():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 4
     assert test_part.measures[0].beats[0].notes[0].octave == octave
-    assert test_part.measures[0].beats[0].notes[0].pc == pc
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == pitch_class
 
     assert test_part.measures[1].beats[0].notes[0].dur == 1
     assert test_part.measures[1].beats[0].notes[0].octave == octave
-    assert test_part.measures[1].beats[0].notes[0].pc == pc
+    assert test_part.measures[1].beats[0].notes[0].pitch_class == pitch_class
 
 
 def test_note_exactly_multiple_measures():
 
     dur = 8
     octave = 4
-    pc = 0
+    pitch_class = 0
 
-    test_note = Note(dur, octave, pc)
+    test_note = Note(dur, octave, pitch_class)
 
     time_sig = [(4, 4)]
 
@@ -110,19 +110,19 @@ def test_note_exactly_multiple_measures():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 4
     assert test_part.measures[0].beats[0].notes[0].octave == 4
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[1].beats[0].notes[0].dur == 4
     assert test_part.measures[1].beats[0].notes[0].octave == 4
-    assert test_part.measures[1].beats[0].notes[0].pc == 0
+    assert test_part.measures[1].beats[0].notes[0].pitch_class == 0
 
 
 def test_greater_than_multiple_measures():
     dur = 9
     octave = 4
-    pc = 0
+    pitch_class = 0
 
-    test_note = Note(dur, octave, pc)
+    test_note = Note(dur, octave, pitch_class)
 
     time_sig = [(4, 4)]
 
@@ -130,15 +130,15 @@ def test_greater_than_multiple_measures():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 4
     assert test_part.measures[0].beats[0].notes[0].octave == 4
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[1].beats[0].notes[0].dur == 4
     assert test_part.measures[1].beats[0].notes[0].octave == 4
-    assert test_part.measures[1].beats[0].notes[0].pc == 0
+    assert test_part.measures[1].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[2].beats[0].notes[0].dur == 1
     assert test_part.measures[2].beats[0].notes[0].octave == 4
-    assert test_part.measures[2].beats[0].notes[0].pc == 0
+    assert test_part.measures[2].beats[0].notes[0].pitch_class == 0
 
 
 def test_two_notes_equal_two_measures():
@@ -154,11 +154,11 @@ def test_two_notes_equal_two_measures():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 4
     assert test_part.measures[0].beats[0].notes[0].octave == 4
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[1].beats[0].notes[0].dur == 4
     assert test_part.measures[1].beats[0].notes[0].octave == 4
-    assert test_part.measures[1].beats[0].notes[0].pc == 2
+    assert test_part.measures[1].beats[0].notes[0].pitch_class == 2
 
 
 def test_two_notes_equal_one_measure():
@@ -174,11 +174,11 @@ def test_two_notes_equal_one_measure():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 2
     assert test_part.measures[0].beats[0].notes[0].octave == 4
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[0].beats[1].notes[0].dur == 2
     assert test_part.measures[0].beats[1].notes[0].octave == 4
-    assert test_part.measures[0].beats[1].notes[0].pc == 2
+    assert test_part.measures[0].beats[1].notes[0].pitch_class == 2
 
 
 def test_two_notes_less_than_measure():
@@ -194,11 +194,11 @@ def test_two_notes_less_than_measure():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 2
     assert test_part.measures[0].beats[0].notes[0].octave == 4
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[0].beats[1].notes[0].dur == 1
     assert test_part.measures[0].beats[1].notes[0].octave == 4
-    assert test_part.measures[0].beats[1].notes[0].pc == 2
+    assert test_part.measures[0].beats[1].notes[0].pitch_class == 2
 
 
 def test_two_notes_greater_than_one_measure():
@@ -214,15 +214,15 @@ def test_two_notes_greater_than_one_measure():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 3
     assert test_part.measures[0].beats[0].notes[0].octave == 4
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[0].beats[1].notes[0].dur == 1
     assert test_part.measures[0].beats[1].notes[0].octave == 4
-    assert test_part.measures[0].beats[1].notes[0].pc == 2
+    assert test_part.measures[0].beats[1].notes[0].pitch_class == 2
 
     assert test_part.measures[1].beats[0].notes[0].dur == 2
     assert test_part.measures[1].beats[0].notes[0].octave == 4
-    assert test_part.measures[1].beats[0].notes[0].pc == 2
+    assert test_part.measures[1].beats[0].notes[0].pitch_class == 2
 
 
 def test_two_notes_one_greater_than_measure_one_less():
@@ -238,19 +238,19 @@ def test_two_notes_one_greater_than_measure_one_less():
 
     assert test_part.measures[0].beats[0].notes[0].dur == 4
     assert test_part.measures[0].beats[0].notes[0].octave == 4
-    assert test_part.measures[0].beats[0].notes[0].pc == 0
+    assert test_part.measures[0].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[1].beats[0].notes[0].dur == 4
     assert test_part.measures[1].beats[0].notes[0].octave == 4
-    assert test_part.measures[1].beats[0].notes[0].pc == 0
+    assert test_part.measures[1].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[2].beats[0].notes[0].dur == 1
     assert test_part.measures[2].beats[0].notes[0].octave == 4
-    assert test_part.measures[2].beats[0].notes[0].pc == 0
+    assert test_part.measures[2].beats[0].notes[0].pitch_class == 0
 
     assert test_part.measures[2].beats[1].notes[0].dur == 2
     assert test_part.measures[2].beats[1].notes[0].octave == 4
-    assert test_part.measures[2].beats[1].notes[0].pc == 2
+    assert test_part.measures[2].beats[1].notes[0].pitch_class == 2
 
 
 def test_measure_init_on_four_quarters():
@@ -269,7 +269,7 @@ def test_measure_init_on_four_quarters():
         for beat in measure.beats:
             for note in beat.notes:
                 assert note.dur == 1
-                assert note.pc == 0
+                assert note.pitch_class == 0
                 assert note.octave == 4
 
 
@@ -307,7 +307,7 @@ def test_part_durations_are_correct(notes_that_cause_duration_split):
                 assert note.dur == expected_note_duration
 
                 if isinstance(note, Note):
-                    # assert note.pc == expected_note_pitch
+                    # assert note.pitch_class == expected_note_pitch
                     pass
                 note_count += 1
 
