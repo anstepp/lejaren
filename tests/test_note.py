@@ -16,7 +16,10 @@ var_list = (
     "tie_end",
     "tuplet_start",
     "tuplet_continue",
-    "tuplet_end"
+    "tuplet_end",
+    "beam_start",
+    "beam_continue",
+    "is_chord_member"
 )
 
 func_list = (
