@@ -44,6 +44,12 @@ def list_time_sig():
     return time_signature
 
 @pytest.fixture
+def simple_test_part(simple_test_note):
+    time_signature = [(4,4)]
+    simple_test_part = Part([simple_test_note], time_signature)
+    return simple_test_part
+
+@pytest.fixture
 def simple_test_score(simple_test_note):
     time_signature = [(4,4)]
     simple_test_score = Score(Part([simple_test_note], time_signature))
