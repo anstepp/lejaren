@@ -535,3 +535,4 @@ class Part:
                 current_measure.add_note(new_note)
         if current_measure.notes:
             self.measures.append(current_measure)
+

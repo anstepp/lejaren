@@ -7,6 +7,17 @@ fj_pitches = [0, 2, 4, 0, 0, 2, 4, 0, 4, 5, 7, 4, 5, 7, 7, 9, 7, 5, 4, 0, 7, 9, 
 fj_durs = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 4, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 4, 2, 2, 4]
 # fmt: on
 
+function_list = {
+	"controller": ["on_submit", "_get_grace_note_flag", "_load_to_lejaren", "write_files"],
+	"model": [],
+	"view": [],
+	}
+
+var_list = {
+	"model": ["_ingested_files", "_grace_note_gui_bool", "_grace_note_flag", "_tuplet_gui_bool", "_tuplet_flag", "_tuplet_gui_max", "_tuplet_max"],
+	"view": ["grace_note_toggle"],
+	"controller": ["model", "view"],
+	}
 
 @pytest.fixture
 def notes_that_cause_duration_split():
@@ -580,3 +591,6 @@ def test_chord_split_simple():
 
     assert len(test_chord_part.measures[0].beats) == 1
     assert len(test_chord_part.measures[1].beats) == 1
+
+def test_extract_range():
+    pass 
