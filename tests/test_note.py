@@ -23,7 +23,16 @@ var_list = (
 )
 
 func_list = (
-
+    "_fix_pitch_overflow",
+    "_get_step_name",
+    "add_articulation",
+    "set_as_tie",
+    "change_duration",
+    "split",
+    "make_rest",
+    "set_x_pos",
+    "adj_stem_len",
+    "hide_stem",
 )
 
 def test_vars_on_instantiation(simple_test_note):
