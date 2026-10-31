@@ -4,6 +4,19 @@ from lejaren.notation import Note
 
 TEST_DURATION, TEST_OCTAVE, TEST_PITCH_CLASS = 10, 8, 2
 
+var_list = (
+
+)
+
+func_list = (
+
+)
+
+def test_vars_on_instantiation(simple_test_note):
+    pass
+
+def test_funcs_on_instantiation(simple_test_note):
+    pass
 
 def test_object_init_fail_without_args():
     with pytest.raises(TypeError) as e:
