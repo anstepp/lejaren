@@ -13,10 +13,14 @@ func_list = (
 )
 
 def test_vars_on_instantiation(simple_test_note):
-    pass
+    assert isinstance(simple_test_note, Note)
+    for var in var_list:
+        assert hasattr(simple_test_note, var)
 
 def test_funcs_on_instantiation(simple_test_note):
-    pass
+    assert isinstance(simple_test_note, Note)
+    for func in func_list:
+        assert hasattr(simple_test_note, func)
 
 def test_object_init_fail_without_args():
     with pytest.raises(TypeError) as e:
