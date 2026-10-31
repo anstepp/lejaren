@@ -5,7 +5,9 @@ from lejaren.notation import Note
 TEST_DURATION, TEST_OCTAVE, TEST_PITCH_CLASS = 10, 8, 2
 
 var_list = (
-
+    "dur",
+    "octave",
+    "pitch_class"
 )
 
 func_list = (
