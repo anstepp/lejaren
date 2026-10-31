@@ -7,17 +7,36 @@ fj_pitches = [0, 2, 4, 0, 0, 2, 4, 0, 4, 5, 7, 4, 5, 7, 7, 9, 7, 5, 4, 0, 7, 9, 
 fj_durs = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 4, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 4, 2, 2, 4]
 # fmt: on
 
-function_list = {
-	"controller": ["on_submit", "_get_grace_note_flag", "_load_to_lejaren", "write_files"],
-	"model": [],
-	"view": [],
-	}
+func_list = (
+    "create_part",
+    "get_note_uniques",
+    "_test_for_low_bottom_time_sig",
+    "get_ts_uniques",
+    "_get_factor",
+    "_assign_measure_weight",
+    "_compare_weight",
+    "_get_index_range",
+    "_get_change_pitch",
+    "_get_change_group",
+    "_get_implied_meter",
+    "_flatten_chords",
+    "_accum_note_durs",
+    "_make_new_measure",
+    "get_measures"
+)
 
-var_list = {
-	"model": ["_ingested_files", "_grace_note_gui_bool", "_grace_note_flag", "_tuplet_gui_bool", "_tuplet_flag", "_tuplet_gui_max", "_tuplet_max"],
-	"view": ["grace_note_toggle"],
-	"controller": ["model", "view"],
-	}
+var_list = (
+    "current_list",
+    "measures",
+    "time_signatures",
+    "subdivisions",
+    "max_subdivisions",
+    "current_measure",
+    "current_count_mod",
+    "current_count_floor",
+    "measure_factor",
+
+)
 
 @pytest.fixture
 def notes_that_cause_duration_split():
@@ -39,6 +58,15 @@ def notes_that_cause_duration_split():
 
     return test_list, test_sig
 
+def test_instantiation_with_vars(simple_test_part):
+    assert isinstance(simple_test_part, Part)
+    for var in var_list:
+        assert hasattr(simple_test_part, var)
+
+def test_instantiation_with_funcs(simple_test_part):
+    assert isinstance(simple_test_part, Part)
+    for func in func_list:
+        assert hasattr(simple_test_part, func)    
 
 def test_measure_equals_note():
 
