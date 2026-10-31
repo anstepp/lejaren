@@ -4,6 +4,46 @@ from lejaren.notation import Note
 
 TEST_DURATION, TEST_OCTAVE, TEST_PITCH_CLASS = 10, 8, 2
 
+var_list = (
+    "dur",
+    "octave",
+    "pitch_class",
+    "step_name",
+    "alter",
+    "accidental",
+    "tie_start",
+    "tie_continue",
+    "tie_end",
+    "tuplet_start",
+    "tuplet_continue",
+    "tuplet_end",
+    "beam_start",
+    "beam_continue",
+    "is_chord_member"
+)
+
+func_list = (
+    "_fix_pitch_overflow",
+    "_get_step_name",
+    "add_articulation",
+    "set_as_tie",
+    "change_duration",
+    "split",
+    "make_rest",
+    "set_x_pos",
+    "adj_stem_len",
+    "hide_stem",
+)
+
+def test_vars_on_instantiation(simple_test_note):
+    assert isinstance(simple_test_note, Note)
+    for var in var_list:
+        assert hasattr(simple_test_note, var)
+
+def test_funcs_on_instantiation(simple_test_note):
+    assert isinstance(simple_test_note, Note)
+    for func in func_list:
+        assert hasattr(simple_test_note, func)
 
 def test_object_init_fail_without_args():
     with pytest.raises(TypeError) as e:

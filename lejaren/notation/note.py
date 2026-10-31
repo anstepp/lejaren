@@ -407,17 +407,6 @@ class Note:
 
         self.adj_stem_len("up", 0)
 
-    def make_rest(self) -> Rest:
-        return Rest(self.dur)
-
-    def hide_stem(self) -> None:
-        """
-            Use this if you just want to hide the stem.
-            it calls adj_stem_len with default values.
-        """
-
-        self.adj_stem_len("up", 0)
-
     def __eq__(self, other) -> bool:
         """
         Absolute equality test for two notes.
