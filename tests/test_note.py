@@ -13,7 +13,10 @@ var_list = (
     "accidental",
     "tie_start",
     "tie_continue",
-    "tie_end"
+    "tie_end",
+    "tuplet_start",
+    "tuplet_continue",
+    "tuplet_end"
 )
 
 func_list = (
