@@ -22,7 +22,8 @@ func_list = (
     "_flatten_chords",
     "_accum_note_durs",
     "_make_new_measure",
-    "get_measures"
+    "get_measures",
+    "extract_note_list_from_range",
 )
 
 var_list = (
@@ -35,7 +36,6 @@ var_list = (
     "current_count_mod",
     "current_count_floor",
     "measure_factor",
-
 )
 
 @pytest.fixture
@@ -620,5 +620,21 @@ def test_chord_split_simple():
     assert len(test_chord_part.measures[0].beats) == 1
     assert len(test_chord_part.measures[1].beats) == 1
 
-def test_extract_range():
-    pass 
+def test_extract_range(simple_test_note, simple_test_part):
+    extract = simple_test_part.extract_note_list_from_range(0,1)
+    assert extract
+    assert extract[0] == Note(4,4,0)
+    with pytest.raises(TypeError):
+        simple_test_part.extract_note_list_from_range("dumb",10)
+        simple_test_part.extract_note_list_from_range(10,"dumb")
+        simple_test_part.extract_note_list_from_range("dumb","dumb")
+    with pytest.raises(ValueError):
+        simple_test_part.extract_note_list_from_range(4,10)
+        simple_test_part.extract_note_list_from_range(10,4)
+    longer_example = Part([simple_test_note for x in range(10)], (4,4))
+    extract = longer_example.extract_note_list_from_range(0,1)
+    assert extract
+    assert extract[0] == Note(4,4,0)
+    extract = longer_example.extract_note_list_from_range(0,2)
+    assert extract
+    assert extract[0] == Note(8,4,0)
