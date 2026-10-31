@@ -10,7 +10,10 @@ var_list = (
     "pitch_class",
     "step_name",
     "alter",
-    "accidental"
+    "accidental",
+    "tie_start",
+    "tie_continue",
+    "tie_end"
 )
 
 func_list = (
