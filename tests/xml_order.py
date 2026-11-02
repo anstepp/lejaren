@@ -74,3 +74,12 @@ XML_MEASURE_ATTRIBUTE_ORDER = (
 "measure-style", #(Zero or more times)
 
 )
+
+XML_SCORE_ATTRIBUTE_ORDER = (
+    #TODO: Make a tuple?
+    ["score-partwise","score-timewise"],
+    "version",
+    "part-list",
+    "score-part", #TODO: make counting system
+    "part-name", #TODO: check for accuracy/link to instruments
+)
