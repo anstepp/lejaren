@@ -560,7 +560,7 @@ def test_chord_parsed():
     assert test_chord_part.measures[0].beats[0].notes[0].notes[2].dur == 4
 
 
-def test_chord_split_simple():
+def test_chord_split_simple(simple_test_note):
 
     c = Note(8, 4, 0)
     e = Note(8, 4, 4)
@@ -570,9 +570,8 @@ def test_chord_split_simple():
 
     ts = [(4, 4)]
 
-def test_chord_parsed():
 
-    c = Note(4,4,0)
+    c = simple_test_note
     e = Note(4,4,4)
     g = Note(4,4,7)
 
@@ -587,7 +586,7 @@ def test_chord_parsed():
     # assert test_chord_part.measures[0].beats[0].notes[1].dur == 4
     # assert test_chord_part.measures[0].beats[0].notes[2].dur == 4
 
-def test_chord_split_simple():
+def test_chord_split_simple(simple_test_note):
     
     c = Note(8,4,0)
     e = Note(8,4,4)
@@ -605,7 +604,7 @@ def test_chord_split_simple():
 def test_extract_range(simple_test_note, simple_test_part):
     extract = simple_test_part.extract_note_list_from_range(0,1)
     assert extract
-    assert extract[0] == Note(4,4,0)
+    assert extract[0] == simple_test_note
     with pytest.raises(TypeError):
         simple_test_part.extract_note_list_from_range("dumb",10)
         simple_test_part.extract_note_list_from_range(10,"dumb")
@@ -616,7 +615,7 @@ def test_extract_range(simple_test_note, simple_test_part):
     longer_example = Part([simple_test_note for x in range(10)], (4,4))
     extract = longer_example.extract_note_list_from_range(0,1)
     assert extract
-    assert extract[0] == Note(4,4,0)
+    assert extract[0] == simple_test_note
     extract = longer_example.extract_note_list_from_range(0,2)
     assert extract
     assert extract[0] == Note(8,4,0)
