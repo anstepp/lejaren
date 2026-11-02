@@ -60,9 +60,9 @@ def test_measure_equals_note():
 
     assert len(test_part.measures) == 1
 
-    for measure_idx, measure in enumerate(test_part.measures):
-        for beat_idx, beat in enumerate(measure.beats):
-            for note_idx, note in enumerate(beat.notes):
+    for measure in test_part.measures:
+        for beat in measure.beats:
+            for note in beat.notes:
                 if isinstance(note, Note):
                     assert note.dur == 4
                     assert note.octave == 4
@@ -384,9 +384,9 @@ def test_frere_jacques():
     fj_part = Part(fj_list, fj_ts)
 
     counter = 0
-    for measure_index, measure in enumerate(fj_part.measures):
-        for beat_index, beat in enumerate(measure.beats):
-            for note_index, note in enumerate(beat.notes):
+    for measure in fj_part.measures:
+        for beat in measure.beats:
+            for note in beat.notes:
                 # print(counter, fj_durs[counter], note.dur)
                 assert note.dur == fj_durs[counter]
                 counter += 1
