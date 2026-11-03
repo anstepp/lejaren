@@ -76,11 +76,10 @@ class Score:
             temp_root = temp_tree.getroot()
             self._parts = self._from_etree(temp_tree)
         elif isinstance(parts, str):
-            try:
-                parts_path = pathlib.Path(parts)
-            except ValueError as e:
-                print(f"Path was string; unable to load file as it does not exist, path was: {parts}, details: {e}")
+            if not pathlib.Path(parts).exists():
+                raise ValueError(f"Path was string; unable to load file as it does not exist, path was: {parts}")
             else:
+                parts_path = pathlib.Path(parts)
                 temp_tree = etree.parse(parts_path)
                 temp_root = temp_tree.getroot()
                 self._parts = self._from_etree(temp_tree)
