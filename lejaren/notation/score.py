@@ -61,18 +61,30 @@ class Score:
         if isinstance(parts, list) or isinstance(parts, Part):
             if isinstance(parts, Part):
                 self._parts = self._parse_parts(parts)
-            elif len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0):
+            elif len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0) and len(parts) > 0:
                 self._parts = self._parse_parts(parts)
             else:
-                raise ValueError(f"Some parts wrong: {len(parts)} and {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
+                raise ValueError(f"Some parts wrong... count:{len(parts)} and part: {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
             self._measure_count = self._pad_with_empty_measures()
         elif isinstance(parts, etree.ElementTree):
             self._parts = self._from_etree(parts)
             if len(self._parts) < 0:
                 raise ValueError("No parts exist, Aborting.")
             self._measure_count = len(self._parts)
+        elif isinstance(parts, pathlib.Path):
+            temp_tree = etree.parse(parts)
+            temp_root = temp_tree.getroot()
+            self._parts = self._from_etree(temp_tree)
+        elif isinstance(parts, str):
+            if not pathlib.Path(parts).exists():
+                raise ValueError(f"Path was string; unable to load file as it does not exist, path was: {parts}")
+            else:
+                parts_path = pathlib.Path(parts)
+                temp_tree = etree.parse(parts_path)
+                temp_root = temp_tree.getroot()
+                self._parts = self._from_etree(temp_tree)
         else:
-            raise TypeError(f"Parts must be Lejaren Parts or an ETree, is {type(parts)}")
+            raise TypeError(f"Parts must be Lejaren Parts, ETree or Path, is {type(parts)}")
             
         
 
@@ -83,22 +95,35 @@ class Score:
             part_note_list = []
             for measure in part.iterchildren('measure'):
                 divisions = float(measure.findall('.//divisions')[0].text)
-                for note in measure.iterchildren('note'):
-                    # FIXME: Save minimum necessary info
-                    # Try to stick with XPath for now...
-                    dur = float(note.findall('.//duration')[0].text)
-                    dur /= divisions
-                    step = int(DIATONIC[note.findall('.//step')[0].text])
-                    octave = note.findall('.//octave')[0].text
-                    try:
-                        alter = float(note.findall('.//alter')[0].text)
-                        step += alter
-                    except (IndexError):
-                        alter = 0
-                        step += alter
-                    part_note_list.append(Note(float(dur), int(octave), step))
-                    #join notes
-                    #part_note_list = self._join_ties(part_note_list)
+                if sum(1 for _ in measure.iterchildren(tag='note')) < 0:
+                    raise ValueError(f"No notes in this measure, count is {sum(1 for _ in measure.iterchildren(tag='note'))}")
+                else:
+                    for note in measure.iterchildren('note'):
+                        if (note.findall('.//duration') and note.findall('.//step') and note.findall('.//octave')) is not None:
+                            # FIXME: Save minimum necessary info
+                            # Try to stick with XPath for now...
+                            if not isinstance(note.findall('.//duration'), list):
+                                raise TypeError(f"Note durations not list is: {type(note.findall('.//duration'))}")
+                            else:
+                                dur = float(note.findall('.//duration')[0].text)
+                                dur /= divisions
+                            if not isinstance(note.findall('.//step'), list):
+                                raise TypeError(f"Note step not list is: {type(note.findall('.//step'))}")
+                            else:
+                                step = int(DIATONIC[note.findall('.//step')[0].text])
+                            if not isinstance(note.findall('.//octave'), list):
+                                raise TypeError(f"Note step not list is: {type(note.findall('.//octave'))}")
+                            else:
+                                octave = note.findall('.//octave')[0].text
+                            try:
+                                alter = float(note.findall('.//alter')[0].text)
+                                step += alter
+                            except (IndexError):
+                                alter = 0
+                                step += alter
+                            part_note_list.append(Note(float(dur), int(octave), step))
+                            #join notes
+                            #part_note_list = self._join_ties(part_note_list)
             part_list.append(Part(part_note_list, time_signatures))
         parsed_parts = self._parse_parts(part_list)
         return parsed_parts

@@ -1,5 +1,6 @@
 import pytest
 
+from pathlib import Path
 import itertools
 
 from lejaren.notation import Score, Part, Note, Rest, Chord
@@ -64,6 +65,13 @@ def score_with_list_sig(simple_test_note, list_time_sig):
 def simple_score_with_singleton_sig(simple_test_note, single_time_sig):
     simple_test_score = Score(Part([simple_test_note], single_time_sig))
     return simple_test_score
+
+@pytest.fixture
+def simple_test_input_score():
+    files = ["tests/test_files/test_score_fj.musicxml"]
+    for file in files:
+        assert Path(file)
+    return files
 
 @pytest.fixture
 def notes_that_cause_duration_split():

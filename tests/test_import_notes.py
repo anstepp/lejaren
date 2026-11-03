@@ -1,5 +1,7 @@
 import pytest
 
+import pathlib
+
 from lejaren.notation.score import Score
 from lejaren.notation.part import Part
 from lejaren.notation.note import Note
@@ -107,3 +109,24 @@ def test_measure_mashing(double_score_alt_rest, default_time_sig):
 
 def test_set_ticks(simple_score):
     pass
+
+def test_import_simple_score(simple_test_input_score):
+    #working model on dir
+    for file in simple_test_input_score:
+        temp_score = Score(file)
+        assert temp_score
+
+    #test raises
+    with pytest.raises(TypeError):
+        temp_score = Score(123)
+        temp_score = Score({})
+        temp_score = Score(None)
+        temp_score = Score(False)
+    # test for empty list; must fail and raise for a score
+    with pytest.raises(ValueError):
+            temp_score = Score([])
+    #test for non-existent file; assert no file first
+    dumb_non_path = "not_real.dumb"
+    assert pathlib.Path(dumb_non_path).exists() == False
+    with pytest.raises(ValueError):
+        temp_score = Score(dumb_non_path)
