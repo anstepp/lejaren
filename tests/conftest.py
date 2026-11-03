@@ -72,3 +72,21 @@ def simple_test_input_score():
     for file in files:
         assert Path(file)
     return files
+def notes_that_cause_duration_split():
+
+    test_note_a = Note(4, 4, 4)
+    test_note_b = Note(3, 3, 3)
+    test_note_c = Note(6, 6, 6)
+    test_rest = Rest(1)
+
+    test_sig = [[3, 4]]
+    test_list = [
+        test_note_b,
+        test_note_a,
+        test_note_b,
+        test_note_c,
+        test_note_a,
+        test_rest,
+    ]
+
+    return test_list, test_sig

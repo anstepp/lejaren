@@ -38,25 +38,7 @@ var_list = (
     "measure_factor",
 )
 
-@pytest.fixture
-def notes_that_cause_duration_split():
 
-    test_note_a = Note(4, 4, 4)
-    test_note_b = Note(3, 3, 3)
-    test_note_c = Note(6, 6, 6)
-    test_rest = Rest(1)
-
-    test_sig = [[3, 4]]
-    test_list = [
-        test_note_b,
-        test_note_a,
-        test_note_b,
-        test_note_c,
-        test_note_a,
-        test_rest,
-    ]
-
-    return test_list, test_sig
 
 def test_instantiation_with_vars(simple_test_part):
     assert isinstance(simple_test_part, Part)
@@ -78,9 +60,9 @@ def test_measure_equals_note():
 
     assert len(test_part.measures) == 1
 
-    for measure_idx, measure in enumerate(test_part.measures):
-        for beat_idx, beat in enumerate(measure.beats):
-            for note_idx, note in enumerate(beat.notes):
+    for measure in test_part.measures:
+        for beat in measure.beats:
+            for note in beat.notes:
                 if isinstance(note, Note):
                     assert note.dur == 4
                     assert note.octave == 4
@@ -368,7 +350,7 @@ def test_assert_unique(notes_that_cause_duration_split):
                 )
 
 
-def test_long_durs(shared_output_dir):
+def test_long_durs():
     # fmt: off
     long_durs = [4,4,4,4,7,1,4,6,7,3,8,6,7,1,5,6,1]
     long_durs_corrected = [4 * dur for dur in long_durs]
@@ -394,7 +376,7 @@ def test_long_durs(shared_output_dir):
     long_durs_score.convert_to_xml("tests/output/test_score_long.xml")
 
 
-def test_frere_jacques(shared_output_dir):
+def test_frere_jacques():
 
     fj_ts = [[4, 4]]
     fj_list = [Note(dur, 4, pitch) for dur, pitch in zip(fj_durs, fj_pitches)]
@@ -402,9 +384,9 @@ def test_frere_jacques(shared_output_dir):
     fj_part = Part(fj_list, fj_ts)
 
     counter = 0
-    for measure_index, measure in enumerate(fj_part.measures):
-        for beat_index, beat in enumerate(measure.beats):
-            for note_index, note in enumerate(beat.notes):
+    for measure in fj_part.measures:
+        for beat in measure.beats:
+            for note in beat.notes:
                 # print(counter, fj_durs[counter], note.dur)
                 assert note.dur == fj_durs[counter]
                 counter += 1
@@ -413,7 +395,7 @@ def test_frere_jacques(shared_output_dir):
     score.convert_to_xml("tests/output/test_score_fj.musicxml")
 
 
-def test_fj_three_four(shared_output_dir):
+def test_fj_three_four():
 
     # fmt: off
     fj_durs_34 = [2,1,1,2,2,1,1,2,2,1,1,2,2,1,3,2,1,1,2,2,1,1,1,1,2,1,1,1,1,1,1,1,1,2,2,1,1,2,2,1,1,2,3,1,2]
@@ -425,9 +407,9 @@ def test_fj_three_four(shared_output_dir):
     fj_part = Part(fj_list, fj_ts)
 
     counter = 0
-    for measure_index, measure in enumerate(fj_part.measures):
-        for beat_index, beat in enumerate(measure.beats):
-            for note_index, note in enumerate(beat.notes):
+    for measure in fj_part.measures:
+        for beat in measure.beats:
+            for note in beat.notes:
                 # print(counter, fj_durs_34[counter], note.dur)
                 assert note.dur * fj_durs_34[counter]
                 counter += 1
@@ -436,7 +418,7 @@ def test_fj_three_four(shared_output_dir):
     score.convert_to_xml("tests/output/test_score_fj_34.musicxml")
 
 
-def test_fj_shifting_ts(shared_output_dir):
+def test_fj_shifting_ts():
     # fmt: off
     fj_durs_shift = [2,2,2,1,1,1,1,2,1,1,2,2,2,2,2,1,1,1,1,3,1,1,1,1,1,2,2,1,1,1,1,1,1,2,1,1,2,2,2,2,2,1,2,1,3]
     # fmt: on
@@ -449,15 +431,15 @@ def test_fj_shifting_ts(shared_output_dir):
     score.convert_to_xml("tests/output/test_score_fj_shifting.musicxml")
 
     counter = 0
-    for measure_index, measure in enumerate(fj_part.measures):
-        for beat_index, beat in enumerate(measure.beats):
-            for note_index, note in enumerate(beat.notes):
+    for measure in fj_part.measures:
+        for beat in measure.beats:
+            for note in beat.notes:
                 #print(measure_index, fj_durs_shift[counter], note, measure.time_signature)
                 assert note.dur == fj_durs_shift[counter]
                 counter += 1
 
 
-def test_frere_jacques_subdiv(shared_output_dir):
+def test_frere_jacques_subdiv():
 
     fj_ts = [[4, 4]]
     fj_list = [Note(dur, 4, pitch) for dur, pitch in zip(fj_durs, fj_pitches)]
@@ -546,9 +528,9 @@ def test_frere_jacques_subdiv(shared_output_dir):
     assert fj_quartered_part.measure_factor == 16
 
     counter = 0
-    for measure_index, measure in enumerate(fj_part.measures):
-        for beat_index, beat in enumerate(measure.beats):
-            for note_index, note in enumerate(beat.notes):
+    for measure in fj_part.measures:
+        for beat in measure.beats:
+            for note in beat.notes:
                 #print(counter, fj_durs[counter], note.dur)
                 assert note.dur == fj_durs[counter]
                 counter += 1
@@ -578,7 +560,7 @@ def test_chord_parsed():
     assert test_chord_part.measures[0].beats[0].notes[0].notes[2].dur == 4
 
 
-def test_chord_split_simple():
+def test_chord_split_simple(simple_test_note):
 
     c = Note(8, 4, 0)
     e = Note(8, 4, 4)
@@ -588,9 +570,8 @@ def test_chord_split_simple():
 
     ts = [(4, 4)]
 
-def test_chord_parsed():
 
-    c = Note(4,4,0)
+    c = simple_test_note
     e = Note(4,4,4)
     g = Note(4,4,7)
 
@@ -605,7 +586,7 @@ def test_chord_parsed():
     # assert test_chord_part.measures[0].beats[0].notes[1].dur == 4
     # assert test_chord_part.measures[0].beats[0].notes[2].dur == 4
 
-def test_chord_split_simple():
+def test_chord_split_simple(simple_test_note):
     
     c = Note(8,4,0)
     e = Note(8,4,4)
@@ -623,7 +604,7 @@ def test_chord_split_simple():
 def test_extract_range(simple_test_note, simple_test_part):
     extract = simple_test_part.extract_note_list_from_range(0,1)
     assert extract
-    assert extract[0] == Note(4,4,0)
+    assert extract[0] == simple_test_note
     with pytest.raises(TypeError):
         simple_test_part.extract_note_list_from_range("dumb",10)
         simple_test_part.extract_note_list_from_range(10,"dumb")
@@ -634,7 +615,7 @@ def test_extract_range(simple_test_note, simple_test_part):
     longer_example = Part([simple_test_note for x in range(10)], (4,4))
     extract = longer_example.extract_note_list_from_range(0,1)
     assert extract
-    assert extract[0] == Note(4,4,0)
+    assert extract[0] == simple_test_note
     extract = longer_example.extract_note_list_from_range(0,2)
     assert extract
     assert extract[0] == Note(8,4,0)
