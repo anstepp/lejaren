@@ -68,7 +68,7 @@ def simple_score_with_singleton_sig(simple_test_note, single_time_sig):
 
 @pytest.fixture
 def simple_test_input_score():
-    files = ["tests/test_files/test_scorefj.musicxml"]
+    files = ["tests/test_files/test_score_fj.musicxml"]
     for file in files:
         assert Path(file)
     return files
