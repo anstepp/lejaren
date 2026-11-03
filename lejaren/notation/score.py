@@ -83,22 +83,35 @@ class Score:
             part_note_list = []
             for measure in part.iterchildren('measure'):
                 divisions = float(measure.findall('.//divisions')[0].text)
-                for note in measure.iterchildren('note'):
-                    # FIXME: Save minimum necessary info
-                    # Try to stick with XPath for now...
-                    dur = float(note.findall('.//duration')[0].text)
-                    dur /= divisions
-                    step = int(DIATONIC[note.findall('.//step')[0].text])
-                    octave = note.findall('.//octave')[0].text
-                    try:
-                        alter = float(note.findall('.//alter')[0].text)
-                        step += alter
-                    except (IndexError):
-                        alter = 0
-                        step += alter
-                    part_note_list.append(Note(float(dur), int(octave), step))
-                    #join notes
-                    #part_note_list = self._join_ties(part_note_list)
+                if sum(1 for _ in measure.iterchildren(tag='note')) < 0:
+                    raise ValueError(f"No notes in this measure, count is {sum(1 for _ in measure.iterchildren(tag='note'))}")
+                else:
+                    for note in measure.iterchildren('note'):
+                        if (note.findall('.//duration') and note.findall('.//step') and note.findall('.//octave')) is not None:
+                            # FIXME: Save minimum necessary info
+                            # Try to stick with XPath for now...
+                            if not isinstance(note.findall('.//duration'), list):
+                                raise TypeError(f"Note durations not list is: {type(note.findall('.//duration'))}")
+                            else:
+                                dur = float(note.findall('.//duration')[0].text)
+                                dur /= divisions
+                            if not isinstance(note.findall('.//step'), list):
+                                raise TypeError(f"Note step not list is: {type(note.findall('.//step'))}")
+                            else:
+                                step = int(DIATONIC[note.findall('.//step')[0].text])
+                            if not isinstance(note.findall('.//octave'), list):
+                                raise TypeError(f"Note step not list is: {type(note.findall('.//octave'))}")
+                            else:
+                                octave = note.findall('.//octave')[0].text
+                            try:
+                                alter = float(note.findall('.//alter')[0].text)
+                                step += alter
+                            except (IndexError):
+                                alter = 0
+                                step += alter
+                            part_note_list.append(Note(float(dur), int(octave), step))
+                            #join notes
+                            #part_note_list = self._join_ties(part_note_list)
             part_list.append(Part(part_note_list, time_signatures))
         parsed_parts = self._parse_parts(part_list)
         return parsed_parts
