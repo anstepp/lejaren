@@ -71,8 +71,21 @@ class Score:
             if len(self._parts) < 0:
                 raise ValueError("No parts exist, Aborting.")
             self._measure_count = len(self._parts)
+        elif isinstance(parts, pathlib.Path):
+            temp_tree = etree.parse(parts)
+            temp_root = temp_tree.getroot()
+            self._parts = self._from_etree(temp_tree)
+        elif isinstance(parts, str):
+            try:
+                parts_path = pathlib.Path(parts)
+            except ValueError as e:
+                print(f"Path was string; unable to load file as it does not exist, path was: {parts}, details: {e}")
+            else:
+                temp_tree = etree.parse(parts_path)
+                temp_root = temp_tree.getroot()
+                self._parts = self._from_etree(temp_tree)
         else:
-            raise TypeError(f"Parts must be Lejaren Parts or an ETree, is {type(parts)}")
+            raise TypeError(f"Parts must be Lejaren Parts, ETree or Path, is {type(parts)}")
             
         
 

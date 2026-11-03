@@ -108,5 +108,7 @@ def test_measure_mashing(double_score_alt_rest, default_time_sig):
 def test_set_ticks(simple_score):
     pass
 
-def test_import_simple_score(simple_test_input_score):
-    pass
+def test_import_simple_score(simple_test_input_score, single_time_sig):
+    for file in simple_test_input_score:
+        temp_score = Score(file)
+        assert temp_score
