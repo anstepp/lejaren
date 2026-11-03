@@ -64,3 +64,23 @@ def score_with_list_sig(simple_test_note, list_time_sig):
 def simple_score_with_singleton_sig(simple_test_note, single_time_sig):
     simple_test_score = Score(Part([simple_test_note], single_time_sig))
     return simple_test_score
+
+@pytest.fixture
+def notes_that_cause_duration_split():
+
+    test_note_a = Note(4, 4, 4)
+    test_note_b = Note(3, 3, 3)
+    test_note_c = Note(6, 6, 6)
+    test_rest = Rest(1)
+
+    test_sig = [[3, 4]]
+    test_list = [
+        test_note_b,
+        test_note_a,
+        test_note_b,
+        test_note_c,
+        test_note_a,
+        test_rest,
+    ]
+
+    return test_list, test_sig
