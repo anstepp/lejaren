@@ -72,6 +72,8 @@ def simple_test_input_score():
     for file in files:
         assert Path(file)
     return files
+
+@pytest.fixture
 def notes_that_cause_duration_split():
 
     test_note_a = Note(4, 4, 4)
