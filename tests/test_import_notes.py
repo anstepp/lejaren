@@ -109,6 +109,13 @@ def test_set_ticks(simple_score):
     pass
 
 def test_import_simple_score(simple_test_input_score, single_time_sig):
+    #working model on dir
     for file in simple_test_input_score:
         temp_score = Score(file)
         assert temp_score
+    #test raises
+    with pytest.raises(TypeError):
+        temp_score = Score(123)
+        temp_score = Score({})
+    with pytest.raises(ValueError):
+            temp_score = Score([])

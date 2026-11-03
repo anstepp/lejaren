@@ -61,10 +61,10 @@ class Score:
         if isinstance(parts, list) or isinstance(parts, Part):
             if isinstance(parts, Part):
                 self._parts = self._parse_parts(parts)
-            elif len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0):
+            elif len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0) and len(parts) > 0:
                 self._parts = self._parse_parts(parts)
             else:
-                raise ValueError(f"Some parts wrong: {len(parts)} and {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
+                raise ValueError(f"Some parts wrong... count:{len(parts)} and part: {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
             self._measure_count = self._pad_with_empty_measures()
         elif isinstance(parts, etree.ElementTree):
             self._parts = self._from_etree(parts)
