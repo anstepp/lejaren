@@ -12,7 +12,7 @@ def get_logger() -> logging.Logger:
     logging.config.dictConfig(
         {
             "version": 1,
-            "disable_existing_loggers": True,
+            "disable_existing_loggers": False, #to play nice...
             "formatters": {
                 "f": {
                     "format": "[%(levelname)s] %(asctime)s (%(process)d) %(module)s: %(message)s",
