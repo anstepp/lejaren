@@ -34,6 +34,7 @@ import copy
 from typing import Tuple, Self
 from decimal import Decimal
 
+from lejaren.log.log import logging
 
 #FIXME: when in PyPi, return to real
 # try:
@@ -153,6 +154,8 @@ class Note:
 
         """
 
+        logging.info(f"Note creation... dur: {dur}, octave: {octave}, pitch class: {pitch_class}")
+
         # TODO: Verify float for microtones
         necessary_items = (["dur", float], ["octave", int], ["pitch_class", int])
         
@@ -164,7 +167,7 @@ class Note:
             if dur > 0:
                 self.dur = Decimal(str(dur))
         except ValueError as e:
-            log.error(e)
+            logging.error(e)
             raise ValueError("Duration must be greater than 0")
 
         # called to correct any errant pitch classes
@@ -179,6 +182,7 @@ class Note:
             if hasattr(self, item[0]):
                 pass
             else:
+                logging.warning(f"Note has no {item[0]}.")
                 raise ValueError(f"Note has no {item[0]}.")
 
     def _fix_pitch_overflow(self, octave: int, pitch_class: float) -> Tuple[int, int]:
@@ -202,6 +206,7 @@ class Note:
             isinstance(pitch_class, float)
 
         except TypeError as e:
+            logging.warning(e)
             print(f"Non-float passed to pitch class for overflow, was {type(pitch_class)}, details: {e}")
 
         else:
@@ -291,6 +296,7 @@ class Note:
                 11: ["B", "0", "natural"],
             }
         else:
+            logging.warning("starting_pitch must be zero, a flat key, or sharp key")
             raise ValueError("starting_pitch must be zero, a flat key, or sharp key")
 
         return step_names[self.pitch_class]
@@ -320,6 +326,10 @@ class Note:
             self.articulation = articulation
 
         else:
+
+            logging.warning(
+                f"Articulation {articulation} must be a valid articulation: {valid_articulations}"
+            )
 
             raise ValueError(
                 f"Articulation {articulation} must be a valid articulation: {valid_articulations}"
@@ -361,8 +371,8 @@ class Note:
             if new_duration > 0:
                 self.dur = Decimal(str(new_duration))
         except ValueError as e:
-            log.error(e)
-            raise
+            logging.error(f"Duration under 0, details: {e}")
+            raise ValueError(f"Duration under 0, details: {e}")
 
     def split(self, diff: int) -> Tuple[Self, Self]:
         old_note = copy.copy(self)
@@ -382,7 +392,7 @@ class Note:
         try:
             isinstance(shift, float)
         except TypeError as e:
-            print(f"Non-float passed to X-position, was type {type(shift)}, details: {e}")
+            logging.warning(f"Non-float passed to X-position, was type {type(shift)}, details: {e}")
         else:
             self.x_pos = shift
 
@@ -391,11 +401,13 @@ class Note:
         lower_shift_type = shift_type.lower()
         if lower_shift_type in self.stem_dirs:
             if not isinstance(amount, (int|float)):
+                logging.warning(f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}")
                 raise TypeError(f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}")
             else:
                 self.stem_dir = lower_shift_type
                 self.stem_y_pos = amount
-        else:    
+        else:
+            logging.warning(f"Stem shift amount non-numerical, was {type(amount)}")
             raise ValueError(f"Stem shift amount non-numerical, was {type(amount)}")
             
 
