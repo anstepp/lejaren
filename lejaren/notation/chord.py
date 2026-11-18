@@ -135,6 +135,7 @@ class Chord:
                 self.tie_end = True
                 self.articulation = None
         else:
+            log.warning(f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}")
             raise Exception(
                 f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}"
             )
