@@ -64,12 +64,16 @@ class Score:
             elif len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0) and len(parts) > 0:
                 self._parts = self._parse_parts(parts)
             else:
-                raise ValueError(f"Some parts wrong... count:{len(parts)} and part: {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}")
+                warnstr = f"Some parts wrong... count:{len(parts)} and part: {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}"
+                log.warning(warnstr)
+                raise ValueError(warnstr)
             self._measure_count = self._pad_with_empty_measures()
         elif isinstance(parts, etree.ElementTree):
             self._parts = self._from_etree(parts)
             if len(self._parts) < 0:
-                raise ValueError("No parts exist, Aborting.")
+                warnstr = "No parts exist, Aborting."
+                log.warning(warnstr)
+                raise ValueError(warnstr)
             self._measure_count = len(self._parts)
         elif isinstance(parts, pathlib.Path):
             temp_tree = etree.parse(parts)
@@ -77,18 +81,23 @@ class Score:
             self._parts = self._from_etree(temp_tree)
         elif isinstance(parts, str):
             if not pathlib.Path(parts).exists():
-                raise ValueError(f"Path was string; unable to load file as it does not exist, path was: {parts}")
+                warnstr = f"Path was string; unable to load file as it does not exist, path was: {parts}"
+                log.warning(warnstr)
+                raise ValueError(warnstr)
             else:
                 parts_path = pathlib.Path(parts)
                 temp_tree = etree.parse(parts_path)
                 temp_root = temp_tree.getroot()
                 self._parts = self._from_etree(temp_tree)
         else:
-            raise TypeError(f"Parts must be Lejaren Parts, ETree or Path, is {type(parts)}")
+            warnstr = f"Parts must be Lejaren Parts, ETree or Path, is {type(parts)}"
+            log.warning(warnstr)
+            raise TypeError(warnstr)
             
         
 
     def _from_etree(self, parts, time_signatures=[(4,4)]):
+        #FIXME: Get away from findall...?
         part_list = []
         root = parts.getroot()
         for part in root.iterchildren('part'):
@@ -96,19 +105,25 @@ class Score:
             for measure in part.iterchildren('measure'):
                 divisions = float(measure.findall('.//divisions')[0].text)
                 if sum(1 for _ in measure.iterchildren(tag='note')) < 0:
-                    raise ValueError(f"No notes in this measure, count is {sum(1 for _ in measure.iterchildren(tag='note'))}")
+                    warnstr = f"No notes in this measure, count is {sum(1 for _ in measure.iterchildren(tag='note'))}"
+                    log.warning(warnstr)
+                    raise ValueError(warnstr)
                 else:
                     for note in measure.iterchildren('note'):
                         if (note.findall('.//duration') and note.findall('.//step') and note.findall('.//octave')) is not None:
                             # FIXME: Save minimum necessary info
                             # Try to stick with XPath for now...
                             if not isinstance(note.findall('.//duration'), list):
-                                raise TypeError(f"Note durations not list is: {type(note.findall('.//duration'))}")
+                                warnstr = f"Note durations not list is: {type(note.findall('.//duration'))}"
+                                log.warning(warnstr)
+                                raise TypeError(warnstr)
                             else:
                                 dur = float(note.findall('.//duration')[0].text)
                                 dur /= divisions
                             if not isinstance(note.findall('.//step'), list):
-                                raise TypeError(f"Note step not list is: {type(note.findall('.//step'))}")
+                                warnstr = f"Note step not list is: {type(note.findall('.//step'))}"
+                                log.warning(warnstr)
+                                raise TypeError(warnstr)
                             else:
                                 step = int(DIATONIC[note.findall('.//step')[0].text])
                             if not isinstance(note.findall('.//octave'), list):
@@ -119,6 +134,7 @@ class Score:
                                 alter = float(note.findall('.//alter')[0].text)
                                 step += alter
                             except (IndexError):
+                                log.warning(f"IndexError on Accidental...")
                                 alter = 0
                                 step += alter
                             part_note_list.append(Note(float(dur), int(octave), step))
@@ -147,7 +163,9 @@ class Score:
                     parsed_parts.append({"staff_count": 1, "staves": [p]})
 
         else:
-            raise Exception("Invalid parts argument supplied to Score.")
+            warnstr = "Invalid parts argument supplied to Score."
+            log.warning(warnstr)
+            raise TypeError(warnstr)
 
         return parsed_parts
 
@@ -513,6 +531,7 @@ class Score:
 
             serialized = etree.tostring(
                 root,
+                #TODO: Choose - make like to remote or have local pull in repo
                 doctype='<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/xsd/musicxml.xsd">',
             )
 
