@@ -1,4 +1,4 @@
-DEFAULT_SAMPLING_RATE = 44100
+from lejaren._constants import DEFAULT_SAMPLING_RATE
 
 class Tempo:
 
