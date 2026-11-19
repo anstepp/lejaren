@@ -187,11 +187,12 @@ class Part:
         denominator_uniques = self.get_ts_uniques()
         self.measure_factor = self._get_factor(dur_uniques) * max(denominator_uniques)
 
-        # self.create_part(self.current_list, self.measure_factor)
-
         self.get_measures(self.current_list, self.time_signatures)
 
         [measure.clean_up_measure() for measure in self.measures]
+
+        self.clef = clef
+        self.line = line
 
     """default behavior is to simply clean an input list to 4/4
        it's also an option to feed extra arguments with keywords to 
@@ -319,29 +320,7 @@ class Part:
 
         return factor
 
-    def _assign_measure_weight(self):
-        """
-        Assign weight for hypermetric ranking.
-
-        Assigns a weight to the measure based on rules. Not yet implemented.
-
-        Arguments:
-        ----------
-
-        None.
-
-        Returns:
-        --------
-
-        None.
-        """
-        weight = 0
-        for index, measure in enumerate(self.measures):
-            self._get_change_pitch(10)
-
-    def _compare_weight(self):
-        pass
-
+    
     def _get_index_range(self, index: int, search_range: int) -> Tuple[int, int]:
         """
         Returns range for searching for hypermetric analysis.
