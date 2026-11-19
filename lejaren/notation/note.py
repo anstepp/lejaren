@@ -34,7 +34,7 @@ import copy
 from typing import Tuple, Self
 from decimal import Decimal
 
-from lejaren._constants import FLAT_KEYS, SHARP_KEYS
+from lejaren._constants import FLAT_KEYS, SHARP_KEYS, ARTICULATIONS
 from lejaren.log.log import get_logger
 
 logger = get_logger()
@@ -306,29 +306,11 @@ class Note:
 
     def add_articulation(self, articulation: str) -> None:
 
-        valid_articulations = [
-            "accent",
-            "breath-mark",
-            "caesura",
-            "detached-legato",
-            "doit",
-            "falloff",
-            "plop",
-            "scoop",
-            "spiccato",
-            "staccatissimo",
-            "staccato",
-            "stress",
-            "strong-accent",
-            "tenuto",
-            "unstress",
-        ]
-
-        if articulation in valid_articulations:
+        if articulation in ARTICULATIONS:
             self.articulation = articulation
 
         else:
-            warnstr = f"Articulation {articulation} must be a valid articulation: {valid_articulations}" 
+            warnstr = f"Articulation {articulation} must be a valid articulation: {ARTICULATIONS}" 
             logger.warning(warnstr)
             raise ValueError(warnstr)
 
