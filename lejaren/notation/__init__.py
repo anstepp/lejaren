@@ -5,4 +5,5 @@ from .part import Part
 from .rest import Rest
 from .score import Score
 from .chord import Chord
+from .metronome import Metronome
 from .tempo import Tempo

@@ -3,7 +3,7 @@ from typing import Iterable
 from lejaren.notation import Note
 import lejaren.log.log as logger
 
-logging = logger.get_logger()
+logger = logger.get_logger()
 
 
 class Beat:
@@ -24,7 +24,7 @@ class Beat:
                 note.beam_continue = True
 
     def add_note(self, note: Note) -> None:
-        logging.debug(f"Appending note: {note}")
+        logger.debug(f"Appending note: {note}")
         self.notes.append(note)
 
     def extend_beat(self, notes: Iterable[Note]) -> None:
