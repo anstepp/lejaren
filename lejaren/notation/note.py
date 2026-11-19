@@ -151,8 +151,9 @@ class Note:
             if dur > 0:
                 self.dur = Decimal(str(dur))
         except ValueError as e:
-            logger.error(e)
-            raise ValueError("Duration must be greater than 0")
+            errstr = f"Duration must be greater than 0, was: {dur}, details: {e}"
+            logger.error(errstr)
+            raise ValueError(errstr)
 
         # called to correct any errant pitch classes
         self.octave, self.pitch_class = self._fix_pitch_overflow(octave, pitch_class)
@@ -160,7 +161,7 @@ class Note:
         # force starting_pitch to be keyless
         self.step_name, self.alter, self.accidental = self._get_step_name(0)
 
-        self.articulation = None
+        self.articulation: bool = None
 
         for item in necessary_items:
             if hasattr(self, item[0]):
@@ -178,14 +179,14 @@ class Note:
         self.measure_factor, self.measure_flag = 1, False
 
         # chord
-        self.is_chord_member = False
+        self.is_chord_member: bool = False
 
         # engrave
         self.stem_dirs = ("up", "down", "none", "double") #lowercase only
-        self.x_pos = 0
-        self.stem = False
-        self.stem_dir = False # must be in stem_dirs
-        self.stem_y_pos = 0
+        self.x_pos: float = 0
+        self.stem: bool = False
+        self.stem_dir: bool = False # must be in stem_dirs
+        self.stem_y_pos: float = 0
 
     def _fix_pitch_overflow(self, octave: int, pitch_class: float) -> Tuple[int, int]:
         """
@@ -324,18 +325,12 @@ class Note:
         ]
 
         if articulation in valid_articulations:
-
             self.articulation = articulation
 
         else:
-
-            logger.warning(
-                f"Articulation {articulation} must be a valid articulation: {valid_articulations}"
-            )
-
-            raise ValueError(
-                f"Articulation {articulation} must be a valid articulation: {valid_articulations}"
-            )
+            warnstr = f"Articulation {articulation} must be a valid articulation: {valid_articulations}" 
+            logger.warning(warnstr)
+            raise ValueError(warnstr)
 
     def set_as_tie(self, tie_type: str) -> None:
         """Sets note as a tied note of a specific type.
@@ -364,9 +359,9 @@ class Note:
             self.tie_end = True
             self.articulation = None
         else:
-            raise Exception(
-                f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}"
-            )
+            warnstr = f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}"
+            logger.warning(warnstr)
+            raise Exception(warnstr)
 
     def change_duration(self, new_duration: float) -> None:
         try:
@@ -394,7 +389,9 @@ class Note:
         try:
             isinstance(shift, float)
         except TypeError as e:
-            logger.warning(f"Non-float passed to X-position, was type {type(shift)}, details: {e}")
+            warnstr = f"Non-float passed to X-position, was type {type(shift)}, details: {e}"
+            logger.warning(warnstr)
+            print(warnstr)
         else:
             self.x_pos = shift
 
@@ -403,14 +400,16 @@ class Note:
         lower_shift_type = shift_type.lower()
         if lower_shift_type in self.stem_dirs:
             if not isinstance(amount, (int|float)):
-                logger.warning(f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}")
-                raise TypeError(f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}")
+                warnstr = f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}"
+                logger.warning(warnstr)
+                raise TypeError(warnstr)
             else:
                 self.stem_dir = lower_shift_type
                 self.stem_y_pos = amount
         else:
-            logger.warning(f"Stem shift amount non-numerical, was {type(amount)}")
-            raise ValueError(f"Stem shift amount non-numerical, was {type(amount)}")
+            warnstr = f"Stem shift amount non-numerical, was {type(amount)}"
+            logger.warning(warnstr)
+            raise ValueError(warnstr)
             
 
     def hide_stem(self) -> None:
