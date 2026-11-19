@@ -2,8 +2,7 @@ import copy
 import fractions, math
 from itertools import accumulate, cycle
 
-from lxml import etree
-from typing import Iterable, List, Optional, NamedTuple, Tuple, Union
+from typing import Iterable, List, NamedTuple, Tuple, Union
 
 from .measure import Measure
 from .note import Note
@@ -11,8 +10,6 @@ from .beat import Beat
 from .rest import Rest
 from .chord import Chord
 import lejaren.log.log as logger
-
-from lejaren.notation import measure
 
 log = logger.get_logger()
 
