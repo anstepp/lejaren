@@ -1,8 +1,8 @@
 # *lejaren*
 Computer-Aided Musical Prototyping in Python
 
-![](https://github.com/anstepp/lejaren/workflows/tests/badge.svg)
-![Coverage](https://githubusercontent.com)
+![Tests](https://github.com/anstepp/lejaren/workflows/tests/badge.svg)
+![Coverage](./coverage.svg)
 
 
 
