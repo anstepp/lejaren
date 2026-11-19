@@ -9,13 +9,14 @@ import copy
 from itertools import accumulate
 
 from typing import Iterable, List, Optional, Tuple, Union, List
+from lejaren._types import NO_CHORDS, ONLY_PITCH, ALL_DURATIONS, TIME_SIGNATURE, NOTE_LIST
 
 from .note import Note
 from .beat import Beat
 from .rest import Rest
 from .chord import Chord
 
-from lejaren._constants import METER_DIVISION_TYPES, TIME_SIGNATURE
+from lejaren._constants import METER_DIVISION_TYPES
 
 import lejaren.log.log as logger
 
@@ -71,7 +72,7 @@ class Measure:
 
     """
 
-    def __init__(self, time_signature: Tuple, factor: int):
+    def __init__(self, time_signature: TIME_SIGNATURE, factor: int):
 
         """Init a measure with a time signature and factor. This
         sets all the relevant information about a measure.
@@ -147,7 +148,7 @@ class Measure:
         else:
             return False
 
-    def _cumulative_beat_generator(self) -> None:
+    def _cumulative_beat_generator(self):
         """Using the measure map, creates a list of the values for each beat
         that is cummulative. This is used in the Part.get_internal_measures
         method.
@@ -183,7 +184,7 @@ class Measure:
         log.debug(f"Adding note to measure: {note}")
         self.notes.append(note)
 
-    def extend_measure(self, note_list: Iterable[Union[Note, Rest, Chord]]):
+    def extend_measure(self, note_list: NOTE_LIST):
         self.notes.extend(note_list)
 
     def add_beat(self, beat: Beat) -> None:
@@ -345,11 +346,9 @@ class Measure:
 
     def _fill_measure(
         self,
-        note_list: Iterable[Union[Note, Rest, Chord]],
+        note_list: NOTE_LIST,
         total_cumulative_beats: int,
-    ) -> Iterable[Union[Note, Rest, Chord]]:
-
-        # import pdb; pdb.set_trace()
+    ) -> NOTE_LIST:
 
         tot_durs = list(accumulate([note.dur for note in note_list]))[-1]
 

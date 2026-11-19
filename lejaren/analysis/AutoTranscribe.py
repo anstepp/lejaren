@@ -10,7 +10,7 @@ from bisect import bisect_left
 
 import lejaren.log.log as logger
 
-from lejaren._constants import TIME_SIGNATURE
+from lejaren._types import TIME_SIGNATURE
 
 from lejaren.notation import Note, Tempo
 from lejaren.notation.score import Score

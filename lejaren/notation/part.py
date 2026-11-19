@@ -4,7 +4,8 @@ from itertools import accumulate, cycle
 
 from typing import Iterable, NamedTuple, Tuple, Union
 
-from lejaren._constants import TIME_SIGNATURE, TIME_SIGNATURES, MAX_LINES, CLEFS
+from lejaren._types import TIME_SIGNATURE, TIME_SIGNATURES
+from lejaren._constants import MAX_LINES, CLEFS
 
 from .measure import Measure
 from .note import Note
