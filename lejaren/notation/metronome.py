@@ -1,34 +1,9 @@
 from lejaren.notation import Measure, Beat
 from lejaren.log.log import get_logger
 
+from lejaren._constants import STANDARD_DIVS, BEAT_TYPES
+
 log = get_logger()
-
-STANDARDDIVS = [
-    (1, "whole"),
-    (2, "half"),
-    (4, "quarter"),
-    (8, "eighth"),
-    (16, "16th"),
-    (32, "32nd"),
-    (64, "64th"),
-]
-
-BEATTYPES = [
-    "1024th",
-    "512th",	
-    "256th",	
-    "128th",	
-    "64th",	
-    "32nd",	
-    "16th",	
-    "eighth",	
-    "quarter",	
-    "half",	
-    "whole",	
-    "breve",	
-    "long",
-    "maxima",
-]
 
 class Metronome:
 
@@ -37,7 +12,7 @@ class Metronome:
     def __init__(self, beat_unit, tempo):
         if not isinstance(beat_unit, str):
             log.debug("Inexact Beat Unit; guessing...")
-            if beat_unit in STANDARDDIVS:
+            if beat_unit in STANDARD_DIVS:
                 pass
             else:
                 #bail?
@@ -46,7 +21,7 @@ class Metronome:
                 self.beat_unit = "quarter"
                 self.per_minute = 60 # prevent overwrite?
         else:
-            if not any(beat_unit in row for row in BEATTYPES):
+            if not any(beat_unit in row for row in BEAT_TYPES):
                 warnstr = f"Beat Unit isn't a note, is: {beat_unit}, type: {type(beat_unit)}"
                 log.warning(warnstr)
                 raise ValueError(warnstr)

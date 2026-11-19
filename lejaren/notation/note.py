@@ -34,6 +34,7 @@ import copy
 from typing import Tuple, Self
 from decimal import Decimal
 
+from lejaren._constants import FLAT_KEYS, SHARP_KEYS, ARTICULATIONS
 from lejaren.log.log import get_logger
 
 logger = get_logger()
@@ -248,8 +249,7 @@ class Note:
 
         """
 
-        flat_keys = [1, 3, 5, 8, 10]
-        sharp_keys = [2, 4, 6, 7, 9, 11]
+        
 
         step_names = {}
 
@@ -268,7 +268,7 @@ class Note:
                 10: ["B", "-1", "flat"],
                 11: ["B", "0", "natural"],
             }
-        elif starting_pitch in flat_keys:
+        elif starting_pitch in FLAT_KEYS:
             step_names = {
                 0: ["C", "0", "natural"],
                 1: ["D", "-1", "flat"],
@@ -283,7 +283,7 @@ class Note:
                 10: ["B", "-1", "flat"],
                 11: ["B", "0", "natural"],
             }
-        elif starting_pitch in sharp_keys:
+        elif starting_pitch in SHARP_KEYS:
             step_names = {
                 0: ["C", "0", "natural"],
                 1: ["C", "1", "sharp"],
@@ -306,29 +306,11 @@ class Note:
 
     def add_articulation(self, articulation: str) -> None:
 
-        valid_articulations = [
-            "accent",
-            "breath-mark",
-            "caesura",
-            "detached-legato",
-            "doit",
-            "falloff",
-            "plop",
-            "scoop",
-            "spiccato",
-            "staccatissimo",
-            "staccato",
-            "stress",
-            "strong-accent",
-            "tenuto",
-            "unstress",
-        ]
-
-        if articulation in valid_articulations:
+        if articulation in ARTICULATIONS:
             self.articulation = articulation
 
         else:
-            warnstr = f"Articulation {articulation} must be a valid articulation: {valid_articulations}" 
+            warnstr = f"Articulation {articulation} must be a valid articulation: {ARTICULATIONS}" 
             logger.warning(warnstr)
             raise ValueError(warnstr)
 
