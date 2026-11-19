@@ -8,47 +8,17 @@ on:
       - main
 
 jobs:
-  test-and-coverage:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.14"]
+  test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Setup Poetry
-        uses: abatilo/actions-poetry@v2.0.0
+          python-version: "3.14"
+      - uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: 2.4.1
-
-      - name: Install dependencies
-        run: |
+      - run: |
           poetry install
-          poetry run pip install pytest-cov coverage-badge
-
-      - name: Run pytest with coverage
-        run: |
-          poetry run pytest tests/ \
-            --cov=lejaren \
-            --cov-report=term-missing
-
-      - name: Generate and commit coverage badge
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          poetry run coverage-badge -o coverage.svg -f
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@://github.com"
-          git add coverage.svg
-          git diff --staged --quiet || git commit -m "Update coverage badge [skip ci]"
-          git push
-
+          poetry run pip install pytest-cov
+      - run: poetry run pytest tests/ --cov=lejaren --cov-report=term-missing
