@@ -8,24 +8,49 @@ on:
       - main
 
 jobs:
-  run-pytest:
+  test-and-coverage:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.14]
+        python-version: ["3.14"]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v5
-      - name: Setup python
+
+      - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Setup poetry
+
+      - name: Setup Poetry
         uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: 2.4.1
-      - name: Run poetry install
-        run: poetry install
-      - name: Run pytest
-        run: poetry run pytest tests/
+
+      - name: Install dependencies
+        run: |
+          poetry install
+          poetry run pip install pytest-cov coverage-badge
+
+      - name: Run pytest with coverage
+        run: |
+          poetry run pytest tests/ \
+            --cov=lejaren \
+            --cov-report=term-missing
+
+      - name: Generate and deploy coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p public
+          poetry run coverage-badge -o public/coverage.svg -f
+
+      - name: Deploy badge to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
