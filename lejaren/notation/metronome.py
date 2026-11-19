@@ -1,16 +1,16 @@
 from lejaren.notation import Measure, Beat
-from lejaren.log import get_logger
+from lejaren.log.log import get_logger
 
 log = get_logger()
 
 STANDARDDIVS = [
-    1,
-    2,
-    4,
-    8,
-    16,
-    32,
-    64
+    (1, "whole"),
+    (2, "half"),
+    (4, "quarter"),
+    (8, "eighth"),
+    (16, "16th"),
+    (32, "32nd"),
+    (64, "64th"),
 ]
 
 BEATTYPES = [
@@ -41,12 +41,15 @@ class Metronome:
                 pass
             else:
                 #bail?
-                log.debug("Can't make good guess..")
+                log.debug("Can't make good guess, quarter is 60..")
                 # set to boring, default q = 60
                 self.beat_unit = "quarter"
+                self.per_minute = 60 # prevent overwrite?
         else:
-            if beat_unit not in BEATTYPES:
-                raise ValueError(f"Beat Unit isn't a note, is: {beat_unit}, type: {type(beat_unit)}")
+            if not any(beat_unit in row for row in BEATTYPES):
+                warnstr = f"Beat Unit isn't a note, is: {beat_unit}, type: {type(beat_unit)}"
+                log.warning(warnstr)
+                raise ValueError(warnstr)
             else:
                 self.beat_unit = beat_unit
                 self.dots = 0
