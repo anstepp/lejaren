@@ -4,7 +4,7 @@ from itertools import accumulate, cycle
 
 from typing import Iterable, NamedTuple, Tuple, Union
 
-from lejaren._constants import TIME_SIGNATURE, TIME_SIGNATURES
+from lejaren._constants import TIME_SIGNATURE, TIME_SIGNATURES, MAX_LINES, CLEFS
 
 from .measure import Measure
 from .note import Note
@@ -183,8 +183,18 @@ class Part:
 
         [measure.clean_up_measure() for measure in self.measures]
 
-        self.clef = clef
-        self.line = line
+        if clef not in CLEFS:
+            warnstr = f"Clef not real, was: {clef}"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
+        else:
+            self.clef = clef
+        if line < MAX_LINES and line > 0:
+            self.line = line
+        else:
+            warnstr = f"Can't have a clef on over 5 lines, was: {line}"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
 
     """default behavior is to simply clean an input list to 4/4
        it's also an option to feed extra arguments with keywords to 
