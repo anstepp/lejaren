@@ -39,9 +39,13 @@ class Chord:
             if all(note.dur == note_list[0].dur for note in note_list):
                 unsorted_notes = note_list
             else:
-                raise ValueError("All durations in Chord() must be equal")
+                warnstr = "All durations in Chord() must be equal"
+                log.warning(warnstr)
+                raise ValueError(warnstr)
         else:
-            raise ValueError("Arguments to Chord() must be Notes")
+            warnstr = "Arguments to Chord() must be Notes"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
 
         for idx, note in enumerate(note_list):
             log.debug(f"Note list, idx: {idx}, note {note}")
@@ -135,7 +139,6 @@ class Chord:
                 self.tie_end = True
                 self.articulation = None
         else:
-            log.warning(f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}")
-            raise Exception(
-                f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}"
-            )
+            warnstr = f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}"
+            log.warning(warnstr)
+            raise Exception(warnstr)

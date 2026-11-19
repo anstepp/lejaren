@@ -141,11 +141,12 @@ class Part:
         if isinstance(input_list, list):
             self.current_list = input_list
         elif isinstance(input_list, Note|Rest):
+            log.debug("Wrapping Single Note/Rest in List")
             self.current_list = [input_list]
         else:
-            raise ValueError(f"Bad Note list to Part, is type: {type(input_list)}")
-    
-        # self.current_list = input_list
+            warnstr = f"Bad Note list to Part, is type: {type(input_list)}"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
 
         for note in self.current_list:
             if note is type(Note):
@@ -153,17 +154,20 @@ class Part:
 
         self.measures = []
 
-        # TS stuff
+        # Time Signature stuff
         try:
             isinstance(time_signatures, (list|tuple))
         except TypeError as e:
-            print(f"Time Signature non-usable, was type: {type(time_signatures)}, details: {e}")
+            warnstr = f"Time Signature non-usable, was type: {type(time_signatures)}, details: {e}"
+            log.warning(warnstr)
+            print(warnstr)
         if not isinstance(time_signatures, list):
             log.debug("Wrapping Time Signature in List")
             self.time_signatures = [time_signatures]
         else:
             self.time_signatures = time_signatures
-        self.time_signature_index = 0
+
+        self.time_signature_index: int = 0
 
         self.subdivisions, self.max_subdivisions = None, None
 
@@ -183,11 +187,12 @@ class Part:
         denominator_uniques = self.get_ts_uniques()
         self.measure_factor = self._get_factor(dur_uniques) * max(denominator_uniques)
 
-        # self.create_part(self.current_list, self.measure_factor)
-
         self.get_measures(self.current_list, self.time_signatures)
 
         [measure.clean_up_measure() for measure in self.measures]
+
+        self.clef = clef
+        self.line = line
 
     """default behavior is to simply clean an input list to 4/4
        it's also an option to feed extra arguments with keywords to 
@@ -208,9 +213,11 @@ class Part:
 
         """
         if time_sig[1] < 3:
+            log.debug("Setting measure factor to time sig by multiplication... < 3")
             new_measure_factor = measure_factor * time_sig[1]
             return new_measure_factor
         elif time_sig[1] > 4:
+            log.debug("Setting measure factor to time sig by division... > 4")
             new_measure_factor = 4 / time_sig[1]
             return new_measure_factor
         else:
@@ -313,29 +320,7 @@ class Part:
 
         return factor
 
-    def _assign_measure_weight(self):
-        """
-        Assign weight for hypermetric ranking.
-
-        Assigns a weight to the measure based on rules. Not yet implemented.
-
-        Arguments:
-        ----------
-
-        None.
-
-        Returns:
-        --------
-
-        None.
-        """
-        weight = 0
-        for index, measure in enumerate(self.measures):
-            self._get_change_pitch(10)
-
-    def _compare_weight(self):
-        pass
-
+    
     def _get_index_range(self, index: int, search_range: int) -> Tuple[int, int]:
         """
         Returns range for searching for hypermetric analysis.
@@ -392,7 +377,9 @@ class Part:
                 else:
                     self.weight += 1
         else:
-            raise TypeError(f"Pitch index non-integer, was {type(index)}")
+            warnstr = f"Pitch index non-integer, was {type(index)}"
+            log.warning(warnstr)
+            raise TypeError(warnstr)
 
     def _get_change_group(self):
         """
@@ -495,8 +482,6 @@ class Part:
 
         for current_count, note in zip(accumulated_durs, note_list):
 
-            # import pdb; pdb.set_trace()
-
             if current_beat_count > current_count:
                 current_measure.add_note(note)
             elif current_beat_count == current_count:
@@ -539,11 +524,17 @@ class Part:
     def extract_note_list_from_range(self, min: int, max: int) -> list[Note|Rest|Chord]:
         max_measures = len(self.measures)
         if not isinstance(min, int) and isinstance(max, int):
-            raise TypeError(f"Ranges for note extraction not ints, were type: max: {max}, min: {min}")
+            warnstr = f"Ranges for note extraction not ints, were type: max: {max}, min: {min}"
+            log.warning(warnstr)
+            raise TypeError(warnstr)
         if min > max_measures or max > max_measures:
-            raise ValueError(f"Values for min and/or max greater than measures: min: {min}, max: {max}, measure count: {max_measures}")
+            warnstr = f"Values for min and/or max greater than measures: min: {min}, max: {max}, measure count: {max_measures}"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
         if min > max:
-            raise ValueError(f"Extration minimum measure is greater than maxiumum")
+            warnstr = f"Extration minimum measure is greater than maxiumum"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
         else:
             note_list_to_crush = []
             note_list_to_return = []

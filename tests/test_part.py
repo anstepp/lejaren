@@ -13,8 +13,6 @@ func_list = (
     "_test_for_low_bottom_time_sig",
     "get_ts_uniques",
     "_get_factor",
-    "_assign_measure_weight",
-    "_compare_weight",
     "_get_index_range",
     "_get_change_pitch",
     "_get_change_group",
