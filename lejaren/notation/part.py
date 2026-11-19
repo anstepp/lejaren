@@ -164,7 +164,8 @@ class Part:
             self.time_signatures = [time_signatures]
         else:
             self.time_signatures = time_signatures
-        self.time_signature_index = 0
+
+        self.time_signature_index: int = 0
 
         self.subdivisions, self.max_subdivisions = None, None
 
