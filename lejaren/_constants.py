@@ -1,4 +1,4 @@
-from typing import Final, List
+from typing import Final, List, Tuple
 
 FLAT_KEYS: Final[List[int]] = [1, 3, 5, 8, 10]
 SHARP_KEYS: Final[List[int]] = [2, 4, 6, 7, 9, 11]
@@ -20,3 +20,6 @@ ARTICULATIONS: Final[List[str]] = [
             "tenuto",
             "unstress",
         ]
+
+TIME_SIGNATURE = Tuple[int, int]
+TIME_SIGNATURES = List[Tuple[int, int]]

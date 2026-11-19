@@ -2,7 +2,9 @@ import copy
 import fractions, math
 from itertools import accumulate, cycle
 
-from typing import Iterable, List, NamedTuple, Tuple, Union
+from typing import Iterable, NamedTuple, Tuple, Union
+
+from lejaren._constants import TIME_SIGNATURE, TIME_SIGNATURES
 
 from .measure import Measure
 from .note import Note
@@ -11,12 +13,6 @@ from .chord import Chord
 import lejaren.log.log as logger
 
 log = logger.get_logger()
-
-# from collections import namedtuple
-
-TimeSignature = Tuple[int, int]
-TimeSignatures = List[Tuple[int, int]]
-
 
 class CurrentCountDivisions(NamedTuple):
     """
@@ -98,7 +94,7 @@ class Part:
         self,
         input_list: Iterable[Note],
         # TODO/FIXME: Verify Time Signature on instantiation
-        time_signatures: TimeSignatures,
+        time_signatures: TIME_SIGNATURES,
         key=0,
         clef="G",
         line=2,
@@ -117,7 +113,7 @@ class Part:
 
         input_list (list[Note]): a list of Note objects. They can be of any duration.
 
-        time_signatures (tuple[TimeSignature]): a tuple of TimeSignature(s). If one TimeSignature
+        time_signatures (tuple[TIME_SIGNATURE]): a tuple of TIME_SIGNATURE(S). If one TIME_SIGNATURE
         is given, the entire part is that time signature. Otherwise, the Time Signatures are cycled
         through.
 
@@ -196,14 +192,14 @@ class Part:
        for measure groupings of factors"""
 
     def _test_for_low_bottom_time_sig(
-        self, time_sig: TimeSignature, measure_factor: int
+        self, time_sig: TIME_SIGNATURE, measure_factor: int
     ) -> int:
         """
-        Evaulates if TimeSignature is valid or needs to be scaled.
+        Evaulates if TIME_SIGNATURE is valid or needs to be scaled.
 
         Arguments:
         ----------
-        time_sig: a TimeSignature
+        time_sig: a TIME_SIGNATURE
 
         measure_factor (int): a scaling factor for the measure (usually acquired internally).
 
@@ -386,10 +382,10 @@ class Part:
     def _get_implied_meter(self):
         """
         Evaluate note list to break into groupings of 2 and 3 and attempts to define
-        metric weight and assigns a TimeSignature to groupings.
+        metric weight and assigns a TIME_SIGNATURE to groupings.
 
         Evaluates pitch strength in metric and hypermetric terms, and attempts to create
-        a TimeSignature to subdivide note list. Not accurate, very risky, use at own risk.
+        a TIME_SIGNATURE to subdivide note list. Not accurate, very risky, use at own risk.
 
         Arguments:
         ----------
@@ -448,7 +444,7 @@ class Part:
 
     def _make_new_measure(
         self,
-        time_signatures: TimeSignatures,
+        time_signatures: TIME_SIGNATURES,
         current_measure: Measure,
         current_beat_count: int,
     ) -> Measure:
@@ -464,7 +460,7 @@ class Part:
         return current_measure, current_beat_count, measure_max
 
     def get_measures(
-        self, note_list: Iterable[Union[Note, Rest, Chord]], time_sigs: TimeSignatures
+        self, note_list: Iterable[Union[Note, Rest, Chord]], time_sigs: TIME_SIGNATURES
     ):
 
         accumulated_durs = self._accum_note_durs(iter(note_list))
