@@ -1,8 +1,11 @@
-name: Test & Coverage Badge
-
+name: tests
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   coverage:
@@ -12,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.14"
 
@@ -27,7 +30,7 @@ jobs:
 
       - name: Run pytest and generate badge
         run: |
-          pytest --cov=./
+          pytest --cov=./lejaren
           mkdir -p public
           coverage-badge -o public/coverage.svg -f
 
@@ -36,3 +39,25 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+
+  run-pytest:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.14]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+      - name: Setup python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 2.4.1
+      - name: Run poetry install
+        run: poetry install
+      - name: Run pytest
+        run: poetry run pytest tests/
