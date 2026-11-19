@@ -8,7 +8,11 @@ on:
       - main
 
 jobs:
-  coverage:
+  test-and-coverage:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.14"]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,44 +24,33 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.14"
+          python-version: ${{ matrix.python-version }}
+
+      - name: Setup Poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 2.4.1
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pytest pytest-cov coverage-badge
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          poetry install
+          poetry run pip install pytest-cov coverage-badge
 
-      - name: Run pytest and generate badge
+      - name: Run pytest with coverage
         run: |
-          pytest --cov=./lejaren
+          poetry run pytest tests/ \
+            --cov=lejaren \
+            --cov-report=term-missing
+
+      - name: Generate and deploy coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
           mkdir -p public
-          coverage-badge -o public/coverage.svg -f
+          poetry run coverage-badge -o public/coverage.svg -f
 
       - name: Deploy badge to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-
-  run-pytest:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.14]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v5
-      - name: Setup python
-        uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Setup poetry
-        uses: abatilo/actions-poetry@v2.0.0
-        with:
-          poetry-version: 2.4.1
-      - name: Run poetry install
-        run: poetry install
-      - name: Run pytest
-        run: poetry run pytest tests/
