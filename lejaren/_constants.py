@@ -55,3 +55,5 @@ STANDARD_DIVS = [
     (32, "32nd"),
     (64, "64th"),
 ]
+
+METER_DIVISION_TYPES = {2: "Duple", 3: "Triple", 4: "Quadruple"}

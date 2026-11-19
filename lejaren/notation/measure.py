@@ -15,12 +15,13 @@ from .beat import Beat
 from .rest import Rest
 from .chord import Chord
 
+from lejaren._constants import METER_DIVISION_TYPES, TIME_SIGNATURE
+
 import lejaren.log.log as logger
 
 log = logger.get_logger()
 
-METER_DIVISION_TYPES = {2: "Duple", 3: "Triple", 4: "Quadruple"}
-TimeSignature = Tuple[int, int]
+
 
 
 class Measure:
@@ -203,7 +204,7 @@ class Measure:
         self.beats.append(beat)
         log.debug(f"Appending beat and len: {beat} {len(beat.notes)}")
 
-    def set_time_signature(self, time_signature: TimeSignature) -> None:
+    def set_time_signature(self, time_signature: TIME_SIGNATURE) -> None:
         """For future use - eventally this should trigger a cascade
         measure rewrite in a part object that contains the re-sig'd
         measure.

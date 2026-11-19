@@ -9,8 +9,10 @@ from scipy.fft import rfft
 from bisect import bisect_left
 
 import lejaren.log.log as logger
+
+from lejaren._constants import TIME_SIGNATURE
+
 from lejaren.notation import Note, Tempo
-from lejaren.notation.measure import TimeSignature
 from lejaren.notation.score import Score
 
 log = logger.get_logger()
@@ -446,12 +448,12 @@ class AutoTranscribe:
 
         return note_list
 
-    def get_score(self, time_signature: TimeSignature, n_parts: int) -> Score:
+    def get_score(self, time_signature: TIME_SIGNATURE, n_parts: int) -> Score:
         """
         Get a Score that is auto-transcribed from a soundfile.
 
         Args:
-            time_signature: a TimeSignature
+            time_signature: a TIME_SIGNATURE
             n_parts: number of parts to return
         """
         part_list = []
