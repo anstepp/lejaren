@@ -144,7 +144,9 @@ class Part:
             log.debug("Wrapping Single Note/Rest in List")
             self.current_list = [input_list]
         else:
-            raise ValueError(f"Bad Note list to Part, is type: {type(input_list)}")
+            warnstr = f"Bad Note list to Part, is type: {type(input_list)}"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
 
         for note in self.current_list:
             if note is type(Note):
