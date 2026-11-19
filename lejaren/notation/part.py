@@ -395,7 +395,9 @@ class Part:
                 else:
                     self.weight += 1
         else:
-            raise TypeError(f"Pitch index non-integer, was {type(index)}")
+            warnstr = f"Pitch index non-integer, was {type(index)}"
+            log.warning(warnstr)
+            raise TypeError(warnstr)
 
     def _get_change_group(self):
         """
@@ -498,8 +500,6 @@ class Part:
 
         for current_count, note in zip(accumulated_durs, note_list):
 
-            # import pdb; pdb.set_trace()
-
             if current_beat_count > current_count:
                 current_measure.add_note(note)
             elif current_beat_count == current_count:
@@ -542,11 +542,17 @@ class Part:
     def extract_note_list_from_range(self, min: int, max: int) -> list[Note|Rest|Chord]:
         max_measures = len(self.measures)
         if not isinstance(min, int) and isinstance(max, int):
-            raise TypeError(f"Ranges for note extraction not ints, were type: max: {max}, min: {min}")
+            warnstr = f"Ranges for note extraction not ints, were type: max: {max}, min: {min}"
+            log.warning(warnstr)
+            raise TypeError(warnstr)
         if min > max_measures or max > max_measures:
-            raise ValueError(f"Values for min and/or max greater than measures: min: {min}, max: {max}, measure count: {max_measures}")
+            warnstr = f"Values for min and/or max greater than measures: min: {min}, max: {max}, measure count: {max_measures}"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
         if min > max:
-            raise ValueError(f"Extration minimum measure is greater than maxiumum")
+            warnstr = f"Extration minimum measure is greater than maxiumum"
+            log.warning(warnstr)
+            raise ValueError(warnstr)
         else:
             note_list_to_crush = []
             note_list_to_return = []
