@@ -21,8 +21,8 @@ ARTICULATIONS: Final[List[str]] = [
             "unstress",
         ]
 
-TIME_SIGNATURE = Tuple[int, int]
-TIME_SIGNATURES = List[Tuple[int, int]]
+TIME_SIGNATURE: Final = Tuple[int, int]
+TIME_SIGNATURES: Final = List[Tuple[int, int]]
 
 MAX_LINES: Final[int] = 5
 CLEFS: Final[Tuple[str]] = ["G", "C", "F"]
