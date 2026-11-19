@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import lejaren.log.log as logger
 
-logging = logger.get_logger()
+logger = logger.get_logger()
 
 
 class Rest:
@@ -14,7 +14,7 @@ class Rest:
 
     def _check_duration(self, duration: float) -> float:
         if duration <= 0:
-            logging.error(f"Negative rest duration: {duration}")
+            logger.error(f"Negative rest duration: {duration}")
             raise ValueError(f"Rest duration ({duration}) must be positive")
         else:
             return duration
