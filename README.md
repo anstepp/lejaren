@@ -2,7 +2,7 @@
 Computer-Aided Musical Prototyping in Python
 
 ![](https://github.com/anstepp/lejaren/workflows/tests/badge.svg)
-![Coverage](https://<USERNAME>.github.io/<REPO>/coverage.svg)
+![Coverage](https://anstepp.github.io/lejaren/coverage.svg)
 
 
 *lejaren* has replaced [Py2MusicXML](https://github.com/anstepp/py2musicxml).
