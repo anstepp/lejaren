@@ -118,24 +118,6 @@ class Note:
 
     """
 
-    # default flags for ties & tuplets
-    tie_start, tie_continue, tie_end = False, False, False
-    tuplet_start, tuplet_continue, tuplet_end = False, False, False
-    beam_start, beam_continue = False, False
-
-    # measure defaults
-    measure_factor, measure_flag = 1, False
-
-    # chord
-    is_chord_member = False
-
-    # engrave
-    stem_dirs = ("up", "down", "none", "double") #lowercase only
-    x_pos = 0
-    stem = False
-    stem_dir = False # must be in stem_dirs
-    stem_y_pos = 0
-
     def __init__(self, dur: float, octave: int, pitch_class: int) -> None:
 
         """Init a note with dur, octave and pitch_class. Sets additional
@@ -186,6 +168,24 @@ class Note:
             else:
                 logger.warning(f"Note has no {item[0]}.")
                 raise ValueError(f"Note has no {item[0]}.")
+
+        # default flags for ties & tuplets
+        self.tie_start, self.tie_continue, self.tie_end = False, False, False
+        self.tuplet_start, self.tuplet_continue, self.tuplet_end = False, False, False
+        self.beam_start, self.beam_continue = False, False
+
+        # measure defaults
+        self.measure_factor, self.measure_flag = 1, False
+
+        # chord
+        self.is_chord_member = False
+
+        # engrave
+        self.stem_dirs = ("up", "down", "none", "double") #lowercase only
+        self.x_pos = 0
+        self.stem = False
+        self.stem_dir = False # must be in stem_dirs
+        self.stem_y_pos = 0
 
     def _fix_pitch_overflow(self, octave: int, pitch_class: float) -> Tuple[int, int]:
         """
