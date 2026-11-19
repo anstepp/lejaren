@@ -141,11 +141,10 @@ class Part:
         if isinstance(input_list, list):
             self.current_list = input_list
         elif isinstance(input_list, Note|Rest):
+            log.debug("Wrapping Single Note/Rest in List")
             self.current_list = [input_list]
         else:
             raise ValueError(f"Bad Note list to Part, is type: {type(input_list)}")
-    
-        # self.current_list = input_list
 
         for note in self.current_list:
             if note is type(Note):
@@ -153,11 +152,13 @@ class Part:
 
         self.measures = []
 
-        # TS stuff
+        # Time Signature stuff
         try:
             isinstance(time_signatures, (list|tuple))
         except TypeError as e:
-            print(f"Time Signature non-usable, was type: {type(time_signatures)}, details: {e}")
+            warnstr = f"Time Signature non-usable, was type: {type(time_signatures)}, details: {e}"
+            log.warning(warnstr)
+            print(warnstr)
         if not isinstance(time_signatures, list):
             log.debug("Wrapping Time Signature in List")
             self.time_signatures = [time_signatures]
@@ -208,9 +209,11 @@ class Part:
 
         """
         if time_sig[1] < 3:
+            log.debug("Setting measure factor to time sig by multiplication... < 3")
             new_measure_factor = measure_factor * time_sig[1]
             return new_measure_factor
         elif time_sig[1] > 4:
+            log.debug("Setting measure factor to time sig by division... > 4")
             new_measure_factor = 4 / time_sig[1]
             return new_measure_factor
         else:
