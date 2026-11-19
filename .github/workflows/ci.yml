@@ -42,8 +42,13 @@ jobs:
             --cov=lejaren \
             --cov-report=term-missing
 
-      - name: Generate and deploy coverage badge
+      - name: Generate and commit coverage badge
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          mkdir -p public
-          poetry run coverage-badge -o public/coverage.svg -f
+          poetry run coverage-badge -o coverage.svg -f
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@://github.com"
+          git add coverage.svg
+          git diff --staged --quiet || git commit -m "Update coverage badge [skip ci]"
+          git push
+
