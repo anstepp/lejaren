@@ -47,10 +47,3 @@ jobs:
         run: |
           mkdir -p public
           poetry run coverage-badge -o public/coverage.svg -f
-
-      - name: Deploy badge to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
