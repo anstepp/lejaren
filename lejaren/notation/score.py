@@ -124,7 +124,7 @@ class Score:
                                 log.warning(warnstr)
                                 raise ValueError(warnstr)
                             else:
-                                log.warning(note.findall('.//step')[0].text)
+                                log.info(note.findall('.//step')[0].text)
                                 step = int(DIATONIC[note.findall('.//step')[0].text])
                             if not isinstance(note.findall('.//octave'), list):
                                 raise TypeError(f"Note step not list is: {type(note.findall('.//octave'))}")
