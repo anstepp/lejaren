@@ -2,6 +2,8 @@ import pytest
 
 from lxml import etree
 
+from lejaren.notation import Score
+
 @pytest.fixture
 def basic_iteration():
     basic_iteration = (
@@ -88,6 +90,6 @@ def test_add_composer(simple_score_with_singleton_sig, basic_iteration, tmp_path
         if element.tag == "creator":
             assert element.text == "Homer Simpson"
 
-def test__from_etree(simple_score_with_singleton_sig):
-    s = simple_score_with_singleton_sig
-    assert s
+def test_from_etree(xml_file_list):
+    for file in xml_file_list:
+        s = Score(file)
