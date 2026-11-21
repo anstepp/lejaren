@@ -1,7 +1,12 @@
 import pytest
 
-from lejaren.notation import Measure, Note
+from lejaren.notation import Measure, Note, Beat
 
+@pytest.fixture
+def basic_measure():
+    time_signature = (4,4)
+    measure = Measure(time_signature, 1)
+    return measure
 
 def test_object_init_fail_without_args():
     with pytest.raises(TypeError) as e:
@@ -27,11 +32,18 @@ def test_object_init_success_with_args():
         ((3, 8), "Triple", "Simple", [1, 1, 1]),
         ((2, 16), "Duple", "Simple", [1, 1]),
         ((6, 8), "Duple", "Compound", [1.5, 1.5]),
+        ((12, 16), "Quadruple", "Compound", [1.5, 1.5, 1.5, 1.5]),
+        ((7,8), None, "Additive", [3,2,2]),
+        ((5,8), None, "Additive", [3,2]),
+        ((7,16), None, "Additive", [3,2,2])
+
     ],
 )
 def test_create_measure_map(
     time_signature, expected_meter_division, expected_meter_type, expected_meter_map
 ):
+    
+    
     m = Measure(time_signature, 1)
 
     assert m.meter_division == expected_meter_division
@@ -105,3 +117,20 @@ def test_additive_meter_seven_eight():
 
 #     assert m.meter_type == "Additive"
 #     assert m.measure_map == [3, 3, 2]
+
+def test_is_empty(basic_measure):
+    assert basic_measure.is_empty() == True
+    test_beat = Beat(1)
+    test_beat.extend_beat([Note(4,4,0), Note(4,4,0)])
+    basic_measure.add_beat(test_beat)
+    assert basic_measure.is_empty() == False
+
+def test_set_time_signature(basic_measure):
+    basic_measure.set_time_signature((3,4))
+    assert basic_measure.time_signature == (3,4)
+
+
+
+#FIXME: Test more conditions
+def test_multibeat(basic_measure):
+    assert (False, 0) == basic_measure._test_multibeat(0, [1,1,1], [1,1,])

@@ -107,7 +107,7 @@ class Measure:
             self.meter_division,
             self.meter_type,
             self.measure_map,
-        ) = self._create_measure_map(self.measure_factor)
+        ) = self._create_measure_map()
 
         self.cumulative_beats = list((x for x in self._cumulative_beat_generator()))
         self.total_cumulative_beats = self.cumulative_beats[-1]
@@ -211,9 +211,9 @@ class Measure:
         """
 
         self.time_signature = time_signature
-        self._create_measure_map(1)
+        self._create_measure_map()
 
-    def _create_measure_map(self, factor: int) -> Tuple[Optional[str], str, List[int]]:
+    def _create_measure_map(self) -> Tuple[Optional[str], str, List[int]]:
         """
         1. Determines the measure division and type
             (measure_type will always be Simple, Compound, or Additive)
@@ -237,71 +237,28 @@ class Measure:
         measure_map = []
 
         if self.equal_divisions:
-
             if self.time_signature[0] >= 5 and self.time_signature[0] % 3 == 0:
-
                 beats_in_measure = int(self.time_signature[0] / 3)
-
                 meter_division = METER_DIVISION_TYPES.get(beats_in_measure, None)
-
                 meter_type = "Compound"
                 measure_map = [1.5 for x in range(beats_in_measure)]
+                return meter_division, meter_type, measure_map
 
             elif self.time_signature[0] <= 4:
-
                 beats_in_measure = int(self.time_signature[0])
-
                 meter_division = METER_DIVISION_TYPES.get(beats_in_measure, None)
                 meter_type = "Simple"
                 measure_map = [1 for x in range(beats_in_measure)]
-
-            # time sig denominator is divisible by 4, but not 2
-            elif ((self.time_signature[0] % 4) == 0) and (self.time_signature[0] > 2):
-
-                beats_in_measure = self.time_signature[0]
-
-                # print("Quadruple", beats_in_measure)
-
-                meter_division = METER_DIVISION_TYPES.get(beats_in_measure, None)
-                meter_type = "Simple"
-                measure_map = [1 for x in range(beats_in_measure)]
-
-            elif (self.time_signature[0] % 2) == 0:
-
-                beats_in_measure = self.time_signature[0]
-
-                # print("Duple", beats_in_measure)
-
-                meter_division = METER_DIVISION_TYPES.get(beats_in_measure, None)
-                meter_type = "Simple"
-                measure_map = [1 for x in range(beats_in_measure)]
-
-            elif self.time_signature[0] == 3:
-
-                beats_in_measure = self.time_signature[0]
-
-                meter_division = METER_DIVISION_TYPES.get(beats_in_measure, None)
-                meter_type = "Simple"
-                measure_map = [1 for x in range(beats_in_measure)]
+                return meter_division, meter_type, measure_map
 
             # time sig denominator is not divisible by 2 or 3
             else:
-                # print("non div")
                 self.equal_divisions = False
-
                 beats_in_measure = self.time_signature[0]
-
                 denominator = self.time_signature[1]
-
                 divisions = int(beats_in_measure / 2)
-
-                # meter_division remains None
                 meter_type = "Additive"
                 measure_map = self._front_load_measure(beats_in_measure, divisions)
-                # measure_map = [factor / scale for x in range(beats_in_measure)]
-        else:
-            # meter_division remains None
-            meter_type = "Additive"
 
         return meter_division, meter_type, measure_map
 
