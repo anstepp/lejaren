@@ -251,24 +251,6 @@ class Measure:
                 measure_map = [1 for x in range(beats_in_measure)]
                 return meter_division, meter_type, measure_map
 
-            # # time sig denominator is divisible by 4, but not 2
-            # elif ((self.time_signature[0] % 4) == 0) and (self.time_signature[0] > 2):
-            #     meter_division = METER_DIVISION_TYPES.get(self.time_signature[0], None)
-            #     meter_type = "Simple"
-            #     measure_map = [1 for x in range(beats_in_measure)]
-            #     return meter_division, meter_type, measure_map
-
-            # elif (self.time_signature[0] % 2) == 0:
-            #     meter_division = METER_DIVISION_TYPES.get(self.time_signature[0], None)
-            #     meter_type = "Simple"
-            #     measure_map = [1 for x in range(beats_in_measure)]
-            #     return meter_division, meter_type, measure_map
-
-            # elif self.time_signature[0] == 3:
-            #     meter_division = METER_DIVISION_TYPES.get(self.time_signature[0], None)
-            #     meter_type = "Simple"
-            #     measure_map = [1 for x in range(beats_in_measure)]
-
             # time sig denominator is not divisible by 2 or 3
             else:
                 self.equal_divisions = False
@@ -277,10 +259,6 @@ class Measure:
                 divisions = int(beats_in_measure / 2)
                 meter_type = "Additive"
                 measure_map = self._front_load_measure(beats_in_measure, divisions)
-
-        # else:
-        #     # meter_division remains None
-        #     meter_type = "Additive"
 
         return meter_division, meter_type, measure_map
 
