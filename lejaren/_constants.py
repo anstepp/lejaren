@@ -83,3 +83,5 @@ DIATONIC = {
     "A":9,
     "B":11
 }
+
+EMPTY_MEASURE_FACTOR = 1
