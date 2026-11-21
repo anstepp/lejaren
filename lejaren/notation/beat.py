@@ -10,8 +10,8 @@ class Beat:
     def __init__(self, subdivisions: int) -> None:
         self.notes = []
         self.tuplet = False
-        if not isinstance(subdivisions, int):
-            warnstr = f"Subdivision not in, was {type(subdivisions)}"
+        if not type(subdivisions) == int:
+            warnstr = f"Subdivision not int, was {type(subdivisions)}"
             log.warning(warnstr)
             raise TypeError(warnstr)
         else:
@@ -23,7 +23,7 @@ class Beat:
         for location, note in enumerate(self.notes):
             if location == 0:
                 note.beam_start = True
-            elif location == len(self.notes):
+            elif location == (len(self.notes)-1):
                 note.beam_end = True
             else:
                 note.beam_continue = True
