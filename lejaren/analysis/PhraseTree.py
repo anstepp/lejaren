@@ -1,12 +1,14 @@
+from lejaren._types import NOTE_LIST
+
 import Tree
 
 class PhraseTree(Tree):
-    def __init__(self):
-        getNoteList = self.PhraseGenerator(theList)
+    def __init__(self, note_list: NOTE_LIST):
+        self.note_list = self.PhraseGenerator(note_list)
 
-    def PhraseGenerator(self, notelist):
+    def PhraseGenerator(self, note_list: NOTE_LIST):
         total = 0
-        for item in notelist:
+        for item in note_list:
             if self.tieTest(item):
                 total + item
                 yield item
