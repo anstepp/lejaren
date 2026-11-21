@@ -1,6 +1,6 @@
 import pytest
 
-from lejaren.notation import Measure, Note
+from lejaren.notation import Measure, Note, Beat
 
 
 def test_object_init_fail_without_args():
@@ -105,3 +105,12 @@ def test_additive_meter_seven_eight():
 
 #     assert m.meter_type == "Additive"
 #     assert m.measure_map == [3, 3, 2]
+
+def test_is_empty():
+    time_signature = (4,4)
+    measure = Measure(time_signature, 1)
+    assert measure.is_empty() == True
+    test_beat = Beat(1)
+    test_beat.extend_beat([Note(4,4,0), Note(4,4,0)])
+    measure.add_beat(test_beat)
+    assert measure.is_empty() == False
