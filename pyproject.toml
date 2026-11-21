@@ -23,7 +23,6 @@ source = ["lejaren"]
 [tool.pytest.ini_options]
 addopts = "--cov=lejaren/notation --cov-report=term-missing"
 
-
 [build-system]
 requires = ["poetry>=2.0.0"]
 build-backend = "poetry.masonry.api"

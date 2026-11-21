@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import lejaren.log.log as logger
 
-logger = logger.get_logger()
+log = logger.get_logger()
 
 
 class Rest:
@@ -14,7 +14,7 @@ class Rest:
 
     def _check_duration(self, duration: float) -> float:
         if duration <= 0:
-            logger.error(f"Negative rest duration: {duration}")
+            log.error(f"Negative rest duration: {duration}")
             raise ValueError(f"Rest duration ({duration}) must be positive")
         else:
             return duration
@@ -23,7 +23,12 @@ class Rest:
         self.dur = Decimal(str(self._check_duration(new_duration)))
 
     def measure_toggle(self, toggle: bool) -> None:
-        self.is_measure = toggle
+        if not isinstance(toggle, bool):
+            warnstr = f"Measure toggle is not boolean, is: {type(toggle)}"
+            log.warning(warnstr)
+            raise TypeError(warnstr)
+        else:
+            self.is_measure = toggle
 
     def __str__(self):
         return "Duration: {}, is_measure {}".format(self.dur, self.is_measure)
