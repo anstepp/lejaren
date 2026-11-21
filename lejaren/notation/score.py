@@ -14,10 +14,9 @@ from .chord import Chord
 import lejaren.log.log as logger
 log = logger.get_logger()
 
-EMPTY_MEASURE_FACTOR = 1
-
 from .score_helper_funcs import _convert_score_parts_to_xml, _from_etree
 from ._parse_parts import _parse_parts
+from ._pad_with_empty_measures import _pad_with_empty_measures
 
 class Score:
     """Generates a MusicXML score from a list of parts (NoteLists) and outputs score to file"""
@@ -46,7 +45,7 @@ class Score:
                 warnstr = f"Some parts wrong... count:{len(parts)} and part: {reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0)}"
                 log.warning(warnstr)
                 raise ValueError(warnstr)
-            self._measure_count = self._pad_with_empty_measures()
+            self._measure_count = _pad_with_empty_measures(self._parts)
         elif isinstance(parts, etree.ElementTree):
             log.debug(f"Creating a lejaren score from a etree, is: {parts}")
             self._parts = _from_etree(parts)
@@ -76,32 +75,7 @@ class Score:
             log.warning(warnstr)
             raise TypeError(warnstr)
 
-    def _pad_with_empty_measures(self) -> int:
-        """Returns score measure length (ie. max number of measures)"""
 
-        max_len = 0
-
-        # figure out which staff is the longest (largest number of measures)
-        for part in self._parts:
-            for staff in part["staves"]:
-                if len(staff.measures) > max_len:
-                    max_len = len(staff.measures)
-                    longest_staff = staff
-
-        for part in self._parts:
-            for staff in part["staves"]:
-                if len(staff.measures) < max_len:
-                    for idx in range(len(staff.measures), max_len):
-                        ts = longest_staff.measures[idx].time_signature
-                        measure_to_append = Measure(ts, EMPTY_MEASURE_FACTOR)
-
-                        full_rest = ts[0]
-                        empty_beat = Beat(ts[0])
-                        empty_beat.add_note(Rest(full_rest))
-                        measure_to_append.add_beat(empty_beat)
-                        staff.measures.append(measure_to_append)
-
-        return max_len
 
     def convert_to_xml(self, output_filepath: str) -> None:
         """Entrypoint to Score class

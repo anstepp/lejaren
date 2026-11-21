@@ -1,7 +1,7 @@
 from typing import Tuple, List, Union, Iterable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from lejaren.notation import Note, Rest, Chord
+    from lejaren.notation import Note, Rest, Chord, Part
 
 
 type TIME_SIGNATURE = Tuple[int, int]
@@ -12,3 +12,5 @@ type NO_CHORDS = Union[Note, Rest]
 type ONLY_PITCH = Union[Note, Chord]
 
 type NOTE_LIST = Iterable[ALL_DURATIONS]
+
+type PART_LIST = Iterable[Part]
