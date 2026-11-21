@@ -35,9 +35,9 @@ from typing import Tuple, Self
 from decimal import Decimal
 
 from lejaren._constants import FLAT_KEYS, SHARP_KEYS, ARTICULATIONS
-from lejaren.log.log import get_logger
+import lejaren.log.log as logger
 
-logger = get_logger()
+log = logger.get_logger()
 
 #FIXME: when in PyPi, return to real
 # try:
@@ -139,7 +139,7 @@ class Note:
 
         """
 
-        logger.info(f"Note creation... dur: {dur}, octave: {octave}, pitch class: {pitch_class}")
+        log.info(f"Note creation... dur: {dur}, octave: {octave}, pitch class: {pitch_class}")
 
         # TODO: Verify float for microtones
         necessary_items = (["dur", float], ["octave", int], ["pitch_class", int])
@@ -153,7 +153,7 @@ class Note:
                 self.dur = Decimal(str(dur))
         except ValueError as e:
             errstr = f"Duration must be greater than 0, was: {dur}, details: {e}"
-            logger.error(errstr)
+            log.error(errstr)
             raise ValueError(errstr)
 
         # called to correct any errant pitch classes
@@ -168,7 +168,7 @@ class Note:
             if hasattr(self, item[0]):
                 pass
             else:
-                logger.warning(f"Note has no {item[0]}.")
+                log.warning(f"Note has no {item[0]}.")
                 raise ValueError(f"Note has no {item[0]}.")
 
         # default flags for ties & tuplets
@@ -210,7 +210,7 @@ class Note:
             isinstance(pitch_class, float)
 
         except TypeError as e:
-            logger.warning(e)
+            log.warning(e)
             print(f"Non-float passed to pitch class for overflow, was {type(pitch_class)}, details: {e}")
 
         else:
@@ -299,7 +299,7 @@ class Note:
                 11: ["B", "0", "natural"],
             }
         else:
-            logger.warning("starting_pitch must be zero, a flat key, or sharp key")
+            log.warning("starting_pitch must be zero, a flat key, or sharp key")
             raise ValueError("starting_pitch must be zero, a flat key, or sharp key")
 
         return step_names[self.pitch_class]
@@ -311,7 +311,7 @@ class Note:
 
         else:
             warnstr = f"Articulation {articulation} must be a valid articulation: {ARTICULATIONS}" 
-            logger.warning(warnstr)
+            log.warning(warnstr)
             raise ValueError(warnstr)
 
     def set_as_tie(self, tie_type: str) -> None:
@@ -342,7 +342,7 @@ class Note:
             self.articulation = None
         else:
             warnstr = f"Wrong Tie Type: tie_start, tie_continue, tie_end accepted, not {tie_type}"
-            logger.warning(warnstr)
+            log.warning(warnstr)
             raise Exception(warnstr)
 
     def change_duration(self, new_duration: float) -> None:
@@ -350,7 +350,7 @@ class Note:
             if new_duration > 0:
                 self.dur = Decimal(str(new_duration))
         except ValueError as e:
-            logger.error(f"Duration under 0, details: {e}")
+            log.error(f"Duration under 0, details: {e}")
             raise ValueError(f"Duration under 0, details: {e}")
 
     def split(self, diff: int) -> Tuple[Self, Self]:
@@ -372,7 +372,7 @@ class Note:
             isinstance(shift, float)
         except TypeError as e:
             warnstr = f"Non-float passed to X-position, was type {type(shift)}, details: {e}"
-            logger.warning(warnstr)
+            log.warning(warnstr)
             print(warnstr)
         else:
             self.x_pos = shift
@@ -383,14 +383,14 @@ class Note:
         if lower_shift_type in self.stem_dirs:
             if not isinstance(amount, (int|float)):
                 warnstr = f"Stem length shift non-existent, was {lower_shift_type}, must be in {self.stem_dirs}"
-                logger.warning(warnstr)
+                log.warning(warnstr)
                 raise TypeError(warnstr)
             else:
                 self.stem_dir = lower_shift_type
                 self.stem_y_pos = amount
         else:
             warnstr = f"Stem shift amount non-numerical, was {type(amount)}"
-            logger.warning(warnstr)
+            log.warning(warnstr)
             raise ValueError(warnstr)
             
 
