@@ -113,3 +113,6 @@ def test_create_output_xml(xml_file_list, shared_output_dir):
         score.convert_to_xml(temp_address)
         assert temp_path.is_file()
 
+def test_xml_input_as_file(xml_file_list):
+    for address in xml_file_list:
+        assert Score(address)

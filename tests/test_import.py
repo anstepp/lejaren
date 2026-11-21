@@ -35,7 +35,11 @@ def data_files():
 
         "uncompressed_data_files": [
             "tests/test_files/test_treble_middle_c_full_score.musicxml",
-            "tests/test_files/test_treble_middle_c.musicxml"
+            "tests/test_files/test_treble_middle_c.musicxml",
+            "tests/test_files/TemporalTides_Section4_Part1_logic.xml",
+            "tests/test_files/TemporalTides_Section4_Part2_logic.xml",
+            "tests/test_files/TemporalTides_Section4_Part3_logic.xml",
+            "tests/test_files/TemporalTides_Section4_Part4_logic.xml",
         ],
 
         "compressed_data_files": [

@@ -2,6 +2,7 @@ import pathlib
 from functools import reduce
 
 from lxml import etree
+from lxml.etree import _Element
 from typing import Iterable, Optional, Tuple
 
 from .note import Note
@@ -12,37 +13,13 @@ from .beat import Beat
 from .chord import Chord
 import lejaren.log.log as logger
 
+from lejaren._constants import ARTICULATIONS, DIATONIC
+
 log = logger.get_logger()
 
 EMPTY_MEASURE_FACTOR = 1
 
-ARTICULATIONS = ["accent",
-"strong-accent",
-"staccato",
-"tenuto",
-"detached-legato",
-"staccatissimo",
-"spiccato",
-"scoop",
-"plop",
-"doit",
-"falloff",
-"breath-mark",
-"caesura",
-"stress",
-"unstress",
-"soft-accent",
-"other-articulation",]
 
-DIATONIC = {
-    "C":0,
-    "D":2,
-    "E":4,
-    "F":5,
-    "G":7,
-    "A":9,
-    "B":11
-}
 
 class Score:
     """Generates a MusicXML score from a list of parts (NoteLists) and outputs score to file"""
@@ -53,6 +30,9 @@ class Score:
         title: Optional[str] = None,
         composer: Optional[str] = None,
     ):
+
+
+        log.info(f"Making a part, parts is... {parts}")
     
         self.title = title
         self.composer = composer
@@ -60,6 +40,7 @@ class Score:
         #FIXME: Add really nice testing for this so we know it acutally works right
         if isinstance(parts, list) or isinstance(parts, Part):
             if isinstance(parts, Part):
+                log.debug(f"Creating a lejaren score from a parts, parts is: {parts}")
                 self._parts = self._parse_parts(parts)
             elif len(parts) == reduce(lambda acc, item: acc + 1 if isinstance(item, Part) else acc, parts, 0) and len(parts) > 0:
                 self._parts = self._parse_parts(parts)
@@ -69,6 +50,7 @@ class Score:
                 raise ValueError(warnstr)
             self._measure_count = self._pad_with_empty_measures()
         elif isinstance(parts, etree.ElementTree):
+            log.debug(f"Creating a lejaren score from a etree, is: {parts}")
             self._parts = self._from_etree(parts)
             if len(self._parts) < 0:
                 warnstr = "No parts exist, Aborting."
@@ -76,6 +58,7 @@ class Score:
                 raise ValueError(warnstr)
             self._measure_count = len(self._parts)
         elif isinstance(parts, pathlib.Path):
+            log.debug(f"Creating a lejaren score from a file, file is: {parts}")
             temp_tree = etree.parse(parts)
             temp_root = temp_tree.getroot()
             self._parts = self._from_etree(temp_tree)
@@ -85,6 +68,7 @@ class Score:
                 log.warning(warnstr)
                 raise ValueError(warnstr)
             else:
+                log.debug(f"Creating a lejaren score from a file, file is: {parts}")
                 parts_path = pathlib.Path(parts)
                 temp_tree = etree.parse(parts_path)
                 temp_root = temp_tree.getroot()
@@ -100,17 +84,28 @@ class Score:
         #FIXME: Get away from findall...?
         part_list = []
         root = parts.getroot()
+        divisions = 1.0
         for part in root.iterchildren('part'):
             part_note_list = []
             for measure in part.iterchildren('measure'):
-                divisions = float(measure.findall('.//divisions')[0].text)
+                log.critical(repr(measure.findtext('attributes/divisions', default='')))
+
+                if not measure.findtext('attributes/divisions', default='').strip():
+                    if measure.get("number") == 1:
+                        log.warning("First measure has no divisions; setting to 1.0")
+                    else:
+                        log.info(f"No division on imported measure {measure.get("number")} was {measure.findtext('attributes/divisions')}, using previous divisons: {divisions}")
+                else:
+                    new_div = float(measure.findtext('attributes/divisions', default=divisions))
+                    log.info(f"New divisions set in measure: {measure.get("number")}, old divisions {divisions}, new: {new_div}")
+                    divisions = new_div
                 if sum(1 for _ in measure.iterchildren(tag='note')) < 0:
                     warnstr = f"No notes in this measure, count is {sum(1 for _ in measure.iterchildren(tag='note'))}"
                     log.warning(warnstr)
                     raise ValueError(warnstr)
                 else:
                     for note in measure.iterchildren('note'):
-                        if (note.findall('.//duration') and note.findall('.//step') and note.findall('.//octave')) is not None:
+                        if self._note_check(note):
                             # FIXME: Save minimum necessary info
                             # Try to stick with XPath for now...
                             if not isinstance(note.findall('.//duration'), list):
@@ -124,18 +119,23 @@ class Score:
                                 warnstr = f"Note step not list is: {type(note.findall('.//step'))}"
                                 log.warning(warnstr)
                                 raise TypeError(warnstr)
+                            elif (len(note.findall('.//step')) < 1):
+                                warnstr = f"Note step not list has no values: {len(note.findall('.//step'))}"
+                                log.warning(warnstr)
+                                raise ValueError(warnstr)
                             else:
+                                log.warning(note.findall('.//step')[0].text)
                                 step = int(DIATONIC[note.findall('.//step')[0].text])
                             if not isinstance(note.findall('.//octave'), list):
                                 raise TypeError(f"Note step not list is: {type(note.findall('.//octave'))}")
                             else:
                                 octave = note.findall('.//octave')[0].text
-                            try:
-                                alter = float(note.findall('.//alter')[0].text)
-                                step += alter
-                            except (IndexError):
-                                log.warning(f"IndexError on Accidental...")
+                            if not (note.findtext('.//alter', default=None)):
+                                log.info(f"No accidental text for alter value... setting to 0... was: {note.findtext('.//alter', default=None)}")
                                 alter = 0
+                                step += alter
+                            else:
+                                alter = float(note.findtext('.//alter', default=0))
                                 step += alter
                             part_note_list.append(Note(float(dur), int(octave), step))
                             #join notes
@@ -553,3 +553,15 @@ class Score:
             encoding="UTF-8",
             xml_declaration=True,
         )
+
+
+    def _note_check(self, note: _Element):
+        note_ok = False
+        if (note.findall('.//duration') and note.findall('.//step') and note.findall('.//octave')):
+            note_ok = True
+        elif (len(note.findall('.//duration')) > 0 and len(note.findall('.//step')) > 0 and len(note.findall('.//octave'))) > 0:
+            pass
+        else:
+            pass
+
+        return note_ok

@@ -1,6 +1,11 @@
+from pathlib import Path
+
 import logging
 import logging.config
 import os
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+LOG_FILE = PROJECT_ROOT / "log" / "lejaren.log"
 
 def get_logger() -> logging.Logger:
     """Return a logging.Logger object w/ default of info.
@@ -20,14 +25,20 @@ def get_logger() -> logging.Logger:
                 }
             },
             "handlers": {
-                "h": {
+                "s": {
                     "class": "logging.StreamHandler",
                     "formatter": "f",
                     "level": log_level,
-
+                },
+                "f": {
+                    "class": "logging.FileHandler",
+                    "mode": "w",
+                    "formatter": "f",
+                    "level": log_level,
+                    "filename": LOG_FILE,
                 }
             },
-            "loggers": {"default": {"handlers": ["h"], "level": log_level}},
+            "loggers": {"default": {"handlers": ["s", "f"], "level": log_level}},
         }
     )
 
