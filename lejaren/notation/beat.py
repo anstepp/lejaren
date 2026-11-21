@@ -3,14 +3,19 @@ from typing import Iterable
 from lejaren.notation import Note
 import lejaren.log.log as logger
 
-logger = logger.get_logger()
+log = logger.get_logger()
 
 
 class Beat:
     def __init__(self, subdivisions: int) -> None:
         self.notes = []
         self.tuplet = False
-        self.subdivisions = subdivisions
+        if not isinstance(subdivisions, int):
+            warnstr = f"Subdivision not in, was {type(subdivisions)}"
+            log.warning(warnstr)
+            raise TypeError(warnstr)
+        else:
+            self.subdivisions = subdivisions
         self.multi_beat = False
         self.actual_notes = 0
 
@@ -24,7 +29,7 @@ class Beat:
                 note.beam_continue = True
 
     def add_note(self, note: Note) -> None:
-        logger.debug(f"Appending note: {note}")
+        log.debug(f"Appending note: {note}")
         self.notes.append(note)
 
     def extend_beat(self, notes: Iterable[Note]) -> None:

@@ -17,13 +17,9 @@ from .rest import Rest
 from .chord import Chord
 
 from lejaren._constants import METER_DIVISION_TYPES
-
 import lejaren.log.log as logger
 
 log = logger.get_logger()
-
-
-
 
 class Measure:
 
