@@ -55,3 +55,31 @@ STANDARD_DIVS = [
 ]
 
 METER_DIVISION_TYPES = {2: "Duple", 3: "Triple", 4: "Quadruple"}
+
+ARTICULATIONS = ["accent",
+"strong-accent",
+"staccato",
+"tenuto",
+"detached-legato",
+"staccatissimo",
+"spiccato",
+"scoop",
+"plop",
+"doit",
+"falloff",
+"breath-mark",
+"caesura",
+"stress",
+"unstress",
+"soft-accent",
+"other-articulation",]
+
+DIATONIC = {
+    "C":0,
+    "D":2,
+    "E":4,
+    "F":5,
+    "G":7,
+    "A":9,
+    "B":11
+}
