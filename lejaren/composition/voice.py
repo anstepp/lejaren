@@ -292,7 +292,7 @@ class Cello(Strings):
 class DoubleBass(Strings):
     def __init__(self):
         super(DoubleBass, self).__init__()
-        self.insert_rest = [(0,4), (3,7)]
+        self.inst_range = [(0,4), (3,7)]
         self.open_strings = [(0,4), (0,9), (1,2), (1,7)]
         self.clef = "F"
         self.transposition = -12
