@@ -15,6 +15,7 @@ import lejaren.log.log as logger
 log = logger.get_logger()
 
 from .score_helper_funcs import _convert_score_parts_to_xml, _from_etree
+from ._write_xml_to_file import _write_xml_to_file
 from ._parse_parts import _parse_parts
 from ._pad_with_empty_measures import _pad_with_empty_measures
 from ._join_ties import _join_ties
@@ -84,19 +85,7 @@ class Score:
         * writes MusicXML tree to .xml file
         """
         xml_score = _convert_score_parts_to_xml(self)
-        self._write_xml_to_file(output_filepath, xml_score)
-
-    def _write_xml_to_file(
-        self, output_filepath: str, xml_score: etree.ElementTree
-    ) -> None:
-        """Write MusicXML tree to output file"""
-        output_filepath = pathlib.Path(output_filepath)
-        xml_score.write(
-            str(output_filepath),
-            pretty_print=True,
-            encoding="UTF-8",
-            xml_declaration=True,
-        )
+        _write_xml_to_file(output_filepath, xml_score)
 
 
     
