@@ -291,7 +291,7 @@ class Cello(Strings):
 
 class DoubleBass(Strings):
     def __init__(self):
-        super(Bass, self).__init__()
+        super(DoubleBass, self).__init__()
 
 
 # Keyboards -----------------------------------------------------------
