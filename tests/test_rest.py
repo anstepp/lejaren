@@ -19,6 +19,22 @@ def test_init_fail_on_negative():
     with pytest.raises(ValueError) as e:
         rest = Rest(-9)
 
+def test_toggle():
+
+    rest = Rest(1)
+
+
+    good_toggle_list = [True, False]
+
+    for toggle in good_toggle_list:
+        rest.measure_toggle(toggle)
+        assert rest.is_measure == toggle
+
+    bad_toggle_list = [123, "true", "False"]
+
+    for toggle in bad_toggle_list:
+        with pytest.raises(TypeError):
+            rest.measure_toggle(toggle)
 
 def test_split():
 
