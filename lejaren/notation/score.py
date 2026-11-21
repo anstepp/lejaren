@@ -9,7 +9,8 @@ from .part import Part
 import lejaren.log.log as logger
 log = logger.get_logger()
 
-from .score_helper_funcs import _convert_score_parts_to_xml, _from_etree
+from ._convert_parts_to_xml import _convert_score_parts_to_xml
+from ._from_etree import _from_etree
 from ._write_xml_to_file import _write_xml_to_file
 from ._parse_parts import _parse_parts
 from ._pad_with_empty_measures import _pad_with_empty_measures
