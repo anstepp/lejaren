@@ -1,6 +1,5 @@
 import Tree
 
-
 class PhraseTree(Tree):
     def __init__(self):
         getNoteList = self.PhraseGenerator(theList)
@@ -8,7 +7,7 @@ class PhraseTree(Tree):
     def PhraseGenerator(self, notelist):
         total = 0
         for item in notelist:
-            if tieTest(item):
+            if self.tieTest(item):
                 total + item
                 yield item
 

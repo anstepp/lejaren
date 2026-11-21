@@ -3,8 +3,7 @@ from __future__ import annotations
 from itertools import cycle, compress
 from typing import Iterable
 
-CLOCKFACE = 12
-
+from lejaren._constants import CLOCKFACE
 
 class PitchClassSet:
     def __init__(self, pitch_classs: Iterable[int]) -> None:

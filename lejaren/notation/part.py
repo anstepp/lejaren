@@ -1,4 +1,3 @@
-import copy
 import fractions, math
 from itertools import accumulate, cycle
 

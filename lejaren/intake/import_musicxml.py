@@ -2,7 +2,7 @@ from re import search
 
 from lxml import etree
 
-from ..notation.score import Score
+from lejaren.notation.score import Score
 
 class inputParser:
 

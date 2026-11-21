@@ -1,21 +1,6 @@
-from enum import Enum
 from dataclasses import dataclass, field
 
-from lejaren.notation import Note
-
-class NOTE_VALUES(Enum): 
-        WHOLE = 0
-        HALF = 1
-        QUARTER = 2
-        QUARTER_T = 3 
-        EIGHTH = 4
-        EIGHTH_T = 5 
-        SIXTEENTH = 6
-        SIXTEENTH_T = 7
-
-DEFAULT_AUDIO_SR = (44100, 48000, 89000, 96000, 128000)
-DEFAULT_DIVISIONS = (4, 2, 1, .5, .25, .125)
-DEFAULT_TRIPLETS = (.6666, .1666, 0.0833, 0.04166)
+from lejaren._constants import DEFAULT_DIVISIONS, DEFAULT_TRIPLETS
 
 @dataclass
 class DefaultValues:

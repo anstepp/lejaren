@@ -1,3 +1,5 @@
+from .Node import Node
+
 class MeterNode(Node):
     def __init__(self, Note):
         if Note.measure_flag == False:
