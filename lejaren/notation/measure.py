@@ -278,9 +278,9 @@ class Measure:
                 meter_type = "Additive"
                 measure_map = self._front_load_measure(beats_in_measure, divisions)
 
-        else:
-            # meter_division remains None
-            meter_type = "Additive"
+        # else:
+        #     # meter_division remains None
+        #     meter_type = "Additive"
 
         return meter_division, meter_type, measure_map
 
