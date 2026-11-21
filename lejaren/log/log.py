@@ -7,10 +7,19 @@ import os
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 LOG_FILE = PROJECT_ROOT / "log" / "lejaren.log"
 
-def get_logger() -> logging.Logger:
+log_types = ('default', 'stream_only', 'file_only')
+
+def get_logger(log_type="default") -> logging.Logger:
     """Return a logging.Logger object w/ default of info.
     can specify level with LEJAREN_LOG_LEVEL.
     """
+
+    if log_type not in log_types:
+        print("Default Log...")
+        log_type = 'default'
+    else:
+        # log_type is ok..
+        pass
 
     log_level = os.getenv("LEJAREN_LOG_LEVEL", "INFO").upper()
 
@@ -38,8 +47,12 @@ def get_logger() -> logging.Logger:
                     "filename": LOG_FILE,
                 }
             },
-            "loggers": {"default": {"handlers": ["s", "f"], "level": log_level}},
+            "loggers": {
+                "default": {"handlers": ["s", "f"], "level": log_level},
+                "stream_only": {"handlers": ["s"], "level": log_level},
+                "file_only": {"handlers": ["f"], "level": log_level}
+            }
         }
     )
 
-    return logging.getLogger("default")
+    return logging.getLogger(log_type)
