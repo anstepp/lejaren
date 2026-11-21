@@ -1,8 +1,4 @@
-from functools import reduce
-
 from lejaren.notation import Note, Score, Rest, Part
-
-from lejaren.intake.import_musicxml import inputParser
 
 settings_dict = {
     "grace_note": False,

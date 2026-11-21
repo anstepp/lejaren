@@ -48,7 +48,8 @@ from lejaren.notation import Note, Rest, Part
 
 from typing import List, Tuple, Iterable, Union
 
-Time_Signature = List[Tuple[int, int]]
+from lejaren._types import TIME_SIGNATURE, PART_LIST
+
 Range = List[Tuple[int, int]]
 Slice = Tuple[int, int]
 
@@ -111,7 +112,7 @@ class Voice:
         last_chunk = self.note_list[index:]
         self.note_list = first_chunk + input_list + last_chunk
 
-    def make_part(self, time_signature: Time_Signature) -> Part:
+    def make_part(self, time_signature: TIME_SIGNATURE) -> Part:
         checked_list = self._check_range(self.note_list)
         part = Part(checked_list, time_signature)
         return [part]
@@ -207,7 +208,7 @@ class Clarinet(Woodwind):
         self.clef = "G"
         self.transposition = 2
 
-    def make_part(self, time_signature: Time_Signature) -> Part:
+    def make_part(self, time_signature: TIME_SIGNATURE) -> Part:
         checked_list = self._check_range(self.note_list)
         part = Part(checked_list, time_signature)
         return [part]
@@ -304,7 +305,7 @@ class Piano(Voice):
         super(Piano, self).__init__()
         self.inst_range = [(0, 9), (8, 0)]
 
-    def make_part(self, time_signature: Time_Signature) -> Iterable[Part]:
+    def make_part(self, time_signature: TIME_SIGNATURE) -> PART_LIST:
 
         """divide notelist into two lists, divided by middle c"""
 

@@ -9,7 +9,7 @@ import copy
 from itertools import accumulate
 
 from typing import Iterable, List, Optional, Tuple, Union, List
-from lejaren._types import NO_CHORDS, ONLY_PITCH, ALL_DURATIONS, TIME_SIGNATURE, NOTE_LIST
+from lejaren._types import TIME_SIGNATURE, NOTE_LIST
 
 from .note import Note
 from .beat import Beat

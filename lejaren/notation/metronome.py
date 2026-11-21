@@ -1,4 +1,3 @@
-from lejaren.notation import Measure, Beat
 from lejaren.log.log import get_logger
 
 from lejaren._constants import STANDARD_DIVS, BEAT_TYPES
