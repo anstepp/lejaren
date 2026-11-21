@@ -39,57 +39,6 @@ def basic_iteration():
         )
     return basic_iteration
 
-def test_convert_score_parts_to_xml(simple_score_with_singleton_sig, basic_iteration, tmp_path):
-    xml_file = tmp_path / "default_test.xml"
-    s = simple_score_with_singleton_sig
-    assert s
-    s.convert_to_xml(xml_file)
-    assert xml_file.exists()
-    tree = etree.parse(str(xml_file))
-    root = tree.getroot()
-
-    for idx, element in enumerate(root.iter()):
-        assert element.tag == basic_iteration[idx]
-
-def test_add_title(simple_score_with_singleton_sig, basic_iteration, tmp_path):
-    xml_file = tmp_path / "default_test.xml"
-    s = simple_score_with_singleton_sig
-    assert s
-    s.title = "Cool Title"
-    s.convert_to_xml(xml_file)
-    assert xml_file.exists()
-    tree = etree.parse(str(xml_file))
-    root = tree.getroot()
-
-    temp_iteration = list(basic_iteration)
-    temp_iteration.insert(1, "movement-title")
-    basic_iteration = tuple(temp_iteration)
-
-    for idx, element in enumerate(root.iter()):
-        assert element.tag == basic_iteration[idx]
-        if element.tag == "movement-title":
-            assert element.text == "Cool Title"
-
-def test_add_composer(simple_score_with_singleton_sig, basic_iteration, tmp_path):
-    xml_file = tmp_path / "default_test.xml"
-    s = simple_score_with_singleton_sig
-    assert s
-    s.composer = "Homer Simpson"
-    s.convert_to_xml(xml_file)
-    assert xml_file.exists()
-    tree = etree.parse(str(xml_file))
-    root = tree.getroot()
-
-    temp_iteration = list(basic_iteration)
-    temp_iteration.insert(1,"identification")
-    temp_iteration.insert(2, "creator")
-    basic_iteration = tuple(temp_iteration)
-
-    for idx, element in enumerate(root.iter()):
-        assert element.tag == basic_iteration[idx]
-        if element.tag == "creator":
-            assert element.text == "Homer Simpson"
-
 def test_from_etree(xml_file_list):
     for file in xml_file_list:
         s = Score(file)

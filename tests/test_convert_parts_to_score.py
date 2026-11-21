@@ -89,7 +89,3 @@ def test_add_composer(simple_score_with_singleton_sig, basic_iteration, tmp_path
         assert element.tag == basic_iteration[idx]
         if element.tag == "creator":
             assert element.text == "Homer Simpson"
-
-def test_from_etree(xml_file_list):
-    for file in xml_file_list:
-        s = Score(file)
