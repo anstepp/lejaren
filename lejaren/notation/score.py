@@ -2,14 +2,9 @@ import pathlib
 from functools import reduce
 
 from lxml import etree
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, Optional
 
-from .note import Note
 from .part import Part
-from .rest import Rest
-from .measure import Measure
-from .beat import Beat
-from .chord import Chord
 
 import lejaren.log.log as logger
 log = logger.get_logger()

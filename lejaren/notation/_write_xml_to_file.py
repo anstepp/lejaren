@@ -1,13 +1,5 @@
-from __future__ import annotations
-
-from typing import TYPE_CHECKING
-
 from pathlib import Path
 from lxml.etree import ElementTree
-
-# avoid circular import
-if TYPE_CHECKING:
-    from .score import Score
 
 def _write_xml_to_file(
     output_filepath: str, 

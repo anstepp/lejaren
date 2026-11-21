@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING
 
 from lxml import etree
 
 from .note import Note
 from .part import Part
 from .rest import Rest
-from .measure import Measure
-from .beat import Beat
 from .chord import Chord
 # avoid circular import
 if TYPE_CHECKING:
@@ -278,7 +276,7 @@ def _convert_score_parts_to_xml(score: Score) -> etree.ElementTree:
                                         current_note.articulation,
                                     )
                             else:
-                                pass
+                                log.warning(f"No operations performed on element:")
 
                 if (len(staves) > 1) and (staff_idx < len(staves) - 1):
                     xml_backup = etree.SubElement(xml_measure, "backup")
