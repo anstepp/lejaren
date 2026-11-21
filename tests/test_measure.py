@@ -32,11 +32,18 @@ def test_object_init_success_with_args():
         ((3, 8), "Triple", "Simple", [1, 1, 1]),
         ((2, 16), "Duple", "Simple", [1, 1]),
         ((6, 8), "Duple", "Compound", [1.5, 1.5]),
+        ((12, 16), "Quadruple", "Compound", [1.5, 1.5, 1.5, 1.5]),
+        ((7,8), None, "Additive", [3,2,2]),
+        ((5,8), None, "Additive", [3,2]),
+        ((7,16), None, "Additive", [3,2,2])
+
     ],
 )
 def test_create_measure_map(
     time_signature, expected_meter_division, expected_meter_type, expected_meter_map
 ):
+    
+    
     m = Measure(time_signature, 1)
 
     assert m.meter_division == expected_meter_division
