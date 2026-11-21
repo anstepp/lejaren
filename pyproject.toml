@@ -17,6 +17,12 @@ pytest = "*"
 pytest-cov = "^7.1.0"
 coverage-badge = "^1.1.2"
 
+[tool.coverage.run]
+source = ["lejaren"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=lejaren/notation --cov-report=term-missing"
+
 
 [build-system]
 requires = ["poetry>=2.0.0"]
