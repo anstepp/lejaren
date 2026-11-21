@@ -128,7 +128,7 @@ def _convert_score_parts_to_xml(score: Score) -> etree.ElementTree:
                                 current_measure.time_signature[1]
                             )
                         else:
-                            pass
+                            log.warning(f"No operations performed on {current_measure, current_measure_count}")
 
                 # we add the notes
                 for current_beat in current_measure.beats:
@@ -146,7 +146,7 @@ def _convert_score_parts_to_xml(score: Score) -> etree.ElementTree:
 
                         elif type(current_note) == Chord:
                             log.debug("CHORD")
-                            pass
+                            #FIXME: make chord write
 
                         else:
                             # note
@@ -276,7 +276,7 @@ def _convert_score_parts_to_xml(score: Score) -> etree.ElementTree:
                                         current_note.articulation,
                                     )
                             else:
-                                log.warning(f"No operations performed on element:")
+                                log.warning(f"No operations performed on element: {current_measure, current_measure_count}")
 
                 if (len(staves) > 1) and (staff_idx < len(staves) - 1):
                     xml_backup = etree.SubElement(xml_measure, "backup")
