@@ -2,7 +2,7 @@ from itertools import accumulate, cycle
 
 from typing import Iterable, NamedTuple, Union
 
-from lejaren._types import TIME_SIGNATURES, NOTE_LIST
+from lejaren._types import TIME_SIGNATURES, NOTE_LIST, NO_CHORDS
 from lejaren._constants import MAX_LINES, CLEFS
 
 from .measure import Measure
@@ -15,6 +15,7 @@ from .part_funcs._flatten_chords import _flatten_chords
 from .part_funcs._test_for_low_bottom_time_sig import _test_for_low_bottom_time_sig
 from .part_funcs.check_uniques import _get_factor
 from .part_funcs._get_index_range import _get_index_range
+from .part_funcs._make_new_measure import _make_new_measure
 
 import lejaren.log.log as logger
 log = logger.get_logger()
@@ -207,7 +208,7 @@ class Part:
        for measure groupings of factors"""
 
     def create_part(
-        self, current_list: Iterable[Union[Note, Rest]], measure_factor: int
+        self, current_list: NO_CHORDS, measure_factor: int
     ) -> None:
         """
         Transform input list of notes into a list of measures.
@@ -284,22 +285,7 @@ class Part:
 
         return accumulated_durs
 
-    def _make_new_measure(
-        self,
-        time_signatures: TIME_SIGNATURES,
-        current_measure: Measure,
-        current_beat_count: int,
-    ) -> Measure:
 
-        time_sigs = cycle(time_signatures)
-
-        next_ts = next(time_sigs)
-        measure_max = next_ts[0]
-        current_beat_count += next_ts[0]
-        self.measures.append(current_measure)
-        current_measure = Measure(next_ts, 1)
-
-        return current_measure, current_beat_count, measure_max
 
     def get_measures(
         self, note_list: NOTE_LIST, time_sigs: TIME_SIGNATURES
@@ -321,33 +307,45 @@ class Part:
             elif current_beat_count == current_count:
                 current_measure.add_note(note)
                 (
-                    current_measure,
+                    self.measures, 
+                    current_measure, 
                     current_beat_count,
                     measure_max,
-                ) = self._make_new_measure(
-                    time_sigs, current_measure, current_beat_count
+                ) = _make_new_measure(
+                    self.measures, 
+                    time_sigs, 
+                    current_measure, 
+                    current_beat_count
                 )
             elif current_beat_count < current_count:
                 diff = current_count - current_beat_count
                 old_note, new_note = note.split(diff)
                 current_measure.add_note(old_note)
                 (
-                    current_measure,
+                    self.measures, 
+                    current_measure, 
                     current_beat_count,
                     measure_max,
-                ) = self._make_new_measure(
-                    time_sigs, current_measure, current_beat_count
+                ) = _make_new_measure(
+                    self.measures, 
+                    time_sigs, 
+                    current_measure, 
+                    current_beat_count
                 )
                 while diff > measure_max:
                     diff = diff - measure_max
                     old_note, new_note = new_note.split(diff)
                     current_measure.add_note(old_note)
                     (
-                        current_measure,
+                        self.measures, 
+                        current_measure, 
                         current_beat_count,
                         measure_max,
-                    ) = self._make_new_measure(
-                        time_sigs, current_measure, current_beat_count
+                    ) = _make_new_measure(
+                        self.measures, 
+                        time_sigs, 
+                        current_measure, 
+                        current_beat_count
                     )
                 if type(new_note) is not Rest:
                     new_note.set_as_tie("tie_end")

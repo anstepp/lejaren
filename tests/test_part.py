@@ -12,7 +12,6 @@ func_list = (
     "_get_change_group",
     "_get_implied_meter",
     "_accum_note_durs",
-    "_make_new_measure",
     "get_measures",
 )
 
