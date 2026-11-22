@@ -1,9 +1,8 @@
-import fractions, math
 from itertools import accumulate, cycle
 
-from typing import Iterable, NamedTuple, Tuple, Union
+from typing import Iterable, NamedTuple, Union
 
-from lejaren._types import TIME_SIGNATURE, TIME_SIGNATURES
+from lejaren._types import TIME_SIGNATURES, NOTE_LIST
 from lejaren._constants import MAX_LINES, CLEFS
 
 from .measure import Measure
@@ -153,6 +152,7 @@ class Part:
         self.measures = []
 
         # Time Signature stuff
+        # FIXME: use lejaren._types
         try:
             isinstance(time_signatures, (list|tuple))
         except TypeError as e:
@@ -302,7 +302,7 @@ class Part:
         return current_measure, current_beat_count, measure_max
 
     def get_measures(
-        self, note_list: Iterable[Union[Note, Rest, Chord]], time_sigs: TIME_SIGNATURES
+        self, note_list: NOTE_LIST, time_sigs: TIME_SIGNATURES
     ):
 
         accumulated_durs = self._accum_note_durs(iter(note_list))

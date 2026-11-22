@@ -9,8 +9,6 @@ fj_durs = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 4, 1, 1, 1, 1, 2, 2, 1, 1, 1, 
 
 func_list = (
     "create_part",
-    "_get_index_range",
-    "_get_change_pitch",
     "_get_change_group",
     "_get_implied_meter",
     "_accum_note_durs",
