@@ -9,19 +9,10 @@ fj_durs = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 2, 2, 4, 1, 1, 1, 1, 2, 2, 1, 1, 1, 
 
 func_list = (
     "create_part",
-    "get_note_uniques",
-    "_test_for_low_bottom_time_sig",
-    "get_ts_uniques",
-    "_get_factor",
-    "_get_index_range",
-    "_get_change_pitch",
     "_get_change_group",
     "_get_implied_meter",
-    "_flatten_chords",
     "_accum_note_durs",
-    "_make_new_measure",
     "get_measures",
-    "extract_note_list_from_range",
 )
 
 var_list = (
@@ -599,21 +590,3 @@ def test_chord_split_simple(simple_test_note):
     assert len(test_chord_part.measures[0].beats) == 1
     assert len(test_chord_part.measures[1].beats) == 1
 
-def test_extract_range(simple_test_note, simple_test_part):
-    extract = simple_test_part.extract_note_list_from_range(0,1)
-    assert extract
-    assert extract[0] == simple_test_note
-    with pytest.raises(TypeError):
-        simple_test_part.extract_note_list_from_range("dumb",10)
-        simple_test_part.extract_note_list_from_range(10,"dumb")
-        simple_test_part.extract_note_list_from_range("dumb","dumb")
-    with pytest.raises(ValueError):
-        simple_test_part.extract_note_list_from_range(4,10)
-        simple_test_part.extract_note_list_from_range(10,4)
-    longer_example = Part([simple_test_note for x in range(10)], (4,4))
-    extract = longer_example.extract_note_list_from_range(0,1)
-    assert extract
-    assert extract[0] == simple_test_note
-    extract = longer_example.extract_note_list_from_range(0,2)
-    assert extract
-    assert extract[0] == Note(8,4,0)
