@@ -10,8 +10,13 @@ from .measure import Measure
 from .note import Note
 from .rest import Rest
 from .chord import Chord
-import lejaren.log.log as logger
 
+from .part_funcs.extract_note_list_from_range import extract_note_list_from_range
+from .part_funcs._flatten_chords import _flatten_chords
+from .part_funcs._test_for_low_bottom_time_sig import _test_for_low_bottom_time_sig
+from .part_funcs.check_uniques import _get_factor
+
+import lejaren.log.log as logger
 log = logger.get_logger()
 
 class CurrentCountDivisions(NamedTuple):
@@ -175,9 +180,8 @@ class Part:
 
         #  self.current_measure_mod, self.current_measure_floor
 
-        dur_uniques = self.get_note_uniques()
-        denominator_uniques = self.get_ts_uniques()
-        self.measure_factor = self._get_factor(dur_uniques) * max(denominator_uniques)
+
+        self.measure_factor = _get_factor(self.current_list, self.time_signatures)
 
         self.get_measures(self.current_list, self.time_signatures)
 
@@ -200,30 +204,6 @@ class Part:
        it's also an option to feed extra arguments with keywords to 
        modify behavior for optional cleaning methods or user choices
        for measure groupings of factors"""
-
-    def _test_for_low_bottom_time_sig(
-        self, time_sig: TIME_SIGNATURE, measure_factor: int
-    ) -> int:
-        """
-        Evaulates if TIME_SIGNATURE is valid or needs to be scaled.
-
-        Arguments:
-        ----------
-        time_sig: a TIME_SIGNATURE
-
-        measure_factor (int): a scaling factor for the measure (usually acquired internally).
-
-        """
-        if time_sig[1] < 3:
-            log.debug("Setting measure factor to time sig by multiplication... < 3")
-            new_measure_factor = measure_factor * time_sig[1]
-            return new_measure_factor
-        elif time_sig[1] > 4:
-            log.debug("Setting measure factor to time sig by division... > 4")
-            new_measure_factor = 4 / time_sig[1]
-            return new_measure_factor
-        else:
-            return measure_factor
 
     def create_part(
         self, current_list: Iterable[Union[Note, Rest]], measure_factor: int
@@ -249,79 +229,6 @@ class Part:
         [note.change_duration(note.dur * measure_factor) for note in current_list]
 
         self._group_list_to_measures(current_list, measure_factor)
-
-    def get_note_uniques(self) -> list:
-        """
-        Removes dupes of durs in list of Note objects.
-
-        If a duration has yet to be listed, it appends it to the uniques. This is essential
-        toward developing the factor, as note values are dependant upon being 1) integers,
-        and 2) scaled to the time signature of the XML in MusicXML.
-
-        Arguments:
-        ----------
-
-        None.
-
-        Returns:
-        --------
-
-        uniques (list[int]): a list of unique durations in the current_list.
-
-
-        """
-        uniques = []
-        for item in self.current_list:
-            try:
-                isinstance(item, (Note|Rest))
-            except (TypeError, AttributeError):
-                print(f"Non-Note in Part.get_note_uniques, is type {type(item)} instead")
-            else:
-                if item.dur not in uniques:
-                    uniques.append(item.dur)
-        return uniques
-
-    def get_ts_uniques(self) -> list:
-        """unique durations of the notes in the list"""
-        uniques = []
-        for item in self.time_signatures:
-            if item[1] not in uniques:
-                uniques.append(item[1])
-            else:
-                pass
-        return uniques
-
-    def _get_factor(self, input_list: list) -> int:
-        """
-        Returns a factor (int) that scales all duration values to ints.
-
-        Converts all durations to fractions, then finds the least common multiple. This is
-        then returned as the factor to scale durations for MusicXML.
-
-        Arguments:
-        ----------
-
-        input_list (list[float]): list of unique durations. (See _get_uniques).
-
-        Returns:
-
-        factor (int): scaling factor for MusicXML.
-
-        """
-        fractional_list = [
-            fractions.Fraction(x).limit_denominator(128) for x in input_list
-        ]
-        denominators = [x.denominator for x in fractional_list]
-        if denominators:
-            lcm = denominators[0]
-            for i in denominators[1:]:
-                lcm = int(lcm * i / math.gcd(lcm, i))
-            factor = lcm
-        else:
-            factor = 1
-
-        return factor
-
     
     def _get_index_range(self, index: int, search_range: int) -> Tuple[int, int]:
         """
@@ -427,23 +334,6 @@ class Part:
         implied_list = self.group_by_map(location_map)
         return implied_list
 
-    def _flatten_chords(
-        self, note_list: Iterable[Union[Note, Rest, Chord]]
-    ) -> Iterable[Union[Note, Rest]]:
-
-        flat_list = []
-
-        for idx, entry in enumerate(note_list):
-            if isinstance(entry, (Note|Rest|Chord)):
-                if type(entry) == Chord:
-                    flat_list.extend(entry.notes)
-                else:
-                    flat_list.append(entry)
-            else:
-                raise TypeError(f"Non-note or Chord when trying to Flatten Chords, was {type(entry)}")
-
-        return flat_list
-
     def _accum_note_durs(self, note_list: Iterable[Union[Note, Rest, Chord]]):
 
         dur_list = [entry.dur for entry in note_list]
@@ -523,33 +413,3 @@ class Part:
         if current_measure.notes:
             self.measures.append(current_measure)
 
-    def extract_note_list_from_range(self, min: int, max: int) -> list[Note|Rest|Chord]:
-        max_measures = len(self.measures)
-        if not isinstance(min, int) and isinstance(max, int):
-            warnstr = f"Ranges for note extraction not ints, were type: max: {max}, min: {min}"
-            log.warning(warnstr)
-            raise TypeError(warnstr)
-        if min > max_measures or max > max_measures:
-            warnstr = f"Values for min and/or max greater than measures: min: {min}, max: {max}, measure count: {max_measures}"
-            log.warning(warnstr)
-            raise ValueError(warnstr)
-        if min > max:
-            warnstr = f"Extration minimum measure is greater than maxiumum"
-            log.warning(warnstr)
-            raise ValueError(warnstr)
-        else:
-            note_list_to_crush = []
-            note_list_to_return = []
-            internal_list = self.measures[min:max]
-            for measure in internal_list:
-                for note in measure.notes:
-                    note_list_to_crush.append(note)
-            note_list_to_return = note_list_to_crush
-            for idx, note in enumerate(note_list_to_crush):
-                note_to_append = note_list_to_crush[idx]
-                if (idx + 1) < len(note_list_to_crush):
-                    if note_list_to_crush[idx] == note_list_to_crush[idx+1]:
-                        note_to_append.dur += note_list_to_crush[idx+1].dur
-                    else:
-                        note_list_to_return.append(note)
-        return note_list_to_return
