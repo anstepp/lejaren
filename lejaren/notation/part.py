@@ -15,6 +15,7 @@ from .part_funcs.extract_note_list_from_range import extract_note_list_from_rang
 from .part_funcs._flatten_chords import _flatten_chords
 from .part_funcs._test_for_low_bottom_time_sig import _test_for_low_bottom_time_sig
 from .part_funcs.check_uniques import _get_factor
+from .part_funcs._get_index_range import _get_index_range
 
 import lejaren.log.log as logger
 log = logger.get_logger()
@@ -230,65 +231,6 @@ class Part:
 
         self._group_list_to_measures(current_list, measure_factor)
     
-    def _get_index_range(self, index: int, search_range: int) -> Tuple[int, int]:
-        """
-        Returns range for searching for hypermetric analysis.
-
-        Not yet implemented. Cleans a search range for beginning and ends of a list.
-
-        Arguments:
-        ----------
-
-        index (int): location of note to compare in measure list.
-
-        search_range (int): adjacent measures on both sides
-        """
-
-        if isinstance(index, int) and isinstance(search_range, int):
-            if index < search_range:
-                return 0, search_range + index
-            else:
-                return index - search_range, index + search_range
-        else:
-            raise TypeError(f"Non-integer search indices and ranges for measures, types were... index: {type(index)}, range: {type(search_range)}")
-
-    def _get_change_pitch(self, index: int) -> None:
-        """
-        Tests the change in pitch between measure starts in search range and
-        weights the measure appropriately.
-
-        Evaluates the differences in measure pitch between search index, ranking a pitch
-        that is a local maxima higher and weighting the measure accordingly.
-
-        Arguments:
-        ----------
-
-        index (int): index of measure to evaulate.
-
-        Returns:
-        --------
-
-        None, measure ranking is held in measure object.
-        """
-        index_range_low, index_range_high = self._get_index_range(index)
-        test_measure_pitch = self.measures[index].beats[0]
-
-        if isinstance(index, int):
-            # test downbeats
-            for measure in self.measures[index_range_low:index_range_high]:
-                if measure.beats[0] > test_measure_pitch:
-                    break
-                else:
-                    self.weight += 1
-            for measure in self.measures:
-                if measure.beats[0] < test_measure_pitch:
-                    break
-                else:
-                    self.weight += 1
-        else:
-            warnstr = f"Pitch index non-integer, was {type(index)}"
-            log.warning(warnstr)
-            raise TypeError(warnstr)
 
     def _get_change_group(self):
         """
